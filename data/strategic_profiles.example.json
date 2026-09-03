@@ -1,0 +1,22 @@
+[
+  {
+    "champion_name": "Example Control Champion",
+    "role": "mid",
+    "identity": {
+      "main_colors": ["blue", "green"],
+      "off_colors": ["white"],
+      "reasoning": "Fictional format example: control and allied power timings define the main plan. A supportive build offers a flexible alternative; it is not assumed to be active in every draft.",
+      "source_name": "fictional_example_not_champion_analysis"
+    }
+  },
+  {
+    "champion_name": "Example Theme Champion",
+    "role": "support",
+    "identity": {
+      "main_colors": ["colorless"],
+      "off_colors": [],
+      "reasoning": "Fictional format example: a dedicated theme requires the composition to be built around it. Colorless does not mean an unknown classification.",
+      "source_name": "fictional_example_not_champion_analysis"
+    }
+  }
+]
