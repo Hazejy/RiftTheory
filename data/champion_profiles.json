@@ -1,0 +1,11 @@
+[
+  {
+    "name": "Malphite",
+    "capabilities": ["engage", "frontline"]
+  },
+  {
+    "name": "Anivia",
+    "capabilities": ["wave_clear"]
+  }
+]
+

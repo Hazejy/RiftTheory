@@ -1,7 +1,9 @@
 """Command-line entry point for DraftOS."""
 
+from pathlib import Path
+
+from .champion_data import load_champion_profiles
 from .composition import (
-    ChampionProfile,
     CompositionCapability,
     explain_composition,
 )
@@ -9,15 +11,8 @@ from .composition import (
 
 def main() -> None:
     """Run a small, explainable composition analysis."""
-    champions = [
-        ChampionProfile(
-            name="Example Vanguard",
-            capabilities={
-                CompositionCapability.ENGAGE,
-                CompositionCapability.FRONTLINE,
-            },
-        )
-    ]
+    data_file = Path(__file__).resolve().parents[2] / "data" / "champion_profiles.json"
+    champions = load_champion_profiles(data_file)
     required_capabilities = {
         CompositionCapability.ENGAGE,
         CompositionCapability.FRONTLINE,

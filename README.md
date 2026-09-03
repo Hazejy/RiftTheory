@@ -26,9 +26,9 @@ Expected output:
 
 ```text
 Composition analysis:
-- engage: provided by Example Vanguard.
-- frontline: provided by Example Vanguard.
-- wave clear: missing.
+- engage: provided by Malphite.
+- frontline: provided by Malphite.
+- wave clear: provided by Anivia.
 ```
 
 ## Test

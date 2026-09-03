@@ -19,9 +19,9 @@ class MainTests(unittest.TestCase):
         self.assertEqual(
             output.getvalue(),
             "Composition analysis:\n"
-            "- engage: provided by Example Vanguard.\n"
-            "- frontline: provided by Example Vanguard.\n"
-            "- wave clear: missing.\n",
+            "- engage: provided by Malphite.\n"
+            "- frontline: provided by Malphite.\n"
+            "- wave clear: provided by Anivia.\n",
         )
 
 
