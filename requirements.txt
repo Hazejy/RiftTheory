@@ -1,0 +1,4 @@
+# Local web application and API test dependencies, pinned after verification.
+fastapi==0.141.1
+uvicorn==0.52.4
+httpx==0.28.1

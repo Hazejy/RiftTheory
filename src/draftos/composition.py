@@ -12,6 +12,13 @@ class CompositionCapability(Enum):
     WAVE_CLEAR = "wave_clear"
 
 
+BASELINE_CAPABILITIES = frozenset({
+    CompositionCapability.ENGAGE,
+    CompositionCapability.FRONTLINE,
+    CompositionCapability.WAVE_CLEAR,
+})
+
+
 class ChampionRole(Enum):
     """A playable League of Legends role."""
 
