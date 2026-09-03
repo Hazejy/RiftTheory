@@ -40,3 +40,7 @@ python -m unittest discover -s tests -v
 ## Design notes
 
 - [Contextual composition capabilities](docs/composition-context.md)
+
+## Research
+
+- [DraftGap benchmark assessment](research/draftgap-benchmark.md)
