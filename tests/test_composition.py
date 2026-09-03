@@ -5,6 +5,7 @@ import unittest
 from src.draftos.composition import (
     ChampionProfile,
     CompositionCapability,
+    explain_composition,
     find_composition_debt,
 )
 
@@ -90,6 +91,37 @@ class CompositionDebtTests(unittest.TestCase):
         debt = find_composition_debt(champions, required_capabilities)
 
         self.assertEqual(debt, set())
+
+
+class CompositionExplanationTests(unittest.TestCase):
+    """Verify human-readable composition explanations."""
+
+    def test_explanation_names_providers_and_missing_capabilities(self) -> None:
+        champions = [
+            ChampionProfile(
+                name="Example Vanguard",
+                capabilities={
+                    CompositionCapability.ENGAGE,
+                    CompositionCapability.FRONTLINE,
+                },
+            )
+        ]
+        required_capabilities = {
+            CompositionCapability.ENGAGE,
+            CompositionCapability.FRONTLINE,
+            CompositionCapability.WAVE_CLEAR,
+        }
+
+        explanations = explain_composition(champions, required_capabilities)
+
+        self.assertEqual(
+            explanations,
+            [
+                "engage: provided by Example Vanguard.",
+                "frontline: provided by Example Vanguard.",
+                "wave clear: missing.",
+            ],
+        )
 
 
 if __name__ == "__main__":

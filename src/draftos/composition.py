@@ -31,3 +31,27 @@ def find_composition_debt(
         provided_capabilities.update(champion.capabilities)
 
     return required_capabilities - provided_capabilities
+
+
+def explain_composition(
+    champions: list[ChampionProfile],
+    required_capabilities: set[CompositionCapability],
+) -> list[str]:
+    """Explain who provides each required capability and what is missing."""
+    explanations: list[str] = []
+
+    for capability in sorted(required_capabilities, key=lambda item: item.value):
+        providers = [
+            champion.name
+            for champion in champions
+            if capability in champion.capabilities
+        ]
+        readable_name = capability.value.replace("_", " ")
+
+        if providers:
+            provider_names = ", ".join(providers)
+            explanations.append(f"{readable_name}: provided by {provider_names}.")
+        else:
+            explanations.append(f"{readable_name}: missing.")
+
+    return explanations
