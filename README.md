@@ -35,8 +35,14 @@ Role share example (fictional data):
 - jungle: 15.0% (150 games)
 - mid: 5.0% (50 games)
 
-Strategic profiles (curated interpretations; see review status):
+Champion profiles (curated interpretations; see review status):
+Malphite (top):
+  Capabilities: engage, frontline
+  Capability source: manually_curated
+  Strategic identity: not yet assessed
 Anivia (mid):
+  Capabilities: wave clear
+  Capability source: manually_curated
   Main colors: blue
   Off colors: white
   Reasoning: AI-assisted interpretation: Blue reflects space control and denial through stun, wall and persistent area damage. White is a conditional defensive/peel interpretation, not universal draft flexibility. Wave clear does not guarantee safe access against long-range pressure; positioning, mana and allied setup must be assessed. No win probability is inferred.
@@ -53,6 +59,11 @@ python -m unittest discover -s tests -v
 ```
 
 ## Design notes
+
+Champion profiles match by exact champion name and role. A missing strategic
+profile is shown as not yet assessed, not as colorless. Multiple strategies for
+the same champion and role are rejected rather than silently selecting a patch.
+Strategic review status does not certify the separate capability assessment.
 
 - [Contextual composition capabilities](docs/composition-context.md)
 

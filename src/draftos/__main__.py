@@ -2,6 +2,7 @@
 
 from pathlib import Path
 
+from .champion_analysis import analyze_champions, explain_champion_assessment
 from .champion_data import load_champion_profiles
 from .composition import (
     CompositionCapability,
@@ -9,7 +10,6 @@ from .composition import (
 )
 from .flex import explain_role_shares
 from .flex_data import load_role_observations
-from .strategy import explain_strategic_profile
 from .strategy_data import load_strategic_profiles
 
 
@@ -37,9 +37,9 @@ def main() -> None:
     strategic_profiles = load_strategic_profiles(
         data_directory / "strategic_profiles.json"
     )
-    print("\nStrategic profiles (curated interpretations; see review status):")
-    for profile in strategic_profiles:
-        for line in explain_strategic_profile(profile):
+    print("\nChampion profiles (curated interpretations; see review status):")
+    for assessment in analyze_champions(champions, strategic_profiles):
+        for line in explain_champion_assessment(assessment):
             print(line)
 
 
