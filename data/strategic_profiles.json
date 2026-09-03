@@ -1,0 +1,15 @@
+[
+  {
+    "champion_name": "Anivia",
+    "role": "mid",
+    "patch": null,
+    "review_status": "provisional",
+    "source_url": "https://www.leagueoflegends.com/en-us/champions/anivia/",
+    "identity": {
+      "main_colors": ["blue"],
+      "off_colors": ["white"],
+      "reasoning": "AI-assisted interpretation: Blue reflects space control and denial through stun, wall and persistent area damage. White is a conditional defensive/peel interpretation, not universal draft flexibility. Wave clear does not guarantee safe access against long-range pressure; positioning, mana and allied setup must be assessed. No win probability is inferred.",
+      "source_name": "DraftOS AI-assisted synthesis; evidence and limits: research/anivia-mid-profile.md"
+    }
+  }
+]

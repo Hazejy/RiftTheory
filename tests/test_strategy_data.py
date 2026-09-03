@@ -17,6 +17,24 @@ EXAMPLE_FILE = (
 
 
 class StrategicDataTests(unittest.TestCase):
+    def test_real_champion_data_is_separate_and_provisional(self) -> None:
+        profiles = load_strategic_profiles(EXAMPLE_FILE.with_name("strategic_profiles.json"))
+
+        self.assertEqual(len(profiles), 1)
+        anivia = profiles[0]
+        self.assertEqual(anivia.champion_name, "Anivia")
+        self.assertIs(anivia.role, ChampionRole.MID)
+        self.assertEqual(anivia.identity.main_colors, {StrategicColor.BLUE})
+        self.assertEqual(anivia.identity.off_colors, {StrategicColor.WHITE})
+        self.assertIs(anivia.review_status, ReviewStatus.PROVISIONAL)
+        self.assertIsNone(anivia.patch)
+        self.assertEqual(
+            anivia.source_url,
+            "https://www.leagueoflegends.com/en-us/champions/anivia/",
+        )
+        self.assertIn("AI-assisted", anivia.identity.reasoning)
+        self.assertIn("research/anivia-mid-profile.md", anivia.identity.source_name)
+
     def test_example_profiles_preserve_identity_and_role(self) -> None:
         profiles = load_strategic_profiles(EXAMPLE_FILE)
 

@@ -35,9 +35,9 @@ def main() -> None:
         print(f"- {explanation}")
 
     strategic_profiles = load_strategic_profiles(
-        data_directory / "strategic_profiles.example.json"
+        data_directory / "strategic_profiles.json"
     )
-    print("\nStrategic profile examples (fictional data):")
+    print("\nStrategic profiles (curated interpretations; see review status):")
     for profile in strategic_profiles:
         for line in explain_strategic_profile(profile):
             print(line)

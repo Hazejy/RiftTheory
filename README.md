@@ -35,23 +35,15 @@ Role share example (fictional data):
 - jungle: 15.0% (150 games)
 - mid: 5.0% (50 games)
 
-Strategic profile examples (fictional data):
-Example Control Champion (mid):
-  Main colors: blue, green
+Strategic profiles (curated interpretations; see review status):
+Anivia (mid):
+  Main colors: blue
   Off colors: white
-  Reasoning: Fictional format example: control and allied power timings define the main plan. A supportive build offers a flexible alternative; it is not assumed to be active in every draft.
-  Source: fictional_example_not_champion_analysis
+  Reasoning: AI-assisted interpretation: Blue reflects space control and denial through stun, wall and persistent area damage. White is a conditional defensive/peel interpretation, not universal draft flexibility. Wave clear does not guarantee safe access against long-range pressure; positioning, mana and allied setup must be assessed. No win probability is inferred.
+  Source: DraftOS AI-assisted synthesis; evidence and limits: research/anivia-mid-profile.md
   Patch: unknown
-  Review status: unreviewed
-  Source URL: not provided
-Example Theme Champion (support):
-  Main colors: colorless
-  Off colors: none
-  Reasoning: Fictional format example: a dedicated theme requires the composition to be built around it. Colorless does not mean an unknown classification.
-  Source: fictional_example_not_champion_analysis
-  Patch: unknown
-  Review status: unreviewed
-  Source URL: not provided
+  Review status: provisional
+  Source URL: https://www.leagueoflegends.com/en-us/champions/anivia/
 ```
 
 ## Test
@@ -68,3 +60,4 @@ python -m unittest discover -s tests -v
 
 - [DraftGap benchmark assessment](research/draftgap-benchmark.md)
 - [MTG-inspired strategic identities](research/mtg-color-draft-theory.md)
+- [Anivia mid: provisional profile and evidence](research/anivia-mid-profile.md)

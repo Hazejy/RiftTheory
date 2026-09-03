@@ -9,6 +9,11 @@ test a data format. They must never be presented as real League statistics.
 
 ## Strategic profiles
 
+`strategic_profiles.json` contains real-champion interpretations used by the CLI.
+Anivia mid is the first provisional entry; its evidence, source-access limits,
+and review requirements are in [the research note](../research/anivia-mid-profile.md).
+Its patch is unknown until the assessment is verified for a specific patch.
+
 `strategic_profiles.example.json` contains fictional champions, not reviewed
 League of Legends classifications. Load it with
 `load_strategic_profiles(Path("data/strategic_profiles.example.json"))` from
@@ -27,8 +32,10 @@ Colors must be unique within each list and cannot be both main and off colors.
 Colorless is a dedicated strategic theme, not a missing-data marker. Missing
 fields, invalid roles or colors, and blank explanations or sources are rejected.
 
-The CLI displays these fictional profiles with their recorded reasoning and
-source. Colors are listed alphabetically, not ranked by importance. `none` means
+Fictional strategic examples remain separate test fixtures; the CLI displays
+the real-champion profiles with reasoning and source. The role-share CLI example
+is still fictional and labeled as such. Colors are listed alphabetically, not
+ranked by importance. `none` means
 no off colors were recorded; it is distinct from `colorless`.
 
 ## Review metadata
