@@ -6,9 +6,9 @@ evidence-based reviews, and optimized practice.
 
 ## Current status
 
-Phase 0 establishes a small, tested Python foundation. Draft logic, Riot API
-integration, web interfaces, and machine learning are intentionally out of
-scope at this stage.
+Phase 1 builds the first explainable Composition Debt baseline. The initial
+domain vocabulary covers engage, frontline, and wave clear. Riot API
+integration, web interfaces, and machine learning remain out of scope.
 
 ## Requirements
 
@@ -33,4 +33,3 @@ DraftOS foundation is ready.
 ```powershell
 python -m unittest discover -s tests -v
 ```
-
