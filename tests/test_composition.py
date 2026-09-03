@@ -3,10 +3,12 @@
 import unittest
 
 from src.draftos.composition import (
+    CapabilityAssessment,
     ChampionProfile,
     ChampionRole,
     CompositionCapability,
     KnowledgeSource,
+    analyze_composition,
     explain_composition,
     find_composition_debt,
 )
@@ -103,6 +105,42 @@ class CompositionDebtTests(unittest.TestCase):
         debt = find_composition_debt(champions, required_capabilities)
 
         self.assertEqual(debt, set())
+
+
+class CompositionAnalysisTests(unittest.TestCase):
+    """Verify structured composition analysis results."""
+
+    def test_analysis_marks_covered_and_missing_capabilities(self) -> None:
+        champions = [
+            ChampionProfile(
+                name="Example Vanguard",
+                role=ChampionRole.TOP,
+                capabilities={CompositionCapability.ENGAGE},
+                source=KnowledgeSource.MANUALLY_CURATED,
+            )
+        ]
+        required_capabilities = {
+            CompositionCapability.ENGAGE,
+            CompositionCapability.WAVE_CLEAR,
+        }
+
+        assessments = analyze_composition(champions, required_capabilities)
+
+        self.assertEqual(
+            assessments,
+            [
+                CapabilityAssessment(
+                    capability=CompositionCapability.ENGAGE,
+                    providers=["Example Vanguard"],
+                ),
+                CapabilityAssessment(
+                    capability=CompositionCapability.WAVE_CLEAR,
+                    providers=[],
+                ),
+            ],
+        )
+        self.assertFalse(assessments[0].is_missing)
+        self.assertTrue(assessments[1].is_missing)
 
 
 class CompositionExplanationTests(unittest.TestCase):

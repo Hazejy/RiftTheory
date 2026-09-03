@@ -38,17 +38,54 @@ class ChampionProfile:
     source: KnowledgeSource
 
 
+@dataclass
+class CapabilityAssessment:
+    """Structured coverage result for one required capability."""
+
+    capability: CompositionCapability
+    providers: list[str]
+
+    @property
+    def is_missing(self) -> bool:
+        """Return whether no champion provides the capability."""
+        return not self.providers
+
+
+def analyze_composition(
+    champions: list[ChampionProfile],
+    required_capabilities: set[CompositionCapability],
+) -> list[CapabilityAssessment]:
+    """Build a structured assessment for every required capability."""
+    assessments: list[CapabilityAssessment] = []
+
+    for capability in sorted(required_capabilities, key=lambda item: item.value):
+        providers = [
+            champion.name
+            for champion in champions
+            if capability in champion.capabilities
+        ]
+        assessments.append(
+            CapabilityAssessment(
+                capability=capability,
+                providers=providers,
+            )
+        )
+
+    return assessments
+
+
 def find_composition_debt(
     champions: list[ChampionProfile],
     required_capabilities: set[CompositionCapability],
 ) -> set[CompositionCapability]:
     """Return the required capabilities not provided by the champions."""
-    provided_capabilities: set[CompositionCapability] = set()
+    assessments = analyze_composition(champions, required_capabilities)
 
-    for champion in champions:
-        provided_capabilities.update(champion.capabilities)
-
-    return required_capabilities - provided_capabilities
+    return {
+        assessment.capability
+        for assessment in assessments
+        if assessment.is_missing
+    }
 
 
 def explain_composition(
@@ -57,17 +94,13 @@ def explain_composition(
 ) -> list[str]:
     """Explain who provides each required capability and what is missing."""
     explanations: list[str] = []
+    assessments = analyze_composition(champions, required_capabilities)
 
-    for capability in sorted(required_capabilities, key=lambda item: item.value):
-        providers = [
-            champion.name
-            for champion in champions
-            if capability in champion.capabilities
-        ]
-        readable_name = capability.value.replace("_", " ")
+    for assessment in assessments:
+        readable_name = assessment.capability.value.replace("_", " ")
 
-        if providers:
-            provider_names = ", ".join(providers)
+        if assessment.providers:
+            provider_names = ", ".join(assessment.providers)
             explanations.append(f"{readable_name}: provided by {provider_names}.")
         else:
             explanations.append(f"{readable_name}: missing.")
