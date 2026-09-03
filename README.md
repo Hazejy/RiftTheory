@@ -49,3 +49,4 @@ python -m unittest discover -s tests -v
 ## Research
 
 - [DraftGap benchmark assessment](research/draftgap-benchmark.md)
+- [MTG-inspired strategic identities](research/mtg-color-draft-theory.md)
