@@ -25,15 +25,11 @@ python -m src.draftos
 Expected output:
 
 ```text
-Composition analysis:
+Demo selection: Malphite:top, Anivia:mid
+Baseline capability check (not a draft score):
 - engage: provided by Malphite.
 - frontline: provided by Malphite.
 - wave clear: provided by Anivia.
-
-Role share example (fictional data):
-- top: 80.0% (800 games)
-- jungle: 15.0% (150 games)
-- mid: 5.0% (50 games)
 
 Champion profiles (curated interpretations; see review status):
 Malphite (top):
@@ -51,6 +47,41 @@ Anivia (mid):
   Review status: provisional
   Source URL: https://www.leagueoflegends.com/en-us/champions/anivia/
 ```
+
+## Choose champions
+
+List the profiles currently available locally:
+
+```powershell
+python -m src.draftos --list-champions
+```
+
+Analyze one pick or repeat `--champion` for a fixed-role selection:
+
+```powershell
+python -m src.draftos --champion "Anivia:mid"
+python -m src.draftos --champion "Malphite:top" --champion "Anivia:mid"
+```
+
+Names and roles are case-insensitive at the input boundary; surrounding spaces
+are ignored. One to five picks are accepted. Repeated champions, repeated role
+assignments, and missing local profiles produce an error without partial output.
+Missing local data does not mean a role is unplayable. Flex-role inference and
+opponent analysis are not implemented. Without picks, the CLI uses the explicit
+Malphite-top/Anivia-mid demo selection, not the entire future catalog.
+
+The baseline checks engage, frontline and wave clear even for partial selections.
+A missing capability is not a verdict that the draft is bad or that a particular
+next pick is required. Strategic context will determine requirements later.
+
+Fictional role-share data is hidden by default. Request it explicitly or view help:
+
+```powershell
+python -m src.draftos --examples
+python -m src.draftos --help
+```
+
+`--list-champions` is a standalone action and cannot be combined with other modes.
 
 ## Test
 

@@ -34,7 +34,8 @@ fields, invalid roles or colors, and blank explanations or sources are rejected.
 
 Fictional strategic examples remain separate test fixtures; the CLI displays
 the real-champion profiles with reasoning and source. The role-share CLI example
-is still fictional and labeled as such. Colors are listed alphabetically, not
+is still fictional, labeled as such, and only shown with `--examples`.
+Colors are listed alphabetically, not
 ranked by importance. `none` means
 no off colors were recorded; it is distinct from `colorless`.
 

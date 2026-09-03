@@ -2,7 +2,7 @@
 
 import io
 import unittest
-from contextlib import redirect_stdout
+from contextlib import redirect_stderr, redirect_stdout
 
 from src.draftos.__main__ import main
 
@@ -14,19 +14,15 @@ class MainTests(unittest.TestCase):
         output = io.StringIO()
 
         with redirect_stdout(output):
-            main()
+            main([])
 
         self.assertEqual(
             output.getvalue(),
-            "Composition analysis:\n"
+            "Demo selection: Malphite:top, Anivia:mid\n"
+            "Baseline capability check (not a draft score):\n"
             "- engage: provided by Malphite.\n"
             "- frontline: provided by Malphite.\n"
             "- wave clear: provided by Anivia.\n"
-            "\n"
-            "Role share example (fictional data):\n"
-            "- top: 80.0% (800 games)\n"
-            "- jungle: 15.0% (150 games)\n"
-            "- mid: 5.0% (50 games)\n"
             "\n"
             "Champion profiles (curated interpretations; see review status):\n"
             "Malphite (top):\n"
@@ -50,6 +46,56 @@ class MainTests(unittest.TestCase):
             "  Review status: provisional\n"
             "  Source URL: https://www.leagueoflegends.com/en-us/champions/anivia/\n",
         )
+
+
+    def test_single_pick_reports_missing_capabilities(self) -> None:
+        output = io.StringIO()
+        with redirect_stdout(output):
+            main(["--champion", "Anivia:mid"])
+        text = output.getvalue()
+        self.assertIn("- engage: missing.", text)
+        self.assertIn("- frontline: missing.", text)
+        self.assertIn("- wave clear: provided by Anivia.", text)
+        self.assertNotIn("Malphite", text)
+        self.assertNotIn("fictional", text)
+
+    def test_examples_require_explicit_flag(self) -> None:
+        output = io.StringIO()
+        with redirect_stdout(output):
+            main(["--examples"])
+        self.assertIn("Role share example (fictional data):", output.getvalue())
+        self.assertIn("- top: 80.0% (800 games)", output.getvalue())
+
+    def test_catalog_listing_does_not_run_analysis(self) -> None:
+        output = io.StringIO()
+        with redirect_stdout(output):
+            main(["--list-champions"])
+        self.assertEqual(output.getvalue(),
+            "Available local profiles (not a complete champion or role catalog):\n"
+            "- Anivia:mid\n- Malphite:top\n")
+
+    def test_invalid_selection_exits_cleanly_without_partial_output(self) -> None:
+        for args in (
+            ["--champion", "Anivia:support"],
+            ["--champion", "Anivia:mid", "--champion", "Anivia:mid"],
+            ["--champion", "Anivia"],
+            ["--list-champions", "--examples"],
+        ):
+            with self.subTest(args=args):
+                output, errors = io.StringIO(), io.StringIO()
+                with redirect_stdout(output), redirect_stderr(errors):
+                    with self.assertRaises(SystemExit) as raised:
+                        main(args)
+                self.assertEqual(raised.exception.code, 2)
+                self.assertEqual(output.getvalue(), "")
+                self.assertIn("error:", errors.getvalue())
+
+    def test_help_exits_successfully(self) -> None:
+        output = io.StringIO()
+        with redirect_stdout(output), self.assertRaises(SystemExit) as raised:
+            main(["--help"])
+        self.assertEqual(raised.exception.code, 0)
+        self.assertIn("--champion", output.getvalue())
 
 
 if __name__ == "__main__":
