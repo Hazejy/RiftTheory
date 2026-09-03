@@ -9,6 +9,8 @@ from .composition import (
 )
 from .flex import explain_role_shares
 from .flex_data import load_role_observations
+from .strategy import explain_strategic_profile
+from .strategy_data import load_strategic_profiles
 
 
 def main() -> None:
@@ -31,6 +33,14 @@ def main() -> None:
     print("\nRole share example (fictional data):")
     for explanation in explain_role_shares(observations):
         print(f"- {explanation}")
+
+    strategic_profiles = load_strategic_profiles(
+        data_directory / "strategic_profiles.example.json"
+    )
+    print("\nStrategic profile examples (fictional data):")
+    for profile in strategic_profiles:
+        for line in explain_strategic_profile(profile):
+            print(line)
 
 
 if __name__ == "__main__":

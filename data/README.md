@@ -26,6 +26,10 @@ Colors must be unique within each list and cannot be both main and off colors.
 Colorless is a dedicated strategic theme, not a missing-data marker. Missing
 fields, invalid roles or colors, and blank explanations or sources are rejected.
 
-This step only loads profiles. It does not evaluate conditions, infer a team's
-identity, or change the CLI output. Patch and structured context metadata remain
-future work before adopting reviewed real-champion classifications.
+The CLI displays these fictional profiles with their recorded reasoning and
+source. Colors are listed alphabetically, not ranked by importance. `none` means
+no off colors were recorded; it is distinct from `colorless`.
+
+This step does not evaluate conditions or infer a team's identity. Patch and
+structured context metadata remain future work before adopting reviewed
+real-champion classifications.

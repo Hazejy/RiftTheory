@@ -45,3 +45,17 @@ class ChampionStrategicProfile:
     champion_name: str
     role: ChampionRole
     identity: StrategicIdentity
+
+
+def explain_strategic_profile(profile: ChampionStrategicProfile) -> list[str]:
+    """Describe the recorded identity without inferring a draft recommendation."""
+    identity = profile.identity
+    main_colors = ", ".join(sorted(color.value for color in identity.main_colors))
+    off_colors = ", ".join(sorted(color.value for color in identity.off_colors))
+    return [
+        f"{profile.champion_name} ({profile.role.value}):",
+        f"  Main colors: {main_colors}",
+        f"  Off colors: {off_colors or 'none'}",
+        f"  Reasoning: {identity.reasoning}",
+        f"  Source: {identity.source_name}",
+    ]
