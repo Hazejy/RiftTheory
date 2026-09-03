@@ -2,7 +2,7 @@
 
 `--format json` serializes the existing domain assessments. It adds no scoring,
 win-probability model, matchup inference or automatic review. The current
-transport is stdout, not an HTTP API.
+transports are CLI stdout and the local `POST /api/analyze` endpoint.
 
 ## Contract
 
