@@ -64,3 +64,24 @@ def calculate_role_shares(
         observation.role: observation.games / total_games
         for observation in observations
     }
+
+
+def explain_role_shares(observations: list[RoleObservation]) -> list[str]:
+    """Explain observed role shares with their sample sizes."""
+    role_shares = calculate_role_shares(observations)
+    games_by_role = {
+        observation.role: observation.games
+        for observation in observations
+    }
+
+    sorted_roles = sorted(
+        role_shares,
+        key=lambda role: role_shares[role],
+        reverse=True,
+    )
+
+    return [
+        f"{role.value}: {role_shares[role]:.1%} "
+        f"({games_by_role[role]:,} games)"
+        for role in sorted_roles
+    ]

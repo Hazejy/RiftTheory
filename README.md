@@ -29,6 +29,11 @@ Composition analysis:
 - engage: provided by Malphite.
 - frontline: provided by Malphite.
 - wave clear: provided by Anivia.
+
+Role share example (fictional data):
+- top: 80.0% (800 games)
+- jungle: 15.0% (150 games)
+- mid: 5.0% (50 games)
 ```
 
 ## Test

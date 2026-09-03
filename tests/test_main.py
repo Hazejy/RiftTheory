@@ -21,7 +21,12 @@ class MainTests(unittest.TestCase):
             "Composition analysis:\n"
             "- engage: provided by Malphite.\n"
             "- frontline: provided by Malphite.\n"
-            "- wave clear: provided by Anivia.\n",
+            "- wave clear: provided by Anivia.\n"
+            "\n"
+            "Role share example (fictional data):\n"
+            "- top: 80.0% (800 games)\n"
+            "- jungle: 15.0% (150 games)\n"
+            "- mid: 5.0% (50 games)\n",
         )
 
 

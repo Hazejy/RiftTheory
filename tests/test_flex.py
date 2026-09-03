@@ -3,7 +3,11 @@
 import unittest
 
 from src.draftos.composition import ChampionRole
-from src.draftos.flex import RoleObservation, calculate_role_shares
+from src.draftos.flex import (
+    RoleObservation,
+    calculate_role_shares,
+    explain_role_shares,
+)
 
 
 class RoleObservationTests(unittest.TestCase):
@@ -151,6 +155,40 @@ class RoleShareTests(unittest.TestCase):
             "observations must contain unique roles",
         ):
             calculate_role_shares(observations)
+
+    def test_role_share_explanation_includes_games(self) -> None:
+        observations = [
+            RoleObservation(
+                champion_name="Example Champion",
+                role=ChampionRole.TOP,
+                patch="example_patch",
+                region="global",
+                rank_bracket="example_rank",
+                queue="ranked_solo",
+                games=800,
+                source_name="example_source",
+            ),
+            RoleObservation(
+                champion_name="Example Champion",
+                role=ChampionRole.JUNGLE,
+                patch="example_patch",
+                region="global",
+                rank_bracket="example_rank",
+                queue="ranked_solo",
+                games=200,
+                source_name="example_source",
+            ),
+        ]
+
+        explanations = explain_role_shares(observations)
+
+        self.assertEqual(
+            explanations,
+            [
+                "top: 80.0% (800 games)",
+                "jungle: 20.0% (200 games)",
+            ],
+        )
 
 
 if __name__ == "__main__":
