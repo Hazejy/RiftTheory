@@ -83,6 +83,25 @@ python -m src.draftos --help
 
 `--list-champions` is a standalone action and cannot be combined with other modes.
 
+## Machine-readable analysis
+
+```powershell
+python -m src.draftos --champion "Anivia:mid" --format json
+```
+
+This prints one JSON document to stdout. Text remains the default. JSON analysis
+cannot be combined with `--examples` or `--list-champions`. Selection and strategic
+data errors go to stderr with exit code 2, without partial report output.
+See [the report contract](docs/analysis-report.md) for fields and limitations.
+
+## Interface direction
+
+The product targets both a browser-based interface and an installable desktop
+application sharing the analysis core and, where practical, the same UI.
+The CLI is a development interface, not the intended final user experience.
+The next interface milestone is a local visual champion-selection and analysis
+screen. Desktop packaging follows a working UI rather than a separate rewrite.
+
 ## Test
 
 ```powershell

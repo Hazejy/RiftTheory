@@ -1,8 +1,10 @@
 """Tests for the initial DraftOS command-line entry point."""
 
 import io
+import json
 import unittest
 from contextlib import redirect_stderr, redirect_stdout
+from unittest.mock import patch
 
 from src.draftos.__main__ import main
 
@@ -96,6 +98,58 @@ class MainTests(unittest.TestCase):
             main(["--help"])
         self.assertEqual(raised.exception.code, 0)
         self.assertIn("--champion", output.getvalue())
+
+    def test_json_output_is_a_single_document_with_selected_champion(self) -> None:
+        output = io.StringIO()
+        with redirect_stdout(output):
+            main(["--champion", "Anivia:mid", "--format", "json"])
+        report = json.loads(output.getvalue())
+        self.assertEqual(report["schema_version"], 1)
+        self.assertFalse(report["is_demo"])
+        self.assertEqual([item["champion_name"] for item in report["champions"]], ["Anivia"])
+        strategy = report["champions"][0]["strategy"]
+        self.assertEqual(strategy["review_status"], "provisional")
+        self.assertIsNone(strategy["patch"])
+        self.assertEqual(
+            [item["capability"] for item in report["capability_assessments"] if item["is_missing"]],
+            ["engage", "frontline"],
+        )
+
+    def test_default_json_marks_demo_and_missing_strategy(self) -> None:
+        output = io.StringIO()
+        with redirect_stdout(output):
+            main(["--format", "json"])
+        report = json.loads(output.getvalue())
+        self.assertTrue(report["is_demo"])
+        self.assertIsNone(report["champions"][0]["strategy"])
+
+    def test_json_errors_do_not_pollute_stdout(self) -> None:
+        for args in (
+            ["--format", "json", "--examples"],
+            ["--format", "json", "--list-champions"],
+            ["--format", "json", "--champion", "Unknown:mid"],
+            ["--format", "xml"],
+        ):
+            with self.subTest(args=args):
+                output, errors = io.StringIO(), io.StringIO()
+                with redirect_stdout(output), redirect_stderr(errors):
+                    with self.assertRaises(SystemExit) as raised:
+                        main(args)
+                self.assertEqual(raised.exception.code, 2)
+                self.assertEqual(output.getvalue(), "")
+                self.assertIn("error:", errors.getvalue())
+
+    def test_strategy_data_failure_occurs_before_any_output(self) -> None:
+        for format_name in ("text", "json"):
+            with self.subTest(format=format_name):
+                output, errors = io.StringIO(), io.StringIO()
+                with patch("src.draftos.__main__.load_strategic_profiles", side_effect=ValueError("invalid data")):
+                    with redirect_stdout(output), redirect_stderr(errors):
+                        with self.assertRaises(SystemExit) as raised:
+                            main(["--format", format_name])
+                self.assertEqual(raised.exception.code, 2)
+                self.assertEqual(output.getvalue(), "")
+                self.assertIn("cannot load strategic assessments", errors.getvalue())
 
 
 if __name__ == "__main__":
