@@ -2,7 +2,12 @@
 
 import unittest
 
-from src.draftos.strategy import StrategicColor, StrategicIdentity
+from src.draftos.composition import ChampionRole
+from src.draftos.strategy import (
+    ChampionStrategicProfile,
+    StrategicColor,
+    StrategicIdentity,
+)
 
 
 class StrategicColorTests(unittest.TestCase):
@@ -50,6 +55,27 @@ class StrategicIdentityTests(unittest.TestCase):
                 reasoning=" ",
                 source_name="example_source",
             )
+
+
+class ChampionStrategicProfileTests(unittest.TestCase):
+    """Verify role-specific champion strategy profiles."""
+
+    def test_identity_is_attached_to_champion_and_role(self) -> None:
+        identity = StrategicIdentity(
+            colors={StrategicColor.BLUE, StrategicColor.WHITE},
+            reasoning="Example reasoning for a flexible control identity.",
+            source_name="example_source",
+        )
+
+        profile = ChampionStrategicProfile(
+            champion_name="Example Champion",
+            role=ChampionRole.MID,
+            identity=identity,
+        )
+
+        self.assertEqual(profile.champion_name, "Example Champion")
+        self.assertEqual(profile.role, ChampionRole.MID)
+        self.assertEqual(profile.identity, identity)
 
 
 if __name__ == "__main__":

@@ -3,6 +3,8 @@
 from dataclasses import dataclass
 from enum import Enum
 
+from .composition import ChampionRole
+
 
 class StrategicColor(Enum):
     """An MTG-inspired strategic identity used in draft reasoning."""
@@ -30,3 +32,12 @@ class StrategicIdentity:
             raise ValueError("strategic identity reasoning is required")
         if not self.source_name.strip():
             raise ValueError("strategic identity source is required")
+
+
+@dataclass
+class ChampionStrategicProfile:
+    """A champion's strategic identity in a specific role."""
+
+    champion_name: str
+    role: ChampionRole
+    identity: StrategicIdentity
