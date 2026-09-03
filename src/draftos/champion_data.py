@@ -3,7 +3,12 @@
 import json
 from pathlib import Path
 
-from .composition import ChampionProfile, CompositionCapability
+from .composition import (
+    ChampionProfile,
+    ChampionRole,
+    CompositionCapability,
+    KnowledgeSource,
+)
 
 
 def load_champion_profiles(file_path: Path) -> list[ChampionProfile]:
@@ -13,11 +18,12 @@ def load_champion_profiles(file_path: Path) -> list[ChampionProfile]:
     return [
         ChampionProfile(
             name=profile["name"],
+            role=ChampionRole(profile["role"]),
             capabilities={
                 CompositionCapability(capability)
                 for capability in profile["capabilities"]
             },
+            source=KnowledgeSource(profile["source"]),
         )
         for profile in profile_data
     ]
-

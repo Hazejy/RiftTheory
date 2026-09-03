@@ -1,11 +1,14 @@
 [
   {
     "name": "Malphite",
-    "capabilities": ["engage", "frontline"]
+    "role": "top",
+    "capabilities": ["engage", "frontline"],
+    "source": "manually_curated"
   },
   {
     "name": "Anivia",
-    "capabilities": ["wave_clear"]
+    "role": "mid",
+    "capabilities": ["wave_clear"],
+    "source": "manually_curated"
   }
 ]
-

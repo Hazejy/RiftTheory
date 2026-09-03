@@ -4,7 +4,11 @@ import unittest
 from pathlib import Path
 
 from src.draftos.champion_data import load_champion_profiles
-from src.draftos.composition import CompositionCapability
+from src.draftos.composition import (
+    ChampionRole,
+    CompositionCapability,
+    KnowledgeSource,
+)
 
 
 class ChampionDataTests(unittest.TestCase):
@@ -30,8 +34,15 @@ class ChampionDataTests(unittest.TestCase):
             champions[1].capabilities,
             {CompositionCapability.WAVE_CLEAR},
         )
+        self.assertEqual(champions[0].role, ChampionRole.TOP)
+        self.assertEqual(champions[1].role, ChampionRole.MID)
+        self.assertTrue(
+            all(
+                champion.source is KnowledgeSource.MANUALLY_CURATED
+                for champion in champions
+            )
+        )
 
 
 if __name__ == "__main__":
     unittest.main()
-

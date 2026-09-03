@@ -4,7 +4,9 @@ import unittest
 
 from src.draftos.composition import (
     ChampionProfile,
+    ChampionRole,
     CompositionCapability,
+    KnowledgeSource,
     explain_composition,
     find_composition_debt,
 )
@@ -29,13 +31,17 @@ class ChampionProfileTests(unittest.TestCase):
     def test_champion_can_provide_multiple_capabilities(self) -> None:
         champion = ChampionProfile(
             name="Example Vanguard",
+            role=ChampionRole.TOP,
             capabilities={
                 CompositionCapability.ENGAGE,
                 CompositionCapability.FRONTLINE,
             },
+            source=KnowledgeSource.MANUALLY_CURATED,
         )
 
         self.assertEqual(champion.name, "Example Vanguard")
+        self.assertEqual(champion.role, ChampionRole.TOP)
+        self.assertEqual(champion.source, KnowledgeSource.MANUALLY_CURATED)
         self.assertEqual(
             champion.capabilities,
             {
@@ -52,10 +58,12 @@ class CompositionDebtTests(unittest.TestCase):
         champions = [
             ChampionProfile(
                 name="Example Vanguard",
+                role=ChampionRole.TOP,
                 capabilities={
                     CompositionCapability.ENGAGE,
                     CompositionCapability.FRONTLINE,
                 },
+                source=KnowledgeSource.MANUALLY_CURATED,
             )
         ]
         required_capabilities = {
@@ -72,14 +80,18 @@ class CompositionDebtTests(unittest.TestCase):
         champions = [
             ChampionProfile(
                 name="Example Vanguard",
+                role=ChampionRole.TOP,
                 capabilities={
                     CompositionCapability.ENGAGE,
                     CompositionCapability.FRONTLINE,
                 },
+                source=KnowledgeSource.MANUALLY_CURATED,
             ),
             ChampionProfile(
                 name="Example Mage",
+                role=ChampionRole.MID,
                 capabilities={CompositionCapability.WAVE_CLEAR},
+                source=KnowledgeSource.MANUALLY_CURATED,
             ),
         ]
         required_capabilities = {
@@ -100,10 +112,12 @@ class CompositionExplanationTests(unittest.TestCase):
         champions = [
             ChampionProfile(
                 name="Example Vanguard",
+                role=ChampionRole.TOP,
                 capabilities={
                     CompositionCapability.ENGAGE,
                     CompositionCapability.FRONTLINE,
                 },
+                source=KnowledgeSource.MANUALLY_CURATED,
             )
         ]
         required_capabilities = {

@@ -12,12 +12,30 @@ class CompositionCapability(Enum):
     WAVE_CLEAR = "wave_clear"
 
 
+class ChampionRole(Enum):
+    """A playable League of Legends role."""
+
+    TOP = "top"
+    JUNGLE = "jungle"
+    MID = "mid"
+    BOT = "bot"
+    SUPPORT = "support"
+
+
+class KnowledgeSource(Enum):
+    """The origin of a champion profile assessment."""
+
+    MANUALLY_CURATED = "manually_curated"
+
+
 @dataclass
 class ChampionProfile:
     """A champion and the composition capabilities they provide."""
 
     name: str
+    role: ChampionRole
     capabilities: set[CompositionCapability]
+    source: KnowledgeSource
 
 
 def find_composition_debt(
