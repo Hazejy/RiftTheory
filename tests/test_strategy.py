@@ -19,6 +19,7 @@ class StrategicColorTests(unittest.TestCase):
         self.assertEqual(StrategicColor.BLACK.value, "black")
         self.assertEqual(StrategicColor.RED.value, "red")
         self.assertEqual(StrategicColor.GREEN.value, "green")
+        self.assertEqual(StrategicColor.COLORLESS.value, "colorless")
 
     def test_unknown_strategic_color_is_rejected(self) -> None:
         with self.assertRaises(ValueError):
@@ -28,17 +29,16 @@ class StrategicColorTests(unittest.TestCase):
 class StrategicIdentityTests(unittest.TestCase):
     """Verify that strategic identities remain explainable."""
 
-    def test_identity_can_contain_multiple_colors(self) -> None:
+    def test_identity_can_contain_main_and_off_colors(self) -> None:
         identity = StrategicIdentity(
-            colors={StrategicColor.BLUE, StrategicColor.WHITE},
+            main_colors={StrategicColor.BLUE},
+            off_colors={StrategicColor.WHITE},
             reasoning="Example reasoning for a flexible control identity.",
             source_name="example_source",
         )
 
-        self.assertEqual(
-            identity.colors,
-            {StrategicColor.BLUE, StrategicColor.WHITE},
-        )
+        self.assertEqual(identity.main_colors, {StrategicColor.BLUE})
+        self.assertEqual(identity.off_colors, {StrategicColor.WHITE})
         self.assertEqual(
             identity.reasoning,
             "Example reasoning for a flexible control identity.",
@@ -51,8 +51,33 @@ class StrategicIdentityTests(unittest.TestCase):
             "strategic identity reasoning is required",
         ):
             StrategicIdentity(
-                colors={StrategicColor.BLUE},
+                main_colors={StrategicColor.BLUE},
+                off_colors=set(),
                 reasoning=" ",
+                source_name="example_source",
+            )
+
+    def test_identity_without_main_color_is_rejected(self) -> None:
+        with self.assertRaisesRegex(
+            ValueError,
+            "at least one main strategic color is required",
+        ):
+            StrategicIdentity(
+                main_colors=set(),
+                off_colors={StrategicColor.WHITE},
+                reasoning="Example reasoning.",
+                source_name="example_source",
+            )
+
+    def test_color_cannot_be_both_main_and_off_color(self) -> None:
+        with self.assertRaisesRegex(
+            ValueError,
+            "a strategic color cannot be both main and off color",
+        ):
+            StrategicIdentity(
+                main_colors={StrategicColor.BLUE},
+                off_colors={StrategicColor.BLUE},
+                reasoning="Example reasoning.",
                 source_name="example_source",
             )
 
@@ -62,7 +87,8 @@ class ChampionStrategicProfileTests(unittest.TestCase):
 
     def test_identity_is_attached_to_champion_and_role(self) -> None:
         identity = StrategicIdentity(
-            colors={StrategicColor.BLUE, StrategicColor.WHITE},
+            main_colors={StrategicColor.BLUE},
+            off_colors={StrategicColor.WHITE},
             reasoning="Example reasoning for a flexible control identity.",
             source_name="example_source",
         )
