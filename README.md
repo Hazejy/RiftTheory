@@ -41,11 +41,17 @@ Example Control Champion (mid):
   Off colors: white
   Reasoning: Fictional format example: control and allied power timings define the main plan. A supportive build offers a flexible alternative; it is not assumed to be active in every draft.
   Source: fictional_example_not_champion_analysis
+  Patch: unknown
+  Review status: unreviewed
+  Source URL: not provided
 Example Theme Champion (support):
   Main colors: colorless
   Off colors: none
   Reasoning: Fictional format example: a dedicated theme requires the composition to be built around it. Colorless does not mean an unknown classification.
   Source: fictional_example_not_champion_analysis
+  Patch: unknown
+  Review status: unreviewed
+  Source URL: not provided
 ```
 
 ## Test

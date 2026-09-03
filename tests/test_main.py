@@ -36,13 +36,19 @@ class MainTests(unittest.TestCase):
             "timings define the main plan. A supportive build offers a flexible "
             "alternative; it is not assumed to be active in every draft.\n"
             "  Source: fictional_example_not_champion_analysis\n"
+            "  Patch: unknown\n"
+            "  Review status: unreviewed\n"
+            "  Source URL: not provided\n"
             "Example Theme Champion (support):\n"
             "  Main colors: colorless\n"
             "  Off colors: none\n"
             "  Reasoning: Fictional format example: a dedicated theme requires "
             "the composition to be built around it. Colorless does not mean "
             "an unknown classification.\n"
-            "  Source: fictional_example_not_champion_analysis\n",
+            "  Source: fictional_example_not_champion_analysis\n"
+            "  Patch: unknown\n"
+            "  Review status: unreviewed\n"
+            "  Source URL: not provided\n",
         )
 
 

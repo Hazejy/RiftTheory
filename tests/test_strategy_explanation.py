@@ -32,6 +32,9 @@ class StrategicExplanationTests(unittest.TestCase):
                 "  Off colors: black, white",
                 "  Reasoning: An alternative plan requires a different build.",
                 "  Source: fictional_example",
+                "  Patch: unknown",
+                "  Review status: unreviewed",
+                "  Source URL: not provided",
             ],
         )
 

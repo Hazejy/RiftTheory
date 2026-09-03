@@ -2,6 +2,9 @@
   {
     "champion_name": "Example Control Champion",
     "role": "mid",
+    "patch": null,
+    "review_status": "unreviewed",
+    "source_url": null,
     "identity": {
       "main_colors": ["blue", "green"],
       "off_colors": ["white"],
@@ -12,6 +15,9 @@
   {
     "champion_name": "Example Theme Champion",
     "role": "support",
+    "patch": null,
+    "review_status": "unreviewed",
+    "source_url": null,
     "identity": {
       "main_colors": ["colorless"],
       "off_colors": [],

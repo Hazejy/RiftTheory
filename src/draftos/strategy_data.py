@@ -4,7 +4,12 @@ import json
 from pathlib import Path
 
 from .composition import ChampionRole
-from .strategy import ChampionStrategicProfile, StrategicColor, StrategicIdentity
+from .strategy import (
+    ChampionStrategicProfile,
+    ReviewStatus,
+    StrategicColor,
+    StrategicIdentity,
+)
 
 
 def _required_text(data: dict, field: str) -> str:
@@ -40,10 +45,16 @@ def load_strategic_profiles(file_path: Path) -> list[ChampionStrategicProfile]:
             identity = profile.get("identity")
             if not isinstance(identity, dict):
                 raise ValueError("identity must be a JSON object")
+            for field in ("patch", "review_status", "source_url"):
+                if field not in profile:
+                    raise ValueError(f"{field} is required (use null for unknown metadata)")
             profiles.append(
                 ChampionStrategicProfile(
                     champion_name=_required_text(profile, "champion_name"),
                     role=ChampionRole(_required_text(profile, "role")),
+                    patch=profile["patch"],
+                    review_status=ReviewStatus(_required_text(profile, "review_status")),
+                    source_url=profile["source_url"],
                     identity=StrategicIdentity(
                         main_colors=_color_set(identity, "main_colors"),
                         off_colors=_color_set(identity, "off_colors"),
