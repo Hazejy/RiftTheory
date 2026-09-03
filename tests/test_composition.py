@@ -2,7 +2,11 @@
 
 import unittest
 
-from src.draftos.composition import ChampionProfile, CompositionCapability
+from src.draftos.composition import (
+    ChampionProfile,
+    CompositionCapability,
+    find_composition_debt,
+)
 
 
 class CompositionCapabilityTests(unittest.TestCase):
@@ -38,6 +42,54 @@ class ChampionProfileTests(unittest.TestCase):
                 CompositionCapability.FRONTLINE,
             },
         )
+
+
+class CompositionDebtTests(unittest.TestCase):
+    """Verify composition debt calculations."""
+
+    def test_missing_capability_is_returned_as_debt(self) -> None:
+        champions = [
+            ChampionProfile(
+                name="Example Vanguard",
+                capabilities={
+                    CompositionCapability.ENGAGE,
+                    CompositionCapability.FRONTLINE,
+                },
+            )
+        ]
+        required_capabilities = {
+            CompositionCapability.ENGAGE,
+            CompositionCapability.FRONTLINE,
+            CompositionCapability.WAVE_CLEAR,
+        }
+
+        debt = find_composition_debt(champions, required_capabilities)
+
+        self.assertEqual(debt, {CompositionCapability.WAVE_CLEAR})
+
+    def test_complete_composition_has_no_debt(self) -> None:
+        champions = [
+            ChampionProfile(
+                name="Example Vanguard",
+                capabilities={
+                    CompositionCapability.ENGAGE,
+                    CompositionCapability.FRONTLINE,
+                },
+            ),
+            ChampionProfile(
+                name="Example Mage",
+                capabilities={CompositionCapability.WAVE_CLEAR},
+            ),
+        ]
+        required_capabilities = {
+            CompositionCapability.ENGAGE,
+            CompositionCapability.FRONTLINE,
+            CompositionCapability.WAVE_CLEAR,
+        }
+
+        debt = find_composition_debt(champions, required_capabilities)
+
+        self.assertEqual(debt, set())
 
 
 if __name__ == "__main__":

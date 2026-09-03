@@ -18,3 +18,16 @@ class ChampionProfile:
 
     name: str
     capabilities: set[CompositionCapability]
+
+
+def find_composition_debt(
+    champions: list[ChampionProfile],
+    required_capabilities: set[CompositionCapability],
+) -> set[CompositionCapability]:
+    """Return the required capabilities not provided by the champions."""
+    provided_capabilities: set[CompositionCapability] = set()
+
+    for champion in champions:
+        provided_capabilities.update(champion.capabilities)
+
+    return required_capabilities - provided_capabilities
