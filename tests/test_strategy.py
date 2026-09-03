@@ -2,7 +2,7 @@
 
 import unittest
 
-from src.draftos.strategy import StrategicColor
+from src.draftos.strategy import StrategicColor, StrategicIdentity
 
 
 class StrategicColorTests(unittest.TestCase):
@@ -20,6 +20,37 @@ class StrategicColorTests(unittest.TestCase):
             StrategicColor("yellow")
 
 
+class StrategicIdentityTests(unittest.TestCase):
+    """Verify that strategic identities remain explainable."""
+
+    def test_identity_can_contain_multiple_colors(self) -> None:
+        identity = StrategicIdentity(
+            colors={StrategicColor.BLUE, StrategicColor.WHITE},
+            reasoning="Example reasoning for a flexible control identity.",
+            source_name="example_source",
+        )
+
+        self.assertEqual(
+            identity.colors,
+            {StrategicColor.BLUE, StrategicColor.WHITE},
+        )
+        self.assertEqual(
+            identity.reasoning,
+            "Example reasoning for a flexible control identity.",
+        )
+        self.assertEqual(identity.source_name, "example_source")
+
+    def test_identity_without_reasoning_is_rejected(self) -> None:
+        with self.assertRaisesRegex(
+            ValueError,
+            "strategic identity reasoning is required",
+        ):
+            StrategicIdentity(
+                colors={StrategicColor.BLUE},
+                reasoning=" ",
+                source_name="example_source",
+            )
+
+
 if __name__ == "__main__":
     unittest.main()
-
