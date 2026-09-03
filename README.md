@@ -25,7 +25,10 @@ python -m src.draftos
 Expected output:
 
 ```text
-DraftOS foundation is ready.
+Composition analysis:
+- engage: provided by Example Vanguard.
+- frontline: provided by Example Vanguard.
+- wave clear: missing.
 ```
 
 ## Test

@@ -1,11 +1,33 @@
-"""Command-line entry point for the DraftOS foundation."""
+"""Command-line entry point for DraftOS."""
+
+from .composition import (
+    ChampionProfile,
+    CompositionCapability,
+    explain_composition,
+)
 
 
 def main() -> None:
-    """Confirm that the local DraftOS Python package can run."""
-    print("DraftOS foundation is ready.")
+    """Run a small, explainable composition analysis."""
+    champions = [
+        ChampionProfile(
+            name="Example Vanguard",
+            capabilities={
+                CompositionCapability.ENGAGE,
+                CompositionCapability.FRONTLINE,
+            },
+        )
+    ]
+    required_capabilities = {
+        CompositionCapability.ENGAGE,
+        CompositionCapability.FRONTLINE,
+        CompositionCapability.WAVE_CLEAR,
+    }
+
+    print("Composition analysis:")
+    for explanation in explain_composition(champions, required_capabilities):
+        print(f"- {explanation}")
 
 
 if __name__ == "__main__":
     main()
-
