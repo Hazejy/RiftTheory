@@ -1,0 +1,33 @@
+[
+  {
+    "champion_name": "Example Champion",
+    "role": "top",
+    "patch": "example_patch",
+    "region": "global",
+    "rank_bracket": "example_rank",
+    "queue": "ranked_solo",
+    "games": 800,
+    "source_name": "example_source"
+  },
+  {
+    "champion_name": "Example Champion",
+    "role": "jungle",
+    "patch": "example_patch",
+    "region": "global",
+    "rank_bracket": "example_rank",
+    "queue": "ranked_solo",
+    "games": 150,
+    "source_name": "example_source"
+  },
+  {
+    "champion_name": "Example Champion",
+    "role": "mid",
+    "patch": "example_patch",
+    "region": "global",
+    "rank_bracket": "example_rank",
+    "queue": "ranked_solo",
+    "games": 50,
+    "source_name": "example_source"
+  }
+]
+
