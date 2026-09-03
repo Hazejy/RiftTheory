@@ -7,7 +7,7 @@ from pathlib import Path
 from .champion_analysis import analyze_champions, explain_champion_assessment
 from .champion_data import load_champion_profiles
 from .composition import (
-    CompositionCapability,
+    BASELINE_CAPABILITIES,
     analyze_composition,
     explain_composition,
 )
@@ -52,11 +52,7 @@ def main(argv: list[str] | None = None) -> None:
         champions = select_champions(args.champion or ["Malphite:top", "Anivia:mid"], catalog)
     except ValueError as error:
         parser.error(str(error))
-    required_capabilities = {
-        CompositionCapability.ENGAGE,
-        CompositionCapability.FRONTLINE,
-        CompositionCapability.WAVE_CLEAR,
-    }
+    required_capabilities = set(BASELINE_CAPABILITIES)
 
     try:
         strategic_profiles = load_strategic_profiles(

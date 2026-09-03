@@ -7,12 +7,23 @@ evidence-based reviews, and optimized practice.
 ## Current status
 
 Phase 1 builds the first explainable Composition Debt baseline. The initial
-domain vocabulary covers engage, frontline, and wave clear. Riot API
-integration, web interfaces, and machine learning remain out of scope.
+domain vocabulary covers engage, frontline, and wave clear. A local web interface
+now supports role-specific selections and explainable analysis. Riot integration,
+desktop packaging and machine learning are not implemented yet.
+
+## Local application
+
+Start the built application with `start-draftos.cmd` and open
+<http://127.0.0.1:8000>. The server must stay running while using the app.
+
+For installation, startup, testing and current limits, see
+[the local application guide](docs/local-app.md).
 
 ## Requirements
 
 - Python 3.11 or newer
+- Web application: dependencies from `requirements.txt` in `.venv`
+- Frontend build: Node.js and npm (verified with Node 24.19.0)
 
 ## Run
 
@@ -99,13 +110,15 @@ See [the report contract](docs/analysis-report.md) for fields and limitations.
 The product targets both a browser-based interface and an installable desktop
 application sharing the analysis core and, where practical, the same UI.
 The CLI is a development interface, not the intended final user experience.
-The next interface milestone is a local visual champion-selection and analysis
-screen. Desktop packaging follows a working UI rather than a separate rewrite.
+A local visual champion-selection and analysis screen is now implemented.
+Desktop packaging is a later milestone rather than a separate analysis rewrite.
 
 ## Test
 
 ```powershell
-python -m unittest discover -s tests -v
+.\.venv\Scripts\python.exe -m unittest discover -s tests -v
+npm.cmd --prefix web test
+npm.cmd --prefix web run build
 ```
 
 ## Design notes
