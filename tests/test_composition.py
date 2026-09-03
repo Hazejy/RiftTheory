@@ -2,7 +2,7 @@
 
 import unittest
 
-from src.draftos.composition import CompositionCapability
+from src.draftos.composition import ChampionProfile, CompositionCapability
 
 
 class CompositionCapabilityTests(unittest.TestCase):
@@ -18,6 +18,27 @@ class CompositionCapabilityTests(unittest.TestCase):
             CompositionCapability("mobility")
 
 
+class ChampionProfileTests(unittest.TestCase):
+    """Verify that champions can provide composition capabilities."""
+
+    def test_champion_can_provide_multiple_capabilities(self) -> None:
+        champion = ChampionProfile(
+            name="Example Vanguard",
+            capabilities={
+                CompositionCapability.ENGAGE,
+                CompositionCapability.FRONTLINE,
+            },
+        )
+
+        self.assertEqual(champion.name, "Example Vanguard")
+        self.assertEqual(
+            champion.capabilities,
+            {
+                CompositionCapability.ENGAGE,
+                CompositionCapability.FRONTLINE,
+            },
+        )
+
+
 if __name__ == "__main__":
     unittest.main()
-
