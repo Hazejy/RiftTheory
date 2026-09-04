@@ -5,6 +5,7 @@ import { useRiftTheoryKnowledge } from "../../contexts/RiftTheoryKnowledgeContex
 import { useUser } from "../../contexts/UserContext";
 import { championName, useI18n } from "../../utils/i18n";
 import { KnowledgeStrategicProfile } from "../../types/RiftTheoryKnowledge";
+import ObservedRoleBadges from "./ObservedRoleBadges";
 
 const roleNames = ["top", "jungle", "mid", "bot", "support"];
 const profileColors = (
@@ -44,6 +45,7 @@ export default function RiftTheoryStrategy() {
                             championNameFor(championKey, config.language) ??
                             (champion ? championName(champion, config) : name),
                         role,
+                        knowledgeChampion,
                         strategy: knowledgeChampion?.strategicProfiles.find(
                             (profile) => profile.role === role,
                         ),
@@ -107,6 +109,17 @@ export default function RiftTheoryStrategy() {
                                                         : t("unresolved")}
                                                 </span>
                                             </h4>
+                                            <div class="my-3 space-y-2">
+                                                <p class="text-[11px] uppercase tracking-wider text-neutral-500">
+                                                    {t("observedRoles")}
+                                                </p>
+                                                <ObservedRoleBadges
+                                                    champion={
+                                                        pick.knowledgeChampion
+                                                    }
+                                                    selectedRole={pick.role}
+                                                />
+                                            </div>
                                             <p class="text-xs text-neutral-400 my-3">
                                                 {t("capabilities")}:{" "}
                                                 {pick.capabilities.length

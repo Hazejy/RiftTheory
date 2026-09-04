@@ -14,6 +14,8 @@ import {
     RIFT_THEORY_COLORS,
     RiftTheoryColor,
 } from "../../types/RiftTheoryKnowledge";
+import { latestRoleEvidence } from "../../utils/flexEvidence";
+import ObservedRoleBadges from "./ObservedRoleBadges";
 
 type ColorRow = {
     champion: ChampionData;
@@ -208,6 +210,7 @@ export default function ChampColors() {
     const [role, setRole] = createSignal("");
     const [color, setColor] = createSignal<"" | RiftTheoryColor>("");
     const [coverage, setCoverage] = createSignal("");
+    const [flexSignal, setFlexSignal] = createSignal("");
     const pickBlockReason = (key: string) => {
         if (
             [...allyTeam, ...opponentTeam].some(
@@ -257,6 +260,13 @@ export default function ChampColors() {
                 ({ knowledge }) => knowledge.strategicProfiles.length > 0,
             ).length,
     );
+    const flexCandidateCount = createMemo(
+        () =>
+            champions().filter(
+                ({ knowledge }) =>
+                    latestRoleEvidence(knowledge).isFlexCandidate,
+            ).length,
+    );
     const filtered = createMemo(() => {
         const query = normalizeChampionSearch(search());
         const selectedColor = color();
@@ -280,6 +290,14 @@ export default function ChampColors() {
                 return false;
             if (coverage() === "profiled" && !row.profile) return false;
             if (coverage() === "missing" && row.profile) return false;
+            const flexEvidence = latestRoleEvidence(row.knowledge);
+            if (flexSignal() === "established" && !flexEvidence.isFlexCandidate)
+                return false;
+            if (
+                flexSignal() === "emerging" &&
+                !flexEvidence.roles.some((entry) => entry.tier === "emerging")
+            )
+                return false;
             return true;
         });
     });
@@ -288,6 +306,7 @@ export default function ChampColors() {
         setRole("");
         setColor("");
         setCoverage("");
+        setFlexSignal("");
     };
     const filterClass =
         "rounded-lg border border-neutral-700 bg-primary px-3 py-2 text-sm text-neutral-200 focus:outline-2 focus:outline-accent";
@@ -307,6 +326,14 @@ export default function ChampColors() {
             </header>
 
             <ColorGuide />
+            <details class="rounded-xl border border-neutral-700 bg-primary p-4 text-sm">
+                <summary class="cursor-pointer font-medium text-accent">
+                    {t("flexEvidence")}
+                </summary>
+                <p class="mt-3 max-w-4xl text-neutral-400 leading-relaxed">
+                    {t("flexEvidenceHelp")}
+                </p>
+            </details>
             <p class="text-xs text-neutral-400 leading-relaxed">
                 {t("colorsPickHelp")}
             </p>
@@ -328,7 +355,7 @@ export default function ChampColors() {
                 </div>
             </Show>
 
-            <div class="grid grid-cols-3 gap-2 sm:gap-3">
+            <div class="grid grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-3">
                 <For
                     each={[
                         { label: t("champions"), count: champions().length },
@@ -336,6 +363,10 @@ export default function ChampColors() {
                         {
                             label: t("noProfile"),
                             count: champions().length - profiledCount(),
+                        },
+                        {
+                            label: t("observedFlexCandidates"),
+                            count: flexCandidateCount(),
                         },
                     ]}
                 >
@@ -377,6 +408,18 @@ export default function ChampColors() {
                 </select>
                 <select
                     class={filterClass}
+                    aria-label={t("flexEvidence")}
+                    value={flexSignal()}
+                    onChange={(event) =>
+                        setFlexSignal(event.currentTarget.value)
+                    }
+                >
+                    <option value="">{t("allFlexSignals")}</option>
+                    <option value="established">{t("establishedFlex")}</option>
+                    <option value="emerging">{t("emergingFlex")}</option>
+                </select>
+                <select
+                    class={filterClass}
                     aria-label={t("allColors")}
                     value={color()}
                     onChange={(event) =>
@@ -406,7 +449,13 @@ export default function ChampColors() {
                     type="button"
                     class="text-xs text-accent px-2 underline disabled:opacity-40"
                     onClick={clearFilters}
-                    disabled={!search() && !role() && !color() && !coverage()}
+                    disabled={
+                        !search() &&
+                        !role() &&
+                        !color() &&
+                        !coverage() &&
+                        !flexSignal()
+                    }
                 >
                     {t("clearFilters")}
                 </button>
@@ -424,7 +473,7 @@ export default function ChampColors() {
                 </p>
             </div>
             <div class="rounded-xl border border-neutral-700 overflow-auto max-h-[65vh] bg-primary">
-                <table class="w-full min-w-[680px] border-collapse text-sm">
+                <table class="w-full min-w-[900px] border-collapse text-sm">
                     <caption class="sr-only">{t("champColors")}</caption>
                     <thead class="sticky top-0 z-10 bg-panel-inset text-neutral-400 text-xs">
                         <tr>
@@ -433,6 +482,7 @@ export default function ChampColors() {
                                     [
                                         "champion",
                                         "role",
+                                        "observedRoles",
                                         "mainColors",
                                         "offColors",
                                         "review",
@@ -457,7 +507,7 @@ export default function ChampColors() {
                             fallback={
                                 <tr>
                                     <td
-                                        colSpan={6}
+                                        colSpan={7}
                                         class="p-8 text-center text-neutral-400"
                                     >
                                         {t("noResults")}
@@ -511,6 +561,12 @@ export default function ChampColors() {
                                                 —
                                             </span>
                                         )}
+                                    </td>
+                                    <td class="px-4 py-3">
+                                        <ObservedRoleBadges
+                                            champion={row.knowledge}
+                                            selectedRole={row.profile?.role}
+                                        />
                                     </td>
                                     <td class="px-4 py-3">
                                         <Show
