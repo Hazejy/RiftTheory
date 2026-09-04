@@ -5,6 +5,7 @@ import { exportWebData } from "./export";
 import { getStatus } from "./status";
 import { DATABASE_PATH } from "./paths";
 import { checkPatchStatus } from "./patch";
+import { importObservedRoles } from "./observedRoles";
 
 const command = process.argv[2] ?? "status";
 const offline = process.argv.includes("--offline");
@@ -48,6 +49,18 @@ try {
       console.log(`Imported ${records} curated profile records`);
       break;
     }
+    case "import-roles": {
+      const inputPath = process.argv[3];
+      if (!inputPath)
+        throw new Error(
+          "import-roles requires a snapshot path, for example: bun run data:import:roles -- ../data/roles.json",
+        );
+      const result = await importObservedRoles(database, inputPath);
+      console.log(
+        `Imported ${result.records} role observations for ${result.context.patch} from ${result.source}`,
+      );
+      break;
+    }
     case "export": {
       const result = await exportWebData(database);
       console.log(
@@ -77,7 +90,7 @@ try {
       break;
     default:
       throw new Error(
-        `Unknown command: ${command}. Use init, check-patch, refresh, sync-riot, import-curated, export, build, status or verify.`,
+        `Unknown command: ${command}. Use init, check-patch, refresh, sync-riot, import-curated, import-roles, export, build, status or verify.`,
       );
   }
 } catch (error) {

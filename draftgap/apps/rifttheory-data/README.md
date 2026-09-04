@@ -14,6 +14,7 @@ bun run data:build
 bun run data:build:offline
 bun run data:check
 bun run data:refresh
+bun run data:import:roles -- C:\path\to\role-snapshot.json
 bun run data:status
 ```
 
@@ -28,6 +29,22 @@ the export only when Riot has published a new version. A refresh marks champions
 missing from the new roster as inactive and rejects incomplete localization
 snapshots. The final JSON replaces the previous export atomically.
 
+## Observed role snapshots
+
+`data:import:roles` accepts provider-neutral JSON validated against
+`schemas/role-observations.schema.json`. Every file describes exactly one data
+context and records its provider, patch, region, rank bracket, queue, collection
+time, games and optional wins/pick rate. Champions may be matched by their Riot
+key or a known localized name. Unknown champions and duplicate champion-role
+rows are rejected instead of being silently created.
+
+Importing the same source and context replaces that complete snapshot, making
+retries idempotent. Run `bun run data:build:offline` afterward to publish the
+database state to the frontend. The export derives `role_share` and
+`sample_total` per champion and context; it deliberately does not label a role
+as a valid flex pick yet. That policy will be calibrated separately rather than
+presented as source data.
+
 Runtime database:
 
 `data/runtime/rifttheory.sqlite` (local and gitignored)
@@ -41,6 +58,6 @@ are never imported. Re-running any importer is idempotent; import runs and
 failures are recorded. Strategic `unknown` patches remain unknown instead of
 being silently assigned to the current patch.
 
-The observed-statistics and interaction-rule tables are intentionally ready but
-empty. Adding a provider requires a documented source, allowed access method,
-sample context and independent validation before it becomes production data.
+The interaction-rule table is intentionally ready but empty. Adding an observed
+data provider still requires a documented source, allowed access method, sample
+context and independent validation before its snapshots become production data.

@@ -58,6 +58,8 @@ export type KnowledgeRoleObservation = {
     pick_rate: number | null;
     observed_at: string;
     source_key: string;
+    sample_total: number;
+    role_share: number;
 };
 
 export type KnowledgeChampion = {

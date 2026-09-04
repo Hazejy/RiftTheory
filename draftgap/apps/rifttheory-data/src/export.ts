@@ -71,8 +71,14 @@ export async function exportWebData(
     .query<Record<string, string | number | null>, []>(
       `SELECT
             ro.champion_id, ro.role, ro.patch_version, ro.region, ro.rank_bracket,
-            ro.queue, ro.games, ro.wins, ro.pick_rate, ro.observed_at, s.source_key
+            ro.queue, ro.games, ro.wins, ro.pick_rate, ro.observed_at, s.source_key,
+            SUM(ro.games) OVER snapshot AS sample_total,
+            CAST(ro.games AS REAL) / SUM(ro.games) OVER snapshot AS role_share
             FROM role_observations ro JOIN sources s ON s.id = ro.source_id
+            WINDOW snapshot AS (
+              PARTITION BY ro.champion_id, ro.patch_version, ro.region,
+                           ro.rank_bracket, ro.queue, ro.source_id
+            )
             ORDER BY ro.champion_id, ro.role, ro.patch_version`,
     )
     .all();

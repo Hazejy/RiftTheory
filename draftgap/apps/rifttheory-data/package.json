@@ -11,6 +11,7 @@
     "refresh": "bun run src/cli.ts refresh",
     "sync:riot": "bun run src/cli.ts sync-riot",
     "import:curated": "bun run src/cli.ts import-curated",
+    "import:roles": "bun run src/cli.ts import-roles",
     "export": "bun run src/cli.ts export",
     "status": "bun run src/cli.ts status",
     "verify": "bun run src/cli.ts verify",

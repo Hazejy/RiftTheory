@@ -25,6 +25,21 @@ export function getStatus(database: Database) {
     capabilities: count("capability_profiles"),
     strategicProfiles: count("strategic_profiles"),
     roleObservations: count("role_observations"),
+    roleObservationContexts: database
+      .query<{ count: number }, []>(
+        `SELECT COUNT(*) AS count FROM (
+          SELECT DISTINCT patch_version, region, rank_bracket, queue, source_id
+          FROM role_observations
+        )`,
+      )
+      .get()!.count,
+    latestObservedPatch:
+      database
+        .query<{ patch_version: string }, []>(
+          `SELECT patch_version FROM role_observations
+           ORDER BY observed_at DESC LIMIT 1`,
+        )
+        .get()?.patch_version ?? null,
     interactionRules: count("interaction_rules"),
     sources: count("sources"),
     failedImports: database
