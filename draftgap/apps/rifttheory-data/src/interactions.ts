@@ -14,6 +14,7 @@ const SOURCE_KINDS = new Set([
 ]);
 const COMPARISONS = new Set(["subject_greater", "both_at_least"]);
 const SEVERITIES = new Set(["note", "warning", "strong"]);
+const IMPACTS = new Set(["favorable", "unfavorable", "informational"]);
 const PATCH_PATTERN = /^\d+\.\d+(?:\.\d+)?$/;
 const KEY_PATTERN = /^[a-z][a-z0-9_]{2,79}$/;
 
@@ -53,6 +54,7 @@ type InteractionRuleInput = {
   minimumDifference: number;
   relation: string;
   severity: string;
+  subjectImpact: string;
   condition: string;
   effect: string;
   patch: string | null;
@@ -188,7 +190,7 @@ export async function importInteractionEvidenceFile(
   if (!raw || typeof raw !== "object")
     throw new Error("Interaction evidence input must be a JSON object");
   const input = raw as InteractionEvidenceFile;
-  if (input.schemaVersion !== 1)
+  if (input.schemaVersion !== 2)
     throw new Error("Unsupported interaction evidence schemaVersion");
   if (!Array.isArray(input.sources) || !input.sources.length)
     throw new Error("sources must contain at least one record");
@@ -328,6 +330,11 @@ export async function importInteractionEvidenceFile(
         minimumDifference: difference,
         relation: requireKey(rule?.relation, `${prefix}.relation`),
         severity: requireEnum(rule?.severity, `${prefix}.severity`, SEVERITIES),
+        subjectImpact: requireEnum(
+          rule?.subjectImpact,
+          `${prefix}.subjectImpact`,
+          IMPACTS,
+        ),
         condition: requireString(rule?.condition, `${prefix}.condition`),
         effect: requireString(rule?.effect, `${prefix}.effect`),
         patch,
@@ -421,8 +428,9 @@ export async function importInteractionEvidenceFile(
           .query(
             `INSERT INTO interaction_rule_predicates
              (interaction_rule_id, subject_trait_key, object_trait_key, comparison,
-              subject_min_level, object_min_level, minimum_difference, severity)
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+              subject_min_level, object_min_level, minimum_difference, severity,
+              subject_impact)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
           )
           .run(
             interactionRuleId,
@@ -433,6 +441,7 @@ export async function importInteractionEvidenceFile(
             rule.objectMinimum,
             rule.minimumDifference,
             rule.severity,
+            rule.subjectImpact,
           );
         records += 1;
       }

@@ -5,10 +5,32 @@ import { useDataset } from "./DatasetContext";
 import { useDraft } from "./DraftContext";
 import { Team } from "@draftgap/core/src/models/Team";
 import { Role } from "@draftgap/core/src/models/Role";
+import {
+    assessSuggestionEvidence,
+    SuggestionEvidence,
+} from "@draftgap/core/src/draft/suggestion-evidence";
+import { useRiftTheoryKnowledge } from "./RiftTheoryKnowledgeContext";
+import {
+    suggestionEvidenceKey,
+    toInteractionRule,
+    toSuggestionEvidenceChampion,
+} from "../utils/interactionEvidence";
+import { latestRoleEvidence } from "../utils/flexEvidence";
+
+export type RiftTheorySuggestionEvidence = SuggestionEvidence & {
+    observedRole:
+        | {
+              tier: "primary" | "established" | "emerging";
+              games: number;
+              roleShare: number;
+          }
+        | undefined;
+};
 
 export function createDraftSuggestionsContext() {
     const { isLoaded, dataset, dataset30Days } = useDataset();
     const { selection, allyTeam, opponentTeam } = useDraft();
+    const { knowledge, championForKey } = useRiftTheoryKnowledge();
     const { draftAnalysisConfig, allyTeamComp, opponentTeamComp } =
         useDraftAnalysis();
 
@@ -48,7 +70,96 @@ export function createDraftSuggestionsContext() {
         );
     });
 
-    return { allySuggestions, opponentSuggestions };
+    const evidenceMap = (
+        suggestions: ReturnType<typeof allySuggestions>,
+        team: Team,
+        composition: Map<Role, string>,
+        enemy: Map<Role, string>,
+    ) => {
+        const candidateTeam = team === "ally" ? "blue" : "red";
+        const enemyTeam = team === "ally" ? "red" : "blue";
+        const allies = [...composition].map(([role, championKey]) =>
+            toSuggestionEvidenceChampion(
+                championKey,
+                role,
+                candidateTeam,
+                championForKey(championKey),
+            ),
+        );
+        const enemies = [...enemy].map(([role, championKey]) =>
+            toSuggestionEvidenceChampion(
+                championKey,
+                role,
+                enemyTeam,
+                championForKey(championKey),
+            ),
+        );
+        const rules = (knowledge()?.interactionRules ?? []).map(
+            toInteractionRule,
+        );
+        return new Map(
+            suggestions.map((suggestion) => {
+                const champion = championForKey(suggestion.championKey);
+                const candidate = toSuggestionEvidenceChampion(
+                    suggestion.championKey,
+                    suggestion.role,
+                    candidateTeam,
+                    champion,
+                );
+                const roleName = candidate.role;
+                const observed = latestRoleEvidence(champion).roles.find(
+                    (role) => role.role === roleName,
+                );
+                const observedRole =
+                    observed && observed.tier !== "insufficient"
+                        ? {
+                              tier: observed.tier,
+                              games: observed.games,
+                              roleShare: observed.roleShare,
+                          }
+                        : undefined;
+                return [
+                    suggestionEvidenceKey(
+                        suggestion.championKey,
+                        suggestion.role,
+                    ),
+                    {
+                        ...assessSuggestionEvidence(
+                            candidate,
+                            allies,
+                            enemies,
+                            rules,
+                        ),
+                        observedRole,
+                    } satisfies RiftTheorySuggestionEvidence,
+                ] as const;
+            }),
+        );
+    };
+
+    const allySuggestionEvidence = createMemo(() =>
+        evidenceMap(
+            allySuggestions(),
+            "ally",
+            suggestionTeam("ally", allyTeamComp()),
+            opponentTeamComp(),
+        ),
+    );
+    const opponentSuggestionEvidence = createMemo(() =>
+        evidenceMap(
+            opponentSuggestions(),
+            "opponent",
+            suggestionTeam("opponent", opponentTeamComp()),
+            allyTeamComp(),
+        ),
+    );
+
+    return {
+        allySuggestions,
+        opponentSuggestions,
+        allySuggestionEvidence,
+        opponentSuggestionEvidence,
+    };
 }
 
 export const DraftSuggestionsContext =

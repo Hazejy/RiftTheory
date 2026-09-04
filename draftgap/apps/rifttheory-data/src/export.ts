@@ -137,7 +137,7 @@ export async function exportWebData(
             ir.patch_version, ir.confidence, ir.review_status, s.source_key,
             p.subject_trait_key, p.object_trait_key, p.comparison,
             p.subject_min_level, p.object_min_level, p.minimum_difference,
-            p.severity
+            p.severity, p.subject_impact
             FROM interaction_rules ir
             JOIN interaction_rule_predicates p ON p.interaction_rule_id = ir.id
             JOIN sources s ON s.id = ir.source_id

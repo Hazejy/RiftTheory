@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "schemaVersion": 4,
-    "generatedAt": "2026-09-04T21:10:16.841Z",
+    "schemaVersion": 5,
+    "generatedAt": "2026-09-04T21:52:30.292Z",
     "latestPatch": {
       "version": "16.17.1",
       "discovered_at": "2026-09-04T18:41:58.403Z"
@@ -161,7 +161,8 @@
       "subject_min_level": 4,
       "object_min_level": 1,
       "minimum_difference": 2,
-      "severity": "warning"
+      "severity": "warning",
+      "subject_impact": "favorable"
     }
   ],
   "champions": [

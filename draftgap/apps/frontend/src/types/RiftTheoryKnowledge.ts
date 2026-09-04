@@ -1,3 +1,11 @@
+import type {
+    InteractionComparison,
+    InteractionImpact,
+    InteractionSeverity,
+    InteractionTrait,
+    TraitLevel,
+} from "@draftgap/core/src/interaction/interaction-engine";
+
 export const RIFT_THEORY_COLORS = [
     "white",
     "blue",
@@ -98,6 +106,7 @@ export type KnowledgeInteractionRule = {
     minimum_difference: number;
     relation: string;
     severity: InteractionSeverity;
+    subject_impact: InteractionImpact;
     condition_text: string;
     effect_text: string;
     patch_version: string;
@@ -154,9 +163,3 @@ export function isRiftTheoryKnowledge(
         )
     );
 }
-import type {
-    InteractionComparison,
-    InteractionSeverity,
-    InteractionTrait,
-    TraitLevel,
-} from "@draftgap/core/src/interaction/interaction-engine";

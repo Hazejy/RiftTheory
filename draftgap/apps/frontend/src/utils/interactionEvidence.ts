@@ -1,5 +1,13 @@
 import type { InteractionRule } from "@draftgap/core/src/interaction/interaction-engine";
-import type { KnowledgeInteractionRule } from "../types/RiftTheoryKnowledge";
+import type { InteractionTeam } from "@draftgap/core/src/interaction/interaction-engine";
+import type { Role } from "@draftgap/core/src/models/Role";
+import type { SuggestionEvidenceChampion } from "@draftgap/core/src/draft/suggestion-evidence";
+import type {
+    KnowledgeChampion,
+    KnowledgeInteractionRule,
+} from "../types/RiftTheoryKnowledge";
+
+const ROLE_NAMES = ["top", "jungle", "mid", "bot", "support"] as const;
 
 export function toInteractionRule(
     rule: KnowledgeInteractionRule,
@@ -14,6 +22,7 @@ export function toInteractionRule(
         minimumDifference: rule.minimum_difference,
         relation: rule.relation,
         severity: rule.severity,
+        subjectImpact: rule.subject_impact,
         condition: rule.condition_text,
         effect: rule.effect_text,
         patchVersion: rule.patch_version,
@@ -21,4 +30,33 @@ export function toInteractionRule(
         reviewStatus: rule.review_status,
         sourceKey: rule.source_key,
     };
+}
+
+export function toSuggestionEvidenceChampion(
+    championKey: string,
+    role: Role,
+    team: InteractionTeam,
+    champion?: KnowledgeChampion,
+): SuggestionEvidenceChampion {
+    const roleName = ROLE_NAMES[role];
+    return {
+        championKey,
+        championName: champion?.name ?? championKey,
+        role: roleName,
+        team,
+        capabilities: [
+            ...new Set(
+                (champion?.capabilities ?? [])
+                    .filter((capability) => capability.role === roleName)
+                    .map((capability) => capability.capability),
+            ),
+        ],
+        traits: (champion?.roleTraits ?? [])
+            .filter((trait) => trait.role === roleName)
+            .map((trait) => ({ trait: trait.trait, level: trait.level })),
+    };
+}
+
+export function suggestionEvidenceKey(championKey: string, role: Role) {
+    return `${championKey}:${role}`;
 }

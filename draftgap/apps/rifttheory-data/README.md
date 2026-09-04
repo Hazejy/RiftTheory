@@ -95,3 +95,9 @@ different concepts. The UI evaluates a rule only when both champions have
 assigned roles and matching assessed traits. No rule creates a counter label or
 win probability. Adding observed matchup data still requires a documented
 source, allowed access method, sample context and independent validation.
+
+Every rule also records `subjectImpact` as `favorable`, `unfavorable` or
+`informational`. The suggestion layer uses that explicit perspective rather than
+guessing from prose. Its Draft fit badges currently report observed role support,
+foundation capabilities filled and interaction evidence. They do not change the
+ordering of the inherited statistical suggestion list.

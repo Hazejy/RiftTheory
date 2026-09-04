@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "sources": [
     {
       "key": "rifttheory_anivia_official_kit_interpretation",
@@ -106,6 +106,7 @@
       "minimumDifference": 2,
       "relation": "constrains",
       "severity": "warning",
+      "subjectImpact": "favorable",
       "condition": "The ranged threat can contest the space from which the opposing champion must access the wave.",
       "effect": "Wave clear still exists, but safe access cannot be assumed. Check allied setup, fog, cooldowns, mana and positioning before treating it as reliable draft coverage.",
       "patch": null,

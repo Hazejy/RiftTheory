@@ -74,3 +74,8 @@ exercise the full data path for the distinction between having wave clear and
 being able to access the wave safely under long-range pressure. Their official
 Riot champion pages document the kits; RiftTheory owns and labels the derived
 trait levels and interaction rule as provisional interpretations.
+
+Interaction rules state the subject's impact explicitly so the same finding can
+be viewed correctly from either side of a suggestion. This avoids treating every
+matched rule as an advantage. The current suggestion UI presents these signals
+without combining them into an unsupported score.

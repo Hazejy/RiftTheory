@@ -19,6 +19,7 @@ import { RatingText } from "../common/RatingText";
 import { createMustSelectToast } from "../../utils/toast";
 import { useUser } from "../../contexts/UserContext";
 import { useDraftSuggestions } from "../../contexts/DraftSuggestionsContext";
+import type { RiftTheorySuggestionEvidence } from "../../contexts/DraftSuggestionsContext";
 import { useDataset } from "../../contexts/DatasetContext";
 import { useDraftFilters } from "../../contexts/DraftFiltersContext";
 import { Dialog } from "../common/Dialog";
@@ -29,6 +30,8 @@ import {
     normalizeChampionSearch,
     useI18n,
 } from "../../utils/i18n";
+import SuggestionEvidenceBadges from "../rifttheory/SuggestionEvidenceBadges";
+import { suggestionEvidenceKey } from "../../utils/interactionEvidence";
 
 export default function DraftTable() {
     const { t } = useI18n();
@@ -50,13 +53,22 @@ export default function DraftTable() {
         favouriteFilter,
         setFavouriteFilter,
     } = useDraftFilters();
-    const { allySuggestions, opponentSuggestions } = useDraftSuggestions();
+    const {
+        allySuggestions,
+        opponentSuggestions,
+        allySuggestionEvidence,
+        opponentSuggestionEvidence,
+    } = useDraftSuggestions();
     const { isFavourite, setFavourite, config } = useUser();
 
     const suggestions = () =>
         selection.team === "opponent"
             ? opponentSuggestions()
             : allySuggestions();
+    const suggestionEvidence = () =>
+        selection.team === "opponent"
+            ? opponentSuggestionEvidence()
+            : allySuggestionEvidence();
 
     const ownsChampion = (championKey: string) =>
         // If we don't have owned champions, we are not logged in, so we own all champions.
@@ -296,6 +308,31 @@ export default function DraftTable() {
                 ].name.localeCompare(
                     dataset()!.championData[b.getValue<string>(id)].name,
                 ),
+        },
+        {
+            id: "draftFit",
+            header: () => (
+                <span title={t("draftFitHelp")}>{t("draftFit")}</span>
+            ),
+            accessorFn: (suggestion) =>
+                suggestionEvidence().get(
+                    suggestionEvidenceKey(
+                        suggestion.championKey,
+                        suggestion.role,
+                    ),
+                ),
+            cell: (info) => (
+                <SuggestionEvidenceBadges
+                    evidence={info.getValue<
+                        RiftTheorySuggestionEvidence | undefined
+                    >()}
+                />
+            ),
+            enableSorting: false,
+            meta: {
+                headerClass: "w-1",
+                cellClass: "max-w-72",
+            },
         },
         ...(config.showAdvancedWinrates
             ? ([

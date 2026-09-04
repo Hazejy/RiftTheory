@@ -20,6 +20,7 @@ export type TraitLevel = 1 | 2 | 3 | 4 | 5;
 export type InteractionTeam = "blue" | "red";
 export type InteractionComparison = "subject_greater" | "both_at_least";
 export type InteractionSeverity = "note" | "warning" | "strong";
+export type InteractionImpact = "favorable" | "unfavorable" | "informational";
 
 export type ChampionTrait = {
     trait: InteractionTrait;
@@ -44,6 +45,7 @@ export type InteractionRule = {
     minimumDifference: number;
     relation: string;
     severity: InteractionSeverity;
+    subjectImpact: InteractionImpact;
     condition: string;
     effect: string;
     patchVersion: string;
