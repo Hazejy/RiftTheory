@@ -1,4 +1,5 @@
 import { createMemo, For, Show } from "solid-js";
+import { evaluateDraftInteractions } from "@draftgap/core/src/interaction/interaction-engine";
 import { useDraft } from "../../contexts/DraftContext";
 import { useDataset } from "../../contexts/DatasetContext";
 import { useRiftTheoryKnowledge } from "../../contexts/RiftTheoryKnowledgeContext";
@@ -6,6 +7,8 @@ import { useUser } from "../../contexts/UserContext";
 import { championName, useI18n } from "../../utils/i18n";
 import { KnowledgeStrategicProfile } from "../../types/RiftTheoryKnowledge";
 import ObservedRoleBadges from "./ObservedRoleBadges";
+import InteractionFindings from "./InteractionFindings";
+import { toInteractionRule } from "../../utils/interactionEvidence";
 
 const roleNames = ["top", "jungle", "mid", "bot", "support"];
 const profileColors = (
@@ -25,10 +28,11 @@ export default function RiftTheoryStrategy() {
         useRiftTheoryKnowledge();
     const teams = createMemo(() =>
         [
-            { name: t("ally"), picks: allyTeam },
-            { name: t("opponent"), picks: opponentTeam },
+            { name: t("ally"), team: "blue" as const, picks: allyTeam },
+            { name: t("opponent"), team: "red" as const, picks: opponentTeam },
         ].map((team) => ({
             name: team.name,
+            team: team.team,
             picks: team.picks
                 .filter((pick) => pick.championKey !== undefined)
                 .map((pick) => {
@@ -41,6 +45,7 @@ export default function RiftTheoryStrategy() {
                             ? undefined
                             : roleNames[pick.role];
                     return {
+                        championKey,
                         name:
                             championNameFor(championKey, config.language) ??
                             (champion ? championName(champion, config) : name),
@@ -53,9 +58,37 @@ export default function RiftTheoryStrategy() {
                             knowledgeChampion?.capabilities.filter(
                                 (profile) => profile.role === role,
                             ) ?? [],
+                        roleTraits:
+                            knowledgeChampion?.roleTraits.filter(
+                                (trait) => trait.role === role,
+                            ) ?? [],
                     };
                 }),
         })),
+    );
+    const interactionFindings = createMemo(() =>
+        evaluateDraftInteractions(
+            teams().flatMap((team) =>
+                team.picks
+                    .filter((pick) => pick.role !== undefined)
+                    .map((pick) => ({
+                        championKey: pick.championKey,
+                        championName: pick.name,
+                        role: pick.role!,
+                        team: team.team,
+                        traits: pick.roleTraits.map((trait) => ({
+                            trait: trait.trait,
+                            level: trait.level,
+                        })),
+                    })),
+            ),
+            (knowledge()?.interactionRules ?? []).map(toInteractionRule),
+        ),
+    );
+    const hasRolelessPicks = createMemo(() =>
+        teams().some((team) =>
+            team.picks.some((pick) => pick.role === undefined),
+        ),
     );
 
     return (
@@ -151,6 +184,93 @@ export default function RiftTheoryStrategy() {
                                                         ),
                                                     ].join(", ")}
                                                 </p>
+                                            </Show>
+                                            <Show when={pick.roleTraits.length}>
+                                                <details class="mb-4 rounded border border-neutral-800 bg-neutral-950/30 p-3 text-xs">
+                                                    <summary class="cursor-pointer text-neutral-300">
+                                                        {t("interactionTraits")}
+                                                    </summary>
+                                                    <p class="mt-2 text-neutral-500">
+                                                        {t("traitScale")}
+                                                    </p>
+                                                    <div class="mt-3 grid gap-3">
+                                                        <For
+                                                            each={
+                                                                pick.roleTraits
+                                                            }
+                                                        >
+                                                            {(trait) => {
+                                                                const source =
+                                                                    () =>
+                                                                        sourceForKey(
+                                                                            trait.source_key,
+                                                                        );
+                                                                return (
+                                                                    <div class="border-l-2 border-neutral-700 pl-3">
+                                                                        <p class="text-neutral-200">
+                                                                            {term(
+                                                                                trait.trait,
+                                                                            )}{" "}
+                                                                            <span class="text-accent">
+                                                                                {
+                                                                                    trait.level
+                                                                                }
+                                                                                /5
+                                                                            </span>
+                                                                        </p>
+                                                                        <p
+                                                                            lang="en"
+                                                                            class="mt-1 leading-relaxed text-neutral-400"
+                                                                        >
+                                                                            {
+                                                                                trait.reasoning
+                                                                            }
+                                                                        </p>
+                                                                        <For
+                                                                            each={
+                                                                                trait.conditions
+                                                                            }
+                                                                        >
+                                                                            {(
+                                                                                condition,
+                                                                            ) => (
+                                                                                <p
+                                                                                    lang="en"
+                                                                                    class="mt-1 text-neutral-500"
+                                                                                >
+                                                                                    {
+                                                                                        condition
+                                                                                    }
+                                                                                </p>
+                                                                            )}
+                                                                        </For>
+                                                                        <Show
+                                                                            when={
+                                                                                source()
+                                                                                    ?.url
+                                                                            }
+                                                                        >
+                                                                            {(
+                                                                                url,
+                                                                            ) => (
+                                                                                <a
+                                                                                    class="mt-1 inline-block text-neutral-500 underline hover:text-neutral-300"
+                                                                                    href={url()}
+                                                                                    target="_blank"
+                                                                                    rel="noreferrer"
+                                                                                >
+                                                                                    {source()
+                                                                                        ?.label ??
+                                                                                        trait.source_key}
+                                                                                </a>
+                                                                            )}
+                                                                        </Show>
+                                                                    </div>
+                                                                );
+                                                            }}
+                                                        </For>
+                                                    </div>
+                                                </details>
                                             </Show>
                                             <Show
                                                 when={pick.strategy}
@@ -271,6 +391,10 @@ export default function RiftTheoryStrategy() {
                     )}
                 </For>
             </div>
+            <InteractionFindings
+                findings={interactionFindings()}
+                hasRolelessPicks={hasRolelessPicks()}
+            />
             <p class="text-xs text-neutral-500 mt-5">{t("strategyCaveat")}</p>
         </section>
     );

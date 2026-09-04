@@ -13,6 +13,20 @@ type ChampionRow = {
   last_seen_patch: string | null;
 };
 
+type RoleTraitRow = {
+  champion_id: number;
+  role: string;
+  trait: string;
+  level: number;
+  patch_version: string;
+  assessment_method: string;
+  confidence: number | null;
+  review_status: string;
+  reasoning: string;
+  conditions_json: string;
+  source_key: string;
+};
+
 export async function exportWebData(
   database: Database,
   path = WEB_EXPORT_PATH,
@@ -82,6 +96,54 @@ export async function exportWebData(
             ORDER BY ro.champion_id, ro.role, ro.patch_version`,
     )
     .all();
+  const traitDefinitions = database
+    .query<
+      {
+        trait_key: string;
+        category: string;
+        definition: string;
+        contextual: number;
+      },
+      []
+    >(
+      "SELECT trait_key, category, definition, contextual FROM trait_definitions ORDER BY trait_key",
+    )
+    .all()
+    .map((definition) => ({
+      ...definition,
+      contextual: Boolean(definition.contextual),
+    }));
+  const roleTraits = database
+    .query<RoleTraitRow, []>(
+      `SELECT
+            crt.champion_id, crt.role, crt.trait_key AS trait, crt.level,
+            crt.patch_version, crt.assessment_method, crt.confidence,
+            crt.review_status, crt.reasoning, crt.conditions_json, s.source_key
+            FROM champion_role_traits crt JOIN sources s ON s.id = crt.source_id
+            ORDER BY crt.champion_id, crt.role, crt.trait_key`,
+    )
+    .all()
+    .map((trait) => {
+      const { conditions_json, ...row } = trait;
+      return {
+        ...row,
+        conditions: JSON.parse(String(conditions_json)) as string[],
+      };
+    });
+  const interactionRules = database
+    .query<Record<string, string | number | null>, []>(
+      `SELECT
+            ir.rule_key, ir.relation, ir.condition_text, ir.effect_text,
+            ir.patch_version, ir.confidence, ir.review_status, s.source_key,
+            p.subject_trait_key, p.object_trait_key, p.comparison,
+            p.subject_min_level, p.object_min_level, p.minimum_difference,
+            p.severity
+            FROM interaction_rules ir
+            JOIN interaction_rule_predicates p ON p.interaction_rule_id = ir.id
+            JOIN sources s ON s.id = ir.source_id
+            ORDER BY ir.rule_key`,
+    )
+    .all();
   const sources = database
     .query<
       Record<string, string | number | null>,
@@ -110,6 +172,8 @@ export async function exportWebData(
       sourceCount: sources.length,
     },
     sources,
+    traitDefinitions,
+    interactionRules,
     champions: champions.map((champion) => ({
       riotKey: champion.riot_key,
       slug: champion.slug,
@@ -139,6 +203,9 @@ export async function exportWebData(
       roleObservations: observations.filter(
         (row) => row.champion_id === champion.id,
       ),
+      roleTraits: roleTraits
+        .filter((row) => row.champion_id === champion.id)
+        .map(({ champion_id: _championId, ...trait }) => trait),
     })),
   };
   mkdirSync(dirname(path), { recursive: true });

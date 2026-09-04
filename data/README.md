@@ -60,3 +60,17 @@ fields do not prove that review occurred or that predictions are accurate.
 No automatic review promotion or patch freshness check is performed. Reviewer
 identity, review date, and structured context conditions remain future work.
 This step does not evaluate conditions or infer a team's identity.
+
+## Interaction evidence
+
+`interaction_evidence.json` is the first real input for the contextual draft
+layer. It contains provisional role-specific assessments and generic rules
+consumed by the TypeScript data pipeline. Every assessment states its source,
+confidence, limitations and review status. A 1–5 level is an ordinal coaching
+judgment, not a measured winrate or a claim of absolute champion strength.
+
+The initial Anivia Mid and Xerath Mid profiles are deliberately narrow. They
+exercise the full data path for the distinction between having wave clear and
+being able to access the wave safely under long-range pressure. Their official
+Riot champion pages document the kits; RiftTheory owns and labels the derived
+trait levels and interaction rule as provisional interpretations.

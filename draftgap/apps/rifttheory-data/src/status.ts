@@ -24,6 +24,7 @@ export function getStatus(database: Database) {
     localizations: count("champion_localizations"),
     capabilities: count("capability_profiles"),
     strategicProfiles: count("strategic_profiles"),
+    championRoleTraits: count("champion_role_traits"),
     roleObservations: count("role_observations"),
     roleObservationContexts: database
       .query<{ count: number }, []>(

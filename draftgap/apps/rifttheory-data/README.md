@@ -15,6 +15,7 @@ bun run data:build:offline
 bun run data:check
 bun run data:refresh
 bun run data:import:roles -- C:\path\to\role-snapshot.json
+bun run data:import:interactions
 bun run data:sync:draftgap-roles
 bun run data:status
 ```
@@ -72,6 +73,25 @@ are never imported. Re-running any importer is idempotent; import runs and
 failures are recorded. Strategic `unknown` patches remain unknown instead of
 being silently assigned to the current patch.
 
-The interaction-rule table is intentionally ready but empty. Adding an observed
-data provider still requires a documented source, allowed access method, sample
-context and independent validation before its snapshots become production data.
+## Interaction evidence
+
+`data:build` and `data:build:offline` import `data/interaction_evidence.json`.
+The format is documented by `schemas/interaction-evidence.schema.json` and keeps
+three concepts separate:
+
+- a fixed trait vocabulary with definitions;
+- role-specific champion trait assessments with a 1–5 ordinal level, reasoning,
+  conditions, patch, source, confidence and review status;
+- generic interaction rules that compare two traits and explain a conditional
+  draft implication.
+
+Run `bun run data:import:interactions` to import the default file or append a
+path to validate another file. Imports are idempotent for the same assessed
+profile and rule sources. A `reviewed` profile must name a patch; unknown patches
+remain unknown.
+
+The first provisional path demonstrates why wave clear and safe wave access are
+different concepts. The UI evaluates a rule only when both champions have
+assigned roles and matching assessed traits. No rule creates a counter label or
+win probability. Adding observed matchup data still requires a documented
+source, allowed access method, sample context and independent validation.

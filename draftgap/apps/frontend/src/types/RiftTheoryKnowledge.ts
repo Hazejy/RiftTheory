@@ -62,6 +62,50 @@ export type KnowledgeRoleObservation = {
     role_share: number;
 };
 
+export type KnowledgeTraitDefinition = {
+    trait_key: InteractionTrait;
+    category:
+        | "access"
+        | "control"
+        | "durability"
+        | "pressure"
+        | "tempo"
+        | "utility";
+    definition: string;
+    contextual: boolean;
+};
+
+export type KnowledgeRoleTrait = {
+    role: string;
+    trait: InteractionTrait;
+    level: TraitLevel;
+    patch_version: string;
+    assessment_method: "manual" | "ai_assisted" | "observed" | "hybrid";
+    confidence: number | null;
+    review_status: string;
+    reasoning: string;
+    conditions: string[];
+    source_key: string;
+};
+
+export type KnowledgeInteractionRule = {
+    rule_key: string;
+    subject_trait_key: InteractionTrait;
+    object_trait_key: InteractionTrait;
+    comparison: InteractionComparison;
+    subject_min_level: TraitLevel;
+    object_min_level: TraitLevel;
+    minimum_difference: number;
+    relation: string;
+    severity: InteractionSeverity;
+    condition_text: string;
+    effect_text: string;
+    patch_version: string;
+    confidence: number | null;
+    review_status: string;
+    source_key: string;
+};
+
 export type KnowledgeChampion = {
     riotKey: string | null;
     slug: string;
@@ -73,6 +117,7 @@ export type KnowledgeChampion = {
     capabilities: KnowledgeCapability[];
     strategicProfiles: KnowledgeStrategicProfile[];
     roleObservations: KnowledgeRoleObservation[];
+    roleTraits: KnowledgeRoleTrait[];
 };
 
 export type RiftTheoryKnowledge = {
@@ -83,6 +128,8 @@ export type RiftTheoryKnowledge = {
         sourceCount: number;
     };
     sources: KnowledgeSource[];
+    traitDefinitions: KnowledgeTraitDefinition[];
+    interactionRules: KnowledgeInteractionRule[];
     champions: KnowledgeChampion[];
 };
 
@@ -94,13 +141,22 @@ export function isRiftTheoryKnowledge(
     return (
         typeof candidate.metadata?.schemaVersion === "number" &&
         Array.isArray(candidate.sources) &&
+        Array.isArray(candidate.traitDefinitions) &&
+        Array.isArray(candidate.interactionRules) &&
         Array.isArray(candidate.champions) &&
         candidate.champions.every(
             (champion) =>
                 typeof champion?.name === "string" &&
                 typeof champion?.slug === "string" &&
                 Array.isArray(champion?.capabilities) &&
-                Array.isArray(champion?.strategicProfiles),
+                Array.isArray(champion?.strategicProfiles) &&
+                Array.isArray(champion?.roleTraits),
         )
     );
 }
+import type {
+    InteractionComparison,
+    InteractionSeverity,
+    InteractionTrait,
+    TraitLevel,
+} from "@draftgap/core/src/interaction/interaction-engine";

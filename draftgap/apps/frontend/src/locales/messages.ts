@@ -1,7 +1,7 @@
 export const en = {
     colorGuide: "Color guide",
     colorGuideIntro:
-        "RiftTheory’s working interpretation of the LS / MTG-inspired framework. Colors describe game plans, not team sides or winrates.",
+        "RiftTheory’s working interpretation of an MTG-inspired strategic framework. Colors describe game plans, not team sides or winrates.",
     guideWhite:
         "Flexible and accommodating: adapt to the composition and support several compatible plans.",
     guideBlue:
@@ -108,11 +108,28 @@ export const en = {
     strategyIntro:
         "Curated capabilities, main/off colors and reasoning for the selected roles. Colors are not derived from win rates.",
     coverage:
-        "Knowledge coverage is incomplete. Anivia Mid has provisional colors; Anivia Mid and Malphite Top have capability profiles. Assign a role to match a profile.",
+        "Knowledge coverage is incomplete. Anivia Mid and Xerath Mid have provisional interaction traits; Anivia Mid has provisional colors. Assign roles to match profiles.",
     noPicks: "No champions selected. Add picks in the Draft tab.",
     unresolved: "Role unresolved",
     capabilities: "Capabilities",
     capabilitySource: "Capability source",
+    interactionTraits: "Interaction traits",
+    interactionAnalysis: "Context interactions",
+    interactionIntro:
+        "Rule-based draft evidence about how one champion can enable or constrain another. Only assessed role profiles are evaluated.",
+    findings: "Findings",
+    traitScale:
+        "Ordinal scale: 1 = limited, 3 = meaningful, 5 = defining. It is not a winrate scale.",
+    noInteractionEvidence:
+        "No supported interaction is available for the current assessed picks. This is missing coverage, not proof that the draft has no interactions.",
+    interactionRequiresRoles:
+        "Assign roles to the selected champions before role-specific evidence can be evaluated.",
+    interactionCaveat:
+        "These findings are conditional coaching hypotheses. They are not direct counter claims, measured matchup results or win probabilities.",
+    condition: "Condition",
+    effect: "Draft implication",
+    confidence: "Confidence",
+    constrains: "Constrains",
     unassessed: "Not yet assessed",
     noIdentity: "Strategic identity not yet assessed. No colors inferred.",
     mainColors: "Main",
@@ -133,6 +150,17 @@ export const en = {
     engage: "Engage",
     frontline: "Frontline",
     wave_clear: "Wave clear",
+    threat_range: "Threat range",
+    target_access: "Target access",
+    wave_access_safety: "Wave access safety",
+    disengage: "Disengage",
+    poke: "Poke",
+    siege: "Siege",
+    mobility: "Mobility",
+    peel: "Peel",
+    sustain: "Sustain",
+    side_lane_pressure: "Side-lane pressure",
+    terrain_control: "Terrain control",
     blue: "Blue",
     white: "White",
     red: "Red",
@@ -165,7 +193,7 @@ export type Messages = Record<MessageKey, string>;
 export const ko: Messages = {
     colorGuide: "색상 가이드",
     colorGuideIntro:
-        "LS의 MTG 기반 프레임워크에 대한 RiftTheory의 잠정 해석입니다. 색상은 진영이나 승률이 아닌 게임 계획을 나타냅니다.",
+        "MTG에서 영감을 받은 전략 프레임워크에 대한 RiftTheory의 잠정 해석입니다. 색상은 진영이나 승률이 아닌 게임 계획을 나타냅니다.",
     guideWhite:
         "유연성과 조화: 조합에 맞춰 적응하며 여러 양립 가능한 계획을 지원합니다.",
     guideBlue:
@@ -271,11 +299,28 @@ export const ko: Messages = {
     strategyIntro:
         "선택한 포지션의 능력, 주·보조 색상과 전략적 근거입니다. 색상은 승률로 결정하지 않습니다.",
     coverage:
-        "전략 데이터는 아직 일부만 있습니다. 미드 애니비아의 색상은 잠정 평가이며, 미드 애니비아와 탑 말파이트의 능력이 등록되어 있습니다. 포지션을 지정하세요.",
+        "전략 데이터는 아직 일부만 있습니다. 미드 애니비아와 미드 제라스의 상호작용 특성 및 미드 애니비아의 색상은 잠정 평가입니다. 프로필을 연결하려면 포지션을 지정하세요.",
     noPicks: "선택한 챔피언이 없습니다. 드래프트 탭에서 선택하세요.",
     unresolved: "포지션 미정",
     capabilities: "능력",
     capabilitySource: "능력 평가 출처",
+    interactionTraits: "상호작용 특성",
+    interactionAnalysis: "상황별 상호작용",
+    interactionIntro:
+        "한 챔피언이 다른 챔피언을 지원하거나 제약하는 방식을 규칙 기반 근거로 설명합니다. 평가된 포지션 프로필만 분석합니다.",
+    findings: "근거",
+    traitScale:
+        "서열 척도: 1 = 제한적, 3 = 유의미, 5 = 핵심적. 승률 척도가 아닙니다.",
+    noInteractionEvidence:
+        "현재 평가된 픽 조합에 적용할 근거가 없습니다. 이는 데이터가 부족하다는 뜻이며, 상호작용이 없다는 증거가 아닙니다.",
+    interactionRequiresRoles:
+        "포지션별 근거를 평가하려면 선택한 챔피언의 포지션을 지정하세요.",
+    interactionCaveat:
+        "이 결과는 조건부 코칭 가설이며 직접적인 카운터 주장, 측정된 상대 전적 또는 승리 확률이 아닙니다.",
+    condition: "조건",
+    effect: "드래프트 영향",
+    confidence: "신뢰도",
+    constrains: "제약",
     unassessed: "아직 평가되지 않음",
     noIdentity:
         "전략적 정체성이 아직 평가되지 않았습니다. 색상을 임의로 지정하지 않습니다.",
@@ -297,6 +342,17 @@ export const ko: Messages = {
     engage: "이니시에이팅",
     frontline: "전방 유지",
     wave_clear: "라인 클리어",
+    threat_range: "위협 사거리",
+    target_access: "대상 접근력",
+    wave_access_safety: "안전한 웨이브 접근",
+    disengage: "교전 이탈",
+    poke: "포킹",
+    siege: "공성",
+    mobility: "기동성",
+    peel: "보호",
+    sustain: "유지력",
+    side_lane_pressure: "사이드 압박",
+    terrain_control: "지형 통제",
     blue: "청색",
     white: "백색",
     red: "적색",
@@ -326,7 +382,7 @@ export const ko: Messages = {
 export const zh: Messages = {
     colorGuide: "颜色指南",
     colorGuideIntro:
-        "这是 RiftTheory 对 LS / MTG 启发框架的暂定解读。颜色代表游戏计划，而非阵营或胜率。",
+        "这是 RiftTheory 对 MTG 启发式战略框架的暂定解读。颜色代表游戏计划，而非阵营或胜率。",
     guideWhite: "灵活与配合：适应阵容，支持多种相互兼容的计划。",
     guideBlue: "控制与限制：压缩对手选择，回应威胁并争取时间。",
     guideBlack: "有条件的力量：通过承担代价、限制或特定准备来获得独特优势。",
@@ -425,11 +481,26 @@ export const zh: Messages = {
     strategyIntro:
         "展示所选位置的能力、主色与副色及其策略依据。颜色不由胜率推导。",
     coverage:
-        "策略资料尚不完整。中路艾尼维亚的颜色为暂定评价；已有中路艾尼维亚和上路墨菲特的能力资料。请指定位置以匹配资料。",
+        "策略资料尚不完整。中路艾尼维亚和中路泽拉斯拥有暂定互动特征；中路艾尼维亚拥有暂定颜色资料。请分配位置以匹配资料。",
     noPicks: "尚未选择英雄。请在阵容选择页添加。",
     unresolved: "位置未定",
     capabilities: "能力",
     capabilitySource: "能力评价来源",
+    interactionTraits: "互动特征",
+    interactionAnalysis: "情境互动",
+    interactionIntro:
+        "通过规则化证据说明一个英雄如何帮助或限制另一个英雄。仅分析已评估的位置资料。",
+    findings: "依据",
+    traitScale: "序数尺度：1 = 有限，3 = 明显，5 = 核心。它不是胜率尺度。",
+    noInteractionEvidence:
+        "当前已评估阵容没有可用的互动依据。这表示资料覆盖不足，并不证明阵容之间没有互动。",
+    interactionRequiresRoles: "请先为所选英雄分配位置，再评估位置相关依据。",
+    interactionCaveat:
+        "这些结果是有条件的教练分析假设，不是直接的克制结论、实测对局结果或获胜概率。",
+    condition: "条件",
+    effect: "选人影响",
+    confidence: "可信度",
+    constrains: "限制",
     unassessed: "尚未评估",
     noIdentity: "尚未评估策略定位，不会自动推断颜色。",
     mainColors: "主色",
@@ -449,6 +520,17 @@ export const zh: Messages = {
     engage: "开团",
     frontline: "前排",
     wave_clear: "清线",
+    threat_range: "威胁距离",
+    target_access: "目标接近能力",
+    wave_access_safety: "安全接近兵线能力",
+    disengage: "脱离战斗",
+    poke: "消耗",
+    siege: "推进",
+    mobility: "机动性",
+    peel: "保护",
+    sustain: "续航",
+    side_lane_pressure: "边线压力",
+    terrain_control: "地形控制",
     blue: "蓝色",
     white: "白色",
     red: "红色",

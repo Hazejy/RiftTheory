@@ -1,0 +1,117 @@
+{
+  "schemaVersion": 1,
+  "sources": [
+    {
+      "key": "rifttheory_anivia_official_kit_interpretation",
+      "label": "RiftTheory provisional interpretation of the official Anivia kit",
+      "kind": "ai_assisted",
+      "url": "https://www.leagueoflegends.com/en-us/champions/anivia/",
+      "accessNote": "Riot documents the ability kit. Trait levels and contextual conclusions are provisional RiftTheory interpretations, not Riot ratings."
+    },
+    {
+      "key": "rifttheory_xerath_official_kit_interpretation",
+      "label": "RiftTheory provisional interpretation of the official Xerath kit",
+      "kind": "ai_assisted",
+      "url": "https://www.leagueoflegends.com/en-us/champions/xerath/",
+      "accessNote": "Riot documents the ability kit. Trait levels and contextual conclusions are provisional RiftTheory interpretations, not Riot ratings."
+    },
+    {
+      "key": "rifttheory_interaction_model_v1",
+      "label": "RiftTheory interaction model v1",
+      "kind": "manual",
+      "url": null,
+      "accessNote": "A transparent draft heuristic. It is not a matchup win rate, counter table or calibrated probability model."
+    }
+  ],
+  "profiles": [
+    {
+      "champion": { "name": "Anivia" },
+      "role": "mid",
+      "patch": null,
+      "assessmentMethod": "ai_assisted",
+      "reviewStatus": "provisional",
+      "sourceKey": "rifttheory_anivia_official_kit_interpretation",
+      "traits": [
+        {
+          "trait": "wave_clear",
+          "level": 4,
+          "confidence": 0.7,
+          "reasoning": "Glacial Storm supplies persistent area damage and slowing around a wave.",
+          "conditions": ["Requires mana and a usable position near the wave."]
+        },
+        {
+          "trait": "wave_access_safety",
+          "level": 2,
+          "confidence": 0.55,
+          "reasoning": "Her wave tool is area-based, but using it safely still depends on positioning, enemy reach and allied setup.",
+          "conditions": [
+            "This level is contextual and must be revisited by matchup and patch."
+          ]
+        },
+        {
+          "trait": "terrain_control",
+          "level": 4,
+          "confidence": 0.75,
+          "reasoning": "Crystallize blocks movement and Glacial Storm controls a persistent area.",
+          "conditions": [
+            "Value depends on terrain, approach angle and displacement interactions."
+          ]
+        }
+      ]
+    },
+    {
+      "champion": { "name": "Xerath" },
+      "role": "mid",
+      "patch": null,
+      "assessmentMethod": "ai_assisted",
+      "reviewStatus": "provisional",
+      "sourceKey": "rifttheory_xerath_official_kit_interpretation",
+      "traits": [
+        {
+          "trait": "threat_range",
+          "level": 5,
+          "confidence": 0.75,
+          "reasoning": "His spell pattern applies repeated pressure from long range, including a long-range ultimate.",
+          "conditions": [
+            "Threat depends on skill-shot access, cooldowns and vision."
+          ]
+        },
+        {
+          "trait": "poke",
+          "level": 5,
+          "confidence": 0.75,
+          "reasoning": "Multiple ranged spells can damage or slow opponents before a committed fight.",
+          "conditions": [
+            "Value depends on accuracy, mana and enemy sustain or engage threat."
+          ]
+        },
+        {
+          "trait": "wave_clear",
+          "level": 3,
+          "confidence": 0.6,
+          "reasoning": "Area spells can affect multiple minions while maintaining distance.",
+          "conditions": ["The rating does not represent a measured clear time."]
+        }
+      ]
+    }
+  ],
+  "rules": [
+    {
+      "ruleKey": "range_pressure_constrains_wave_access",
+      "subjectTrait": "threat_range",
+      "objectTrait": "wave_access_safety",
+      "comparison": "subject_greater",
+      "subjectMinimum": 4,
+      "objectMinimum": 1,
+      "minimumDifference": 2,
+      "relation": "constrains",
+      "severity": "warning",
+      "condition": "The ranged threat can contest the space from which the opposing champion must access the wave.",
+      "effect": "Wave clear still exists, but safe access cannot be assumed. Check allied setup, fog, cooldowns, mana and positioning before treating it as reliable draft coverage.",
+      "patch": null,
+      "confidence": 0.55,
+      "reviewStatus": "provisional",
+      "sourceKey": "rifttheory_interaction_model_v1"
+    }
+  ]
+}

@@ -1,12 +1,12 @@
 {
   "metadata": {
-    "schemaVersion": 3,
-    "generatedAt": "2026-09-04T19:37:38.907Z",
+    "schemaVersion": 4,
+    "generatedAt": "2026-09-04T21:10:16.841Z",
     "latestPatch": {
       "version": "16.17.1",
       "discovered_at": "2026-09-04T18:41:58.403Z"
     },
-    "sourceCount": 4
+    "sourceCount": 7
   },
   "sources": [
     {
@@ -31,11 +31,137 @@
       "access_note": null
     },
     {
+      "source_key": "rifttheory_anivia_official_kit_interpretation",
+      "label": "RiftTheory provisional interpretation of the official Anivia kit",
+      "kind": "ai_assisted",
+      "url": "https://www.leagueoflegends.com/en-us/champions/anivia/",
+      "access_note": "Riot documents the ability kit. Trait levels and contextual conclusions are provisional RiftTheory interpretations, not Riot ratings."
+    },
+    {
+      "source_key": "rifttheory_interaction_model_v1",
+      "label": "RiftTheory interaction model v1",
+      "kind": "manual",
+      "url": null,
+      "access_note": "A transparent draft heuristic. It is not a matchup win rate, counter table or calibrated probability model."
+    },
+    {
+      "source_key": "rifttheory_xerath_official_kit_interpretation",
+      "label": "RiftTheory provisional interpretation of the official Xerath kit",
+      "kind": "ai_assisted",
+      "url": "https://www.leagueoflegends.com/en-us/champions/xerath/",
+      "access_note": "Riot documents the ability kit. Trait levels and contextual conclusions are provisional RiftTheory interpretations, not Riot ratings."
+    },
+    {
       "source_key": "riot_data_dragon",
       "label": "Riot Data Dragon",
       "kind": "official",
       "url": "https://developer.riotgames.com/docs/lol#data-dragon",
       "access_note": "Official versioned static data; publication can lag the live patch."
+    }
+  ],
+  "traitDefinitions": [
+    {
+      "trait_key": "disengage",
+      "category": "control",
+      "definition": "Reliability of stopping or escaping an enemy initiation.",
+      "contextual": true
+    },
+    {
+      "trait_key": "engage",
+      "category": "control",
+      "definition": "Reliability of starting a favorable fight.",
+      "contextual": true
+    },
+    {
+      "trait_key": "frontline",
+      "category": "durability",
+      "definition": "Ability to occupy dangerous space for the team.",
+      "contextual": true
+    },
+    {
+      "trait_key": "mobility",
+      "category": "access",
+      "definition": "Ability to reposition or cross space during a play.",
+      "contextual": false
+    },
+    {
+      "trait_key": "peel",
+      "category": "utility",
+      "definition": "Ability to protect an ally from target access or engage.",
+      "contextual": true
+    },
+    {
+      "trait_key": "poke",
+      "category": "pressure",
+      "definition": "Repeatable damage delivered before a committed fight.",
+      "contextual": true
+    },
+    {
+      "trait_key": "side_lane_pressure",
+      "category": "tempo",
+      "definition": "Ability to create meaningful side-lane pressure without the full team.",
+      "contextual": true
+    },
+    {
+      "trait_key": "siege",
+      "category": "pressure",
+      "definition": "Ability to pressure objectives or structures without committing to a fight.",
+      "contextual": true
+    },
+    {
+      "trait_key": "sustain",
+      "category": "durability",
+      "definition": "Ability to restore or preserve resources through repeated exchanges.",
+      "contextual": true
+    },
+    {
+      "trait_key": "target_access",
+      "category": "access",
+      "definition": "Reliability of reaching and affecting a chosen target.",
+      "contextual": true
+    },
+    {
+      "trait_key": "terrain_control",
+      "category": "control",
+      "definition": "Ability to reshape or deny movement through an area.",
+      "contextual": true
+    },
+    {
+      "trait_key": "threat_range",
+      "category": "pressure",
+      "definition": "Distance at which a champion can credibly pressure opponents.",
+      "contextual": false
+    },
+    {
+      "trait_key": "wave_access_safety",
+      "category": "access",
+      "definition": "Ability to approach and use wave clear while under enemy pressure.",
+      "contextual": true
+    },
+    {
+      "trait_key": "wave_clear",
+      "category": "pressure",
+      "definition": "Speed and repeatability of damaging a minion wave.",
+      "contextual": false
+    }
+  ],
+  "interactionRules": [
+    {
+      "rule_key": "range_pressure_constrains_wave_access",
+      "relation": "constrains",
+      "condition_text": "The ranged threat can contest the space from which the opposing champion must access the wave.",
+      "effect_text": "Wave clear still exists, but safe access cannot be assumed. Check allied setup, fog, cooldowns, mana and positioning before treating it as reliable draft coverage.",
+      "patch_version": "unknown",
+      "confidence": 0.55,
+      "review_status": "provisional",
+      "source_key": "rifttheory_interaction_model_v1",
+      "subject_trait_key": "threat_range",
+      "object_trait_key": "wave_access_safety",
+      "comparison": "subject_greater",
+      "subject_min_level": 4,
+      "object_min_level": 1,
+      "minimum_difference": 2,
+      "severity": "warning"
     }
   ],
   "champions": [
@@ -138,7 +264,8 @@
           "sample_total": 133029,
           "role_share": 0.8065609754264108
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "103",
@@ -239,7 +366,8 @@
           "sample_total": 180088,
           "role_share": 0.024171516147661144
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "84",
@@ -340,7 +468,8 @@
           "sample_total": 149740,
           "role_share": 0.3099772939762255
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "166",
@@ -441,7 +570,8 @@
           "sample_total": 46481,
           "role_share": 0.07656892063423765
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "12",
@@ -542,7 +672,8 @@
           "sample_total": 91232,
           "role_share": 0.011870834794808839
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "799",
@@ -643,7 +774,8 @@
           "sample_total": 96038,
           "role_share": 0.752306378725088
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "32",
@@ -744,7 +876,8 @@
           "sample_total": 47505,
           "role_share": 0.008672771287232922
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "34",
@@ -884,6 +1017,50 @@
           "sample_total": 66164,
           "role_share": 0.20633577171875944
         }
+      ],
+      "roleTraits": [
+        {
+          "role": "mid",
+          "trait": "terrain_control",
+          "level": 4,
+          "patch_version": "unknown",
+          "assessment_method": "ai_assisted",
+          "confidence": 0.75,
+          "review_status": "provisional",
+          "reasoning": "Crystallize blocks movement and Glacial Storm controls a persistent area.",
+          "source_key": "rifttheory_anivia_official_kit_interpretation",
+          "conditions": [
+            "Value depends on terrain, approach angle and displacement interactions."
+          ]
+        },
+        {
+          "role": "mid",
+          "trait": "wave_access_safety",
+          "level": 2,
+          "patch_version": "unknown",
+          "assessment_method": "ai_assisted",
+          "confidence": 0.55,
+          "review_status": "provisional",
+          "reasoning": "Her wave tool is area-based, but using it safely still depends on positioning, enemy reach and allied setup.",
+          "source_key": "rifttheory_anivia_official_kit_interpretation",
+          "conditions": [
+            "This level is contextual and must be revisited by matchup and patch."
+          ]
+        },
+        {
+          "role": "mid",
+          "trait": "wave_clear",
+          "level": 4,
+          "patch_version": "unknown",
+          "assessment_method": "ai_assisted",
+          "confidence": 0.7,
+          "review_status": "provisional",
+          "reasoning": "Glacial Storm supplies persistent area damage and slowing around a wave.",
+          "source_key": "rifttheory_anivia_official_kit_interpretation",
+          "conditions": [
+            "Requires mana and a usable position near the wave."
+          ]
+        }
       ]
     },
     {
@@ -985,7 +1162,8 @@
           "sample_total": 40393,
           "role_share": 0.047582501918649274
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "523",
@@ -1086,7 +1264,8 @@
           "sample_total": 89965,
           "role_share": 0.0056132940588006445
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "22",
@@ -1187,7 +1366,8 @@
           "sample_total": 131366,
           "role_share": 0.010824718724784192
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "136",
@@ -1288,7 +1468,8 @@
           "sample_total": 54479,
           "role_share": 0.05868316231942584
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "893",
@@ -1389,7 +1570,8 @@
           "sample_total": 45352,
           "role_share": 0.18109454930322808
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "268",
@@ -1490,7 +1672,8 @@
           "sample_total": 35617,
           "role_share": 0.07892298621444815
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "432",
@@ -1591,7 +1774,8 @@
           "sample_total": 89895,
           "role_share": 0.0014683797764058067
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "200",
@@ -1692,7 +1876,8 @@
           "sample_total": 59402,
           "role_share": 0.010252180061277398
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "53",
@@ -1793,7 +1978,8 @@
           "sample_total": 112095,
           "role_share": 0.0017574378875061332
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "63",
@@ -1894,7 +2080,8 @@
           "sample_total": 80556,
           "role_share": 0.06762997169670788
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "201",
@@ -1995,7 +2182,8 @@
           "sample_total": 87279,
           "role_share": 0.0010770059235325794
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "233",
@@ -2096,7 +2284,8 @@
           "sample_total": 93989,
           "role_share": 0.04627137218185107
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "51",
@@ -2197,7 +2386,8 @@
           "sample_total": 283596,
           "role_share": 0.0067560896486551295
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "164",
@@ -2298,7 +2488,8 @@
           "sample_total": 126677,
           "role_share": 0.6095897439945689
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "69",
@@ -2399,7 +2590,8 @@
           "sample_total": 48614,
           "role_share": 0.2104126383346361
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "31",
@@ -2500,7 +2692,8 @@
           "sample_total": 110301,
           "role_share": 0.482778941260732
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "42",
@@ -2601,7 +2794,8 @@
           "sample_total": 40632,
           "role_share": 0.04444772593030124
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "122",
@@ -2702,7 +2896,8 @@
           "sample_total": 146753,
           "role_share": 0.8834095384762152
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "131",
@@ -2803,7 +2998,8 @@
           "sample_total": 110816,
           "role_share": 0.018535229569737223
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "36",
@@ -2904,7 +3100,8 @@
           "sample_total": 78834,
           "role_share": 0.8498997894309562
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "119",
@@ -3005,7 +3202,8 @@
           "sample_total": 69451,
           "role_share": 0.024823256684568976
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "245",
@@ -3106,7 +3304,8 @@
           "sample_total": 134708,
           "role_share": 0.021461234670546663
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "60",
@@ -3207,7 +3406,8 @@
           "sample_total": 48701,
           "role_share": 0.03702182706720601
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "28",
@@ -3308,7 +3508,8 @@
           "sample_total": 44856,
           "role_share": 0.009385589441769216
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "81",
@@ -3409,7 +3610,8 @@
           "sample_total": 243881,
           "role_share": 0.00542477683788405
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "9",
@@ -3510,7 +3712,8 @@
           "sample_total": 60318,
           "role_share": 0.09241022580324282
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "114",
@@ -3611,7 +3814,8 @@
           "sample_total": 67972,
           "role_share": 0.9493173659742247
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "105",
@@ -3712,7 +3916,8 @@
           "sample_total": 117734,
           "role_share": 0.03142677561282212
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "3",
@@ -3813,7 +4018,8 @@
           "sample_total": 94247,
           "role_share": 0.046484238225089396
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "41",
@@ -3914,7 +4120,8 @@
           "sample_total": 110484,
           "role_share": 0.8999402628434886
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "86",
@@ -4015,7 +4222,8 @@
           "sample_total": 140547,
           "role_share": 0.9158502138074808
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "150",
@@ -4116,7 +4324,8 @@
           "sample_total": 65728,
           "role_share": 0.9844510710808179
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "79",
@@ -4217,7 +4426,8 @@
           "sample_total": 67339,
           "role_share": 0.595390486939218
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "104",
@@ -4318,7 +4528,8 @@
           "sample_total": 194996,
           "role_share": 0.014184906357053478
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "887",
@@ -4419,7 +4630,8 @@
           "sample_total": 87674,
           "role_share": 0.5744804617104272
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "120",
@@ -4520,7 +4732,8 @@
           "sample_total": 98351,
           "role_share": 0.0026537605108234792
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "74",
@@ -4621,7 +4834,8 @@
           "sample_total": 33921,
           "role_share": 0.6745673771410041
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "910",
@@ -4722,7 +4936,8 @@
           "sample_total": 113097,
           "role_share": 0.018081823567380213
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "420",
@@ -4823,7 +5038,8 @@
           "sample_total": 51412,
           "role_share": 0.9669143390648097
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "39",
@@ -4924,7 +5140,8 @@
           "sample_total": 136979,
           "role_share": 0.5959088619423415
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "427",
@@ -5025,7 +5242,8 @@
           "sample_total": 28203,
           "role_share": 0.053150374073680104
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "40",
@@ -5126,7 +5344,8 @@
           "sample_total": 71490,
           "role_share": 0.007315708490697999
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "59",
@@ -5227,7 +5446,8 @@
           "sample_total": 114523,
           "role_share": 0.009107340883490652
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "24",
@@ -5328,7 +5548,8 @@
           "sample_total": 146136,
           "role_share": 0.7383054141347786
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "126",
@@ -5429,7 +5650,8 @@
           "sample_total": 149256,
           "role_share": 0.6585530899930321
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "202",
@@ -5530,7 +5752,8 @@
           "sample_total": 304463,
           "role_share": 0.006677330250309562
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "222",
@@ -5631,7 +5854,8 @@
           "sample_total": 315215,
           "role_share": 0.0006408324476944308
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "897",
@@ -5732,7 +5956,8 @@
           "sample_total": 69332,
           "role_share": 0.954667397449951
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "145",
@@ -5833,7 +6058,8 @@
           "sample_total": 384146,
           "role_share": 0.010389279076184576
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "429",
@@ -5934,7 +6160,8 @@
           "sample_total": 58208,
           "role_share": 0.08450728422210005
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "43",
@@ -6035,7 +6262,8 @@
           "sample_total": 130636,
           "role_share": 0.02317890933586454
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "30",
@@ -6136,7 +6364,8 @@
           "sample_total": 38864,
           "role_share": 0.03453067105804858
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "38",
@@ -6237,7 +6466,8 @@
           "sample_total": 51991,
           "role_share": 0.050162528129868635
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "55",
@@ -6338,7 +6568,8 @@
           "sample_total": 152819,
           "role_share": 0.019598348372911745
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "10",
@@ -6439,7 +6670,8 @@
           "sample_total": 49611,
           "role_share": 0.7920219306202253
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "141",
@@ -6540,7 +6772,8 @@
           "sample_total": 133443,
           "role_share": 0.03795628095891129
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "85",
@@ -6641,7 +6874,8 @@
           "sample_total": 46959,
           "role_share": 0.8091313699184395
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "121",
@@ -6742,7 +6976,8 @@
           "sample_total": 103137,
           "role_share": 0.0015707263154832892
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "203",
@@ -6843,7 +7078,8 @@
           "sample_total": 40673,
           "role_share": 0.0038846409165785656
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "240",
@@ -6944,7 +7180,8 @@
           "sample_total": 35635,
           "role_share": 0.9062438613722464
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "96",
@@ -7045,7 +7282,8 @@
           "sample_total": 43883,
           "role_share": 0.05361985279037441
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "7",
@@ -7146,7 +7384,8 @@
           "sample_total": 121450,
           "role_share": 0.023664059283655826
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "64",
@@ -7247,7 +7486,8 @@
           "sample_total": 255199,
           "role_share": 0.011065874082578694
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "89",
@@ -7348,7 +7588,8 @@
           "sample_total": 141196,
           "role_share": 0.0016431060369982153
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "876",
@@ -7449,7 +7690,8 @@
           "sample_total": 59495,
           "role_share": 0.014337339272207749
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "127",
@@ -7550,7 +7792,8 @@
           "sample_total": 115737,
           "role_share": 0.0701849883788244
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "805",
@@ -7651,7 +7894,8 @@
           "sample_total": 141597,
           "role_share": 0.04788237038920316
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "236",
@@ -7752,7 +7996,8 @@
           "sample_total": 156257,
           "role_share": 0.009273184561331652
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "117",
@@ -7853,7 +8098,8 @@
           "sample_total": 199638,
           "role_share": 0.005094220539175909
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "99",
@@ -7954,7 +8200,8 @@
           "sample_total": 206902,
           "role_share": 0.005920677422161217
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "54",
@@ -8080,7 +8327,8 @@
           "sample_total": 156207,
           "role_share": 0.7722125128835455
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "90",
@@ -8181,7 +8429,8 @@
           "sample_total": 114235,
           "role_share": 0.08009804350680615
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "57",
@@ -8282,7 +8531,8 @@
           "sample_total": 49381,
           "role_share": 0.1426864583544278
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "11",
@@ -8383,7 +8633,8 @@
           "sample_total": 106788,
           "role_share": 0.08486908641420385
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "800",
@@ -8484,7 +8735,8 @@
           "sample_total": 80023,
           "role_share": 0.008285118028566787
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "902",
@@ -8585,7 +8837,8 @@
           "sample_total": 120516,
           "role_share": 0.0005974310465000497
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "21",
@@ -8686,7 +8939,8 @@
           "sample_total": 111058,
           "role_share": 0.0018818995479839363
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "82",
@@ -8787,7 +9041,8 @@
           "sample_total": 104820,
           "role_share": 0.9023945811867964
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "25",
@@ -8888,7 +9143,8 @@
           "sample_total": 94238,
           "role_share": 0.015110677221503003
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "950",
@@ -8989,7 +9245,8 @@
           "sample_total": 91064,
           "role_share": 0.04662654836159185
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "267",
@@ -9090,7 +9347,8 @@
           "sample_total": 163277,
           "role_share": 0.00017761227852055098
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "75",
@@ -9191,7 +9449,8 @@
           "sample_total": 212360,
           "role_share": 0.7305142211339235
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "111",
@@ -9292,7 +9551,8 @@
           "sample_total": 199958,
           "role_share": 0.00696146190700047
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "518",
@@ -9393,7 +9653,8 @@
           "sample_total": 35051,
           "role_share": 0.03823000770306125
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "76",
@@ -9494,7 +9755,8 @@
           "sample_total": 63976,
           "role_share": 0.02583781418031762
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "895",
@@ -9595,7 +9857,8 @@
           "sample_total": 21199,
           "role_share": 0.005000235860182084
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "56",
@@ -9696,7 +9959,8 @@
           "sample_total": 115239,
           "role_share": 0.011740816910941608
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "20",
@@ -9797,7 +10061,8 @@
           "sample_total": 42603,
           "role_share": 0.00866136187592423
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "2",
@@ -9898,7 +10163,8 @@
           "sample_total": 70733,
           "role_share": 0.8436656157663326
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "61",
@@ -9999,7 +10265,8 @@
           "sample_total": 58267,
           "role_share": 0.011224192081281
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "516",
@@ -10100,7 +10367,8 @@
           "sample_total": 62295,
           "role_share": 0.9485833533991492
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "80",
@@ -10201,7 +10469,8 @@
           "sample_total": 148499,
           "role_share": 0.3381234890470643
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "78",
@@ -10302,7 +10571,8 @@
           "sample_total": 65040,
           "role_share": 0.2665129151291513
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "555",
@@ -10403,7 +10673,8 @@
           "sample_total": 116203,
           "role_share": 0.000705661643847405
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "246",
@@ -10504,7 +10775,8 @@
           "sample_total": 149315,
           "role_share": 0.03164450992867428
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "133",
@@ -10605,7 +10877,8 @@
           "sample_total": 47855,
           "role_share": 0.32702956848814124
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "497",
@@ -10706,7 +10979,8 @@
           "sample_total": 63266,
           "role_share": 0.0028451300856700283
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "33",
@@ -10807,7 +11081,8 @@
           "sample_total": 40201,
           "role_share": 0.028258003532250442
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "421",
@@ -10908,7 +11183,8 @@
           "sample_total": 29681,
           "role_share": 0.06283481014790607
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "526",
@@ -11009,7 +11285,8 @@
           "sample_total": 69165,
           "role_share": 0.0032530904359141183
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "888",
@@ -11095,7 +11372,8 @@
           "sample_total": 23906,
           "role_share": 0.00079477955325023
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "58",
@@ -11196,7 +11474,8 @@
           "sample_total": 105745,
           "role_share": 0.9465317509102085
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "107",
@@ -11297,7 +11576,8 @@
           "sample_total": 76365,
           "role_share": 0.07119753813919989
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "92",
@@ -11398,7 +11678,8 @@
           "sample_total": 54404,
           "role_share": 0.7585839276523785
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "68",
@@ -11499,7 +11780,8 @@
           "sample_total": 35554,
           "role_share": 0.8213140574900152
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "13",
@@ -11600,7 +11882,8 @@
           "sample_total": 71449,
           "role_share": 0.19124130498677377
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "360",
@@ -11701,7 +11984,8 @@
           "sample_total": 74344,
           "role_share": 0.00332239319918218
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "113",
@@ -11802,7 +12086,8 @@
           "sample_total": 43466,
           "role_share": 0.11153545299774537
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "235",
@@ -11903,7 +12188,8 @@
           "sample_total": 113898,
           "role_share": 0.006857012414616587
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "147",
@@ -12004,7 +12290,8 @@
           "sample_total": 199406,
           "role_share": 0.0015847065785382587
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "875",
@@ -12105,7 +12392,8 @@
           "sample_total": 109158,
           "role_share": 0.9257315084556331
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "35",
@@ -12206,7 +12494,8 @@
           "sample_total": 107060,
           "role_share": 0.01696245096207734
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "98",
@@ -12307,7 +12596,8 @@
           "sample_total": 94118,
           "role_share": 0.6850336811236958
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "102",
@@ -12408,7 +12698,8 @@
           "sample_total": 102020,
           "role_share": 0.0362379925504803
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "27",
@@ -12509,7 +12800,8 @@
           "sample_total": 56890,
           "role_share": 0.8357707857268413
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "14",
@@ -12610,7 +12902,8 @@
           "sample_total": 69591,
           "role_share": 0.7294477734189766
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "15",
@@ -12711,7 +13004,8 @@
           "sample_total": 79495,
           "role_share": 0.0016479023837977231
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "72",
@@ -12812,7 +13106,8 @@
           "sample_total": 28171,
           "role_share": 0.10351070249547407
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "901",
@@ -12913,7 +13208,8 @@
           "sample_total": 79865,
           "role_share": 0.05439178613910975
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "37",
@@ -13014,7 +13310,8 @@
           "sample_total": 53224,
           "role_share": 0.0017661205471215993
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "16",
@@ -13115,7 +13412,8 @@
           "sample_total": 93369,
           "role_share": 0.008396791226209984
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "50",
@@ -13216,7 +13514,8 @@
           "sample_total": 83834,
           "role_share": 0.11807858386812033
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "517",
@@ -13317,7 +13616,8 @@
           "sample_total": 312521,
           "role_share": 0.06569478531042713
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "134",
@@ -13418,7 +13718,8 @@
           "sample_total": 204456,
           "role_share": 0.01153793481238017
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "223",
@@ -13519,7 +13820,8 @@
           "sample_total": 75170,
           "role_share": 0.41003059731275776
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "163",
@@ -13620,7 +13922,8 @@
           "sample_total": 47678,
           "role_share": 0.016674357145853434
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "91",
@@ -13721,7 +14024,8 @@
           "sample_total": 145639,
           "role_share": 0.006783897170400785
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "44",
@@ -13822,7 +14126,8 @@
           "sample_total": 26409,
           "role_share": 0.012306410693324246
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "17",
@@ -13923,7 +14228,8 @@
           "sample_total": 100553,
           "role_share": 0.7449106441379173
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "412",
@@ -14024,7 +14330,8 @@
           "sample_total": 271694,
           "role_share": 0.0014980087892997268
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "18",
@@ -14125,7 +14432,8 @@
           "sample_total": 193320,
           "role_share": 0.015078626112145666
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "48",
@@ -14226,7 +14534,8 @@
           "sample_total": 54750,
           "role_share": 0.6019543378995433
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "23",
@@ -14327,7 +14636,8 @@
           "sample_total": 69816,
           "role_share": 0.8299816660937321
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "4",
@@ -14428,7 +14738,8 @@
           "sample_total": 105095,
           "role_share": 0.0595841857367144
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "29",
@@ -14529,7 +14840,8 @@
           "sample_total": 118421,
           "role_share": 0.0034960015537784683
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "77",
@@ -14630,7 +14942,8 @@
           "sample_total": 49483,
           "role_share": 0.18519491542549968
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "6",
@@ -14731,7 +15044,8 @@
           "sample_total": 45956,
           "role_share": 0.9557837931934894
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "110",
@@ -14832,7 +15146,8 @@
           "sample_total": 65406,
           "role_share": 0.1935602238326759
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "67",
@@ -14933,7 +15248,8 @@
           "sample_total": 108683,
           "role_share": 0.3493002585500952
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "45",
@@ -15034,7 +15350,8 @@
           "sample_total": 121759,
           "role_share": 0.030527517473041006
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "161",
@@ -15135,7 +15452,8 @@
           "sample_total": 78659,
           "role_share": 0.02908758056929277
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "711",
@@ -15236,7 +15554,8 @@
           "sample_total": 56191,
           "role_share": 0.019237956256339984
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "254",
@@ -15337,7 +15656,8 @@
           "sample_total": 99114,
           "role_share": 0.013529874689751196
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "234",
@@ -15438,7 +15758,8 @@
           "sample_total": 170775,
           "role_share": 0.01195139803835456
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "112",
@@ -15539,7 +15860,8 @@
           "sample_total": 242173,
           "role_share": 0.02383833044971983
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "8",
@@ -15640,7 +15962,8 @@
           "sample_total": 106964,
           "role_share": 0.20950974159530308
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "106",
@@ -15741,7 +16064,8 @@
           "sample_total": 77735,
           "role_share": 0.7235994082459638
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "19",
@@ -15842,7 +16166,8 @@
           "sample_total": 82786,
           "role_share": 0.29299640035754837
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "62",
@@ -15943,7 +16268,8 @@
           "sample_total": 132969,
           "role_share": 0.13319645932510585
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "498",
@@ -16044,7 +16370,8 @@
           "sample_total": 85428,
           "role_share": 0.0027274429929297185
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "101",
@@ -16144,6 +16471,50 @@
           "source_key": "draftgap_dataset_v5_current_patch",
           "sample_total": 166680,
           "role_share": 0.0038216942644588433
+        }
+      ],
+      "roleTraits": [
+        {
+          "role": "mid",
+          "trait": "poke",
+          "level": 5,
+          "patch_version": "unknown",
+          "assessment_method": "ai_assisted",
+          "confidence": 0.75,
+          "review_status": "provisional",
+          "reasoning": "Multiple ranged spells can damage or slow opponents before a committed fight.",
+          "source_key": "rifttheory_xerath_official_kit_interpretation",
+          "conditions": [
+            "Value depends on accuracy, mana and enemy sustain or engage threat."
+          ]
+        },
+        {
+          "role": "mid",
+          "trait": "threat_range",
+          "level": 5,
+          "patch_version": "unknown",
+          "assessment_method": "ai_assisted",
+          "confidence": 0.75,
+          "review_status": "provisional",
+          "reasoning": "His spell pattern applies repeated pressure from long range, including a long-range ultimate.",
+          "source_key": "rifttheory_xerath_official_kit_interpretation",
+          "conditions": [
+            "Threat depends on skill-shot access, cooldowns and vision."
+          ]
+        },
+        {
+          "role": "mid",
+          "trait": "wave_clear",
+          "level": 3,
+          "patch_version": "unknown",
+          "assessment_method": "ai_assisted",
+          "confidence": 0.6,
+          "review_status": "provisional",
+          "reasoning": "Area spells can affect multiple minions while maintaining distance.",
+          "source_key": "rifttheory_xerath_official_kit_interpretation",
+          "conditions": [
+            "The rating does not represent a measured clear time."
+          ]
         }
       ]
     },
@@ -16246,7 +16617,8 @@
           "sample_total": 53796,
           "role_share": 0.07050710089969514
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "157",
@@ -16347,7 +16719,8 @@
           "sample_total": 270424,
           "role_share": 0.23521580924769991
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "777",
@@ -16448,7 +16821,8 @@
           "sample_total": 288030,
           "role_share": 0.5154740825608444
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "83",
@@ -16549,7 +16923,8 @@
           "sample_total": 61577,
           "role_share": 0.9284797895318057
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "804",
@@ -16650,7 +17025,8 @@
           "sample_total": 160074,
           "role_share": 0.0015555305671127104
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "350",
@@ -16736,7 +17112,8 @@
           "sample_total": 94374,
           "role_share": 0.00039205713438023184
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "904",
@@ -16837,7 +17214,8 @@
           "sample_total": 55822,
           "role_share": 0.840851277274193
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "154",
@@ -16938,7 +17316,8 @@
           "sample_total": 73918,
           "role_share": 0.12837197976135717
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "238",
@@ -17039,7 +17418,8 @@
           "sample_total": 227272,
           "role_share": 0.05672498151994086
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "221",
@@ -17140,7 +17520,8 @@
           "sample_total": 93002,
           "role_share": 0.010408378314444851
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "115",
@@ -17241,7 +17622,8 @@
           "sample_total": 52447,
           "role_share": 0.008046218086830514
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "26",
@@ -17342,7 +17724,8 @@
           "sample_total": 70723,
           "role_share": 0.07082561542920973
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "142",
@@ -17443,7 +17826,8 @@
           "sample_total": 69737,
           "role_share": 0.03375539527080316
         }
-      ]
+      ],
+      "roleTraits": []
     },
     {
       "riotKey": "143",
@@ -17544,7 +17928,8 @@
           "sample_total": 73906,
           "role_share": 0.005425811165534598
         }
-      ]
+      ],
+      "roleTraits": []
     }
   ]
 }

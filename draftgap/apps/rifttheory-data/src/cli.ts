@@ -3,10 +3,11 @@ import { importCuratedData } from "./curated";
 import { syncRiotData } from "./riot";
 import { exportWebData } from "./export";
 import { getStatus } from "./status";
-import { DATABASE_PATH } from "./paths";
+import { DATABASE_PATH, INTERACTION_EVIDENCE_PATH } from "./paths";
 import { checkPatchStatus } from "./patch";
 import { importObservedRoles } from "./observedRoles";
 import { syncDraftGapRoleSamples } from "./providers/draftGap";
+import { importInteractionEvidence } from "./interactions";
 
 const command = process.argv[2] ?? "status";
 const offline = process.argv.includes("--offline");
@@ -38,10 +39,14 @@ try {
       }
       const riot = await syncRiotData(database, status.latestRiotPatch);
       const records = await importCuratedData(database);
+      const interactions = await importInteractionEvidence(
+        database,
+        INTERACTION_EVIDENCE_PATH,
+      );
       const result = await exportWebData(database);
       verifyDatabase(database);
       console.log(
-        `Updated ${result.champions} champions from ${status.publishedPatch ?? "no published patch"} to ${riot.patch} with ${records} curated records`,
+        `Updated ${result.champions} champions from ${status.publishedPatch ?? "no published patch"} to ${riot.patch} with ${records} curated records and ${interactions.records} interaction records`,
       );
       break;
     }
@@ -59,6 +64,14 @@ try {
       const result = await importObservedRoles(database, inputPath);
       console.log(
         `Imported ${result.records} role observations for ${result.context.patch} from ${result.source}`,
+      );
+      break;
+    }
+    case "import-interactions": {
+      const inputPath = process.argv[3] ?? INTERACTION_EVIDENCE_PATH;
+      const result = await importInteractionEvidence(database, inputPath);
+      console.log(
+        `Imported ${result.records} interaction records from ${result.path}`,
       );
       break;
     }
@@ -84,10 +97,14 @@ try {
         console.log(`Synchronized Riot ${result.patch}`);
       }
       const records = await importCuratedData(database);
+      const interactions = await importInteractionEvidence(
+        database,
+        INTERACTION_EVIDENCE_PATH,
+      );
       const result = await exportWebData(database);
       verifyDatabase(database);
       console.log(
-        `Built ${result.champions} champions with ${records} curated records${offline ? " (offline)" : ""}`,
+        `Built ${result.champions} champions with ${records} curated records and ${interactions.records} interaction records${offline ? " (offline)" : ""}`,
       );
       break;
     }
@@ -100,7 +117,7 @@ try {
       break;
     default:
       throw new Error(
-        `Unknown command: ${command}. Use init, check-patch, refresh, sync-riot, sync-draftgap-roles, import-curated, import-roles, export, build, status or verify.`,
+        `Unknown command: ${command}. Use init, check-patch, refresh, sync-riot, sync-draftgap-roles, import-curated, import-roles, import-interactions, export, build, status or verify.`,
       );
   }
 } catch (error) {

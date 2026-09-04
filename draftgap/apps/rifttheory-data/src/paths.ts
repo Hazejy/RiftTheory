@@ -6,6 +6,10 @@ export const DATABASE_PATH = resolve(
   "data/runtime/rifttheory.sqlite",
 );
 export const CURATED_DATA_DIR = resolve(WORKSPACE_ROOT, "data");
+export const INTERACTION_EVIDENCE_PATH = resolve(
+  CURATED_DATA_DIR,
+  "interaction_evidence.json",
+);
 export const WEB_EXPORT_PATH = resolve(
   WORKSPACE_ROOT,
   "draftgap/apps/frontend/public/data/rifttheory-knowledge.json",
