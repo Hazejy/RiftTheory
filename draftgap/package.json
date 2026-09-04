@@ -9,6 +9,8 @@
         "data:init": "bun run --filter @rifttheory/data init",
         "data:build": "bun run --filter @rifttheory/data build",
         "data:build:offline": "bun run --filter @rifttheory/data build:offline",
+        "data:check": "bun run --filter @rifttheory/data check:patch",
+        "data:refresh": "bun run --filter @rifttheory/data refresh",
         "data:status": "bun run --filter @rifttheory/data status",
         "bump-version": "bun run typecheck && bun scripts/bump-version.ts",
         "typecheck": "turbo typecheck",

@@ -4,6 +4,7 @@ import { syncRiotData } from "./riot";
 import { exportWebData } from "./export";
 import { getStatus } from "./status";
 import { DATABASE_PATH } from "./paths";
+import { checkPatchStatus } from "./patch";
 
 const command = process.argv[2] ?? "status";
 const offline = process.argv.includes("--offline");
@@ -19,6 +20,26 @@ try {
       const result = await syncRiotData(database);
       console.log(
         `Riot ${result.patch}: ${result.champions} champions, ${result.records} localized records`,
+      );
+      break;
+    }
+    case "check-patch": {
+      const status = await checkPatchStatus();
+      console.log(JSON.stringify(status, null, 2));
+      break;
+    }
+    case "refresh": {
+      const status = await checkPatchStatus();
+      if (!status.updateAvailable) {
+        console.log(`RiftTheory data is current at ${status.latestRiotPatch}`);
+        break;
+      }
+      const riot = await syncRiotData(database, status.latestRiotPatch);
+      const records = await importCuratedData(database);
+      const result = await exportWebData(database);
+      verifyDatabase(database);
+      console.log(
+        `Updated ${result.champions} champions from ${status.publishedPatch ?? "no published patch"} to ${riot.patch} with ${records} curated records`,
       );
       break;
     }
@@ -56,7 +77,7 @@ try {
       break;
     default:
       throw new Error(
-        `Unknown command: ${command}. Use init, sync-riot, import-curated, export, build, status or verify.`,
+        `Unknown command: ${command}. Use init, check-patch, refresh, sync-riot, import-curated, export, build, status or verify.`,
       );
   }
 } catch (error) {

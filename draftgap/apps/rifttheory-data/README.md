@@ -12,6 +12,8 @@ Run from `draftgap/`:
 bun run data:init
 bun run data:build
 bun run data:build:offline
+bun run data:check
+bun run data:refresh
 bun run data:status
 ```
 
@@ -19,6 +21,12 @@ bun run data:status
 names for EN/KO/ZH, imports the real curated JSON files in the workspace, checks
 database integrity and writes the frontend export. `data:build:offline` skips the
 Riot request and is useful while editing curated profiles.
+
+`data:check` compares the newest Riot Data Dragon version with the patch in the
+published frontend export. `data:refresh` performs the same check and rebuilds
+the export only when Riot has published a new version. A refresh marks champions
+missing from the new roster as inactive and rejects incomplete localization
+snapshots. The final JSON replaces the previous export atomically.
 
 Runtime database:
 

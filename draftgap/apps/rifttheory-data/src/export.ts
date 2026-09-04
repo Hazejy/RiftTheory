@@ -1,5 +1,5 @@
 import { Database } from "bun:sqlite";
-import { mkdirSync } from "node:fs";
+import { mkdirSync, renameSync } from "node:fs";
 import { dirname } from "node:path";
 import { WEB_EXPORT_PATH } from "./paths";
 
@@ -136,6 +136,8 @@ export async function exportWebData(
     })),
   };
   mkdirSync(dirname(path), { recursive: true });
-  await Bun.write(path, JSON.stringify(result, null, 2) + "\n");
+  const temporaryPath = `${path}.tmp`;
+  await Bun.write(temporaryPath, JSON.stringify(result, null, 2) + "\n");
+  renameSync(temporaryPath, path);
   return { path, champions: champions.length, bytes: Bun.file(path).size };
 }

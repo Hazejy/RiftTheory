@@ -11,6 +11,7 @@ const RIOT_SOURCE = {
     "Official versioned static data; publication can lag the live patch.",
 };
 const LOCALES = ["en_US", "ko_KR", "zh_CN"] as const;
+const VERSIONS_URL = "https://ddragon.leagueoflegends.com/api/versions.json";
 
 type RiotChampion = { id: string; key: string; name: string };
 type ChampionResponse = { data: Record<string, RiotChampion> };
@@ -21,14 +22,22 @@ async function fetchJson<T>(url: string) {
   return (await response.json()) as T;
 }
 
-export async function syncRiotData(database: Database) {
-  const sourceId = upsertSource(database, RIOT_SOURCE);
-  const versions = await fetchJson<string[]>(
-    "https://ddragon.leagueoflegends.com/api/versions.json",
-  );
+export async function discoverLatestRiotPatch() {
+  const versions = await fetchJson<string[]>(VERSIONS_URL);
   const patch = versions[0];
   if (!patch || !/^\d+\.\d+\.\d+$/.test(patch))
     throw new Error("Riot returned no valid Data Dragon version");
+  return patch;
+}
+
+export async function syncRiotData(
+  database: Database,
+  requestedPatch?: string,
+) {
+  const sourceId = upsertSource(database, RIOT_SOURCE);
+  const patch = requestedPatch ?? (await discoverLatestRiotPatch());
+  if (!/^\d+\.\d+\.\d+$/.test(patch))
+    throw new Error(`Invalid requested Data Dragon version: ${patch}`);
   const runId = startImportRun(database, "riot-data-dragon", sourceId, patch);
   let records = 0;
   try {
@@ -49,6 +58,7 @@ export async function syncRiotData(database: Database) {
       (champion) => !champion.id.startsWith("Jade_"),
     );
     database.transaction(() => {
+      database.run("UPDATE champions SET active = 0");
       database
         .query(
           `INSERT INTO patches (version, discovered_at, source_id)
@@ -88,6 +98,27 @@ export async function syncRiotData(database: Database) {
             .run(championId, translated.name, locale, sourceId);
           records += 1;
         }
+      }
+
+      const activeChampions = database
+        .query<
+          { count: number },
+          []
+        >("SELECT COUNT(*) AS count FROM champions WHERE active = 1")
+        .get()!.count;
+      const localizedRecords = database
+        .query<
+          { count: number },
+          [string]
+        >("SELECT COUNT(*) AS count FROM champion_localizations WHERE patch_version = ?")
+        .get(patch)!.count;
+      if (
+        activeChampions !== english.length ||
+        localizedRecords !== english.length * LOCALES.length
+      ) {
+        throw new Error(
+          `Incomplete Riot snapshot for ${patch}: ${activeChampions}/${english.length} champions and ${localizedRecords}/${english.length * LOCALES.length} localizations`,
+        );
       }
     })();
     finishImportRun(database, runId, "succeeded", records);
