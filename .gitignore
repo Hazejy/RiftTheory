@@ -18,4 +18,6 @@ venv/
 dist/
 build/
 node_modules/
-
+.upstream-cache/
+draftgap/**/target/
+data/runtime/

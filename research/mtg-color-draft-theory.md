@@ -2,6 +2,12 @@
 
 Assessment date: 2026-09-03
 
+Update 2026-09-04: the user-supplied spreadsheet legend was read directly. The
+new [evidence review](draft-intelligence-review.md) clarifies Green's item/shared
+timings, White's committed in-game mode and the limits of color-only counters.
+Its UI guide distinguishes source paraphrases from conditional coaching synthesis.
+Original video content remains unreviewed where retrieval yielded only metadata.
+
 ## Product decision
 
 DraftOS adopts the MTG-inspired color framework associated with LS as its

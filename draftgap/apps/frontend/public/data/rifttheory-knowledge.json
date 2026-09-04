@@ -1,0 +1,4425 @@
+{
+  "metadata": {
+    "schemaVersion": 3,
+    "generatedAt": "2026-09-04T18:44:23.521Z",
+    "latestPatch": {
+      "version": "16.17.1",
+      "discovered_at": "2026-09-04T18:41:58.403Z"
+    },
+    "sourceCount": 3
+  },
+  "sources": [
+    {
+      "source_key": "manually_curated",
+      "label": "manually_curated",
+      "kind": "manual",
+      "url": null,
+      "access_note": null
+    },
+    {
+      "source_key": "rifttheory_ai_assisted_synthesis_evidence_and_limits_research_anivia_mid_profile",
+      "label": "RiftTheory AI-assisted synthesis; evidence and limits: research/anivia-mid-profile.md",
+      "kind": "ai_assisted",
+      "url": "https://www.leagueoflegends.com/en-us/champions/anivia/",
+      "access_note": null
+    },
+    {
+      "source_key": "riot_data_dragon",
+      "label": "Riot Data Dragon",
+      "kind": "official",
+      "url": "https://developer.riotgames.com/docs/lol#data-dragon",
+      "access_note": "Official versioned static data; publication can lag the live patch."
+    }
+  ],
+  "champions": [
+    {
+      "riotKey": "266",
+      "slug": "aatrox",
+      "name": "Aatrox",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Aatrox",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "아트록스",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "暗裔剑魔",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "103",
+      "slug": "ahri",
+      "name": "Ahri",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Ahri",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "아리",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "九尾妖狐",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "84",
+      "slug": "akali",
+      "name": "Akali",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Akali",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "아칼리",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "离群之刺",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "166",
+      "slug": "akshan",
+      "name": "Akshan",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Akshan",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "아크샨",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "影哨",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "12",
+      "slug": "alistar",
+      "name": "Alistar",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Alistar",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "알리스타",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "牛头酋长",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "799",
+      "slug": "ambessa",
+      "name": "Ambessa",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Ambessa",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "암베사",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "铁血狼母",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "32",
+      "slug": "amumu",
+      "name": "Amumu",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Amumu",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "아무무",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "殇之木乃伊",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "34",
+      "slug": "anivia",
+      "name": "Anivia",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Anivia",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "애니비아",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "冰晶凤凰",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [
+        {
+          "champion_id": 2,
+          "role": "mid",
+          "capability": "wave_clear",
+          "strength": 1,
+          "patch_version": "unknown",
+          "assessment_method": "manual",
+          "confidence": null,
+          "review_status": "curated",
+          "reasoning": null,
+          "source_key": "manually_curated"
+        }
+      ],
+      "strategicProfiles": [
+        {
+          "id": 1,
+          "champion_id": 2,
+          "role": "mid",
+          "patch_version": "unknown",
+          "reasoning": "AI-assisted interpretation: Blue reflects space control and denial through stun, wall and persistent area damage. White is a conditional defensive/peel interpretation, not universal draft flexibility. Wave clear does not guarantee safe access against long-range pressure; positioning, mana and allied setup must be assessed. No win probability is inferred.",
+          "review_status": "provisional",
+          "confidence": null,
+          "source_key": "rifttheory_ai_assisted_synthesis_evidence_and_limits_research_anivia_mid_profile",
+          "source_url": "https://www.leagueoflegends.com/en-us/champions/anivia/",
+          "colors": [
+            {
+              "strategic_profile_id": 1,
+              "color": "blue",
+              "assignment": "main",
+              "weight": 1
+            },
+            {
+              "strategic_profile_id": 1,
+              "color": "white",
+              "assignment": "off",
+              "weight": 1
+            }
+          ]
+        }
+      ],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "1",
+      "slug": "annie",
+      "name": "Annie",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Annie",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "애니",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "黑暗之女",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "523",
+      "slug": "aphelios",
+      "name": "Aphelios",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Aphelios",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "아펠리오스",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "残月之肃",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "22",
+      "slug": "ashe",
+      "name": "Ashe",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Ashe",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "애쉬",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "寒冰射手",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "136",
+      "slug": "aurelionsol",
+      "name": "Aurelion Sol",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Aurelion Sol",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "아우렐리온 솔",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "铸星龙王",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "893",
+      "slug": "aurora",
+      "name": "Aurora",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Aurora",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "오로라",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "双界灵兔",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "268",
+      "slug": "azir",
+      "name": "Azir",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Azir",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "아지르",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "沙漠皇帝",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "432",
+      "slug": "bard",
+      "name": "Bard",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Bard",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "바드",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "星界游神",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "200",
+      "slug": "belveth",
+      "name": "Bel'Veth",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Bel'Veth",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "벨베스",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "虚空女皇",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "53",
+      "slug": "blitzcrank",
+      "name": "Blitzcrank",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Blitzcrank",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "블리츠크랭크",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "蒸汽机器人",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "63",
+      "slug": "brand",
+      "name": "Brand",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Brand",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "브랜드",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "复仇焰魂",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "201",
+      "slug": "braum",
+      "name": "Braum",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Braum",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "브라움",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "弗雷尔卓德之心",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "233",
+      "slug": "briar",
+      "name": "Briar",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Briar",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "브라이어",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "狂厄蔷薇",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "51",
+      "slug": "caitlyn",
+      "name": "Caitlyn",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Caitlyn",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "케이틀린",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "皮城女警",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "164",
+      "slug": "camille",
+      "name": "Camille",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Camille",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "카밀",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "青钢影",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "69",
+      "slug": "cassiopeia",
+      "name": "Cassiopeia",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Cassiopeia",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "카시오페아",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "魔蛇之拥",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "31",
+      "slug": "chogath",
+      "name": "Cho'Gath",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Cho'Gath",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "초가스",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "虚空恐惧",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "42",
+      "slug": "corki",
+      "name": "Corki",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Corki",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "코르키",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "英勇投弹手",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "122",
+      "slug": "darius",
+      "name": "Darius",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Darius",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "다리우스",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "诺克萨斯之手",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "131",
+      "slug": "diana",
+      "name": "Diana",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Diana",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "다이애나",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "皎月女神",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "36",
+      "slug": "drmundo",
+      "name": "Dr. Mundo",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Dr. Mundo",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "문도 박사",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "祖安狂人",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "119",
+      "slug": "draven",
+      "name": "Draven",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Draven",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "드레이븐",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "荣耀行刑官",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "245",
+      "slug": "ekko",
+      "name": "Ekko",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Ekko",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "에코",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "时间刺客",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "60",
+      "slug": "elise",
+      "name": "Elise",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Elise",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "엘리스",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "蜘蛛女皇",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "28",
+      "slug": "evelynn",
+      "name": "Evelynn",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Evelynn",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "이블린",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "痛苦之拥",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "81",
+      "slug": "ezreal",
+      "name": "Ezreal",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Ezreal",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "이즈리얼",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "探险家",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "9",
+      "slug": "fiddlesticks",
+      "name": "Fiddlesticks",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Fiddlesticks",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "피들스틱",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "远古恐惧",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "114",
+      "slug": "fiora",
+      "name": "Fiora",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Fiora",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "피오라",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "无双剑姬",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "105",
+      "slug": "fizz",
+      "name": "Fizz",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Fizz",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "피즈",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "潮汐海灵",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "3",
+      "slug": "galio",
+      "name": "Galio",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Galio",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "갈리오",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "正义巨像",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "41",
+      "slug": "gangplank",
+      "name": "Gangplank",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Gangplank",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "갱플랭크",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "海洋之灾",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "86",
+      "slug": "garen",
+      "name": "Garen",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Garen",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "가렌",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "德玛西亚之力",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "150",
+      "slug": "gnar",
+      "name": "Gnar",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Gnar",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "나르",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "迷失之牙",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "79",
+      "slug": "gragas",
+      "name": "Gragas",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Gragas",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "그라가스",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "酒桶",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "104",
+      "slug": "graves",
+      "name": "Graves",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Graves",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "그레이브즈",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "法外狂徒",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "887",
+      "slug": "gwen",
+      "name": "Gwen",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Gwen",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "그웬",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "灵罗娃娃",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "120",
+      "slug": "hecarim",
+      "name": "Hecarim",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Hecarim",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "헤카림",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "战争之影",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "74",
+      "slug": "heimerdinger",
+      "name": "Heimerdinger",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Heimerdinger",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "하이머딩거",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "大发明家",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "910",
+      "slug": "hwei",
+      "name": "Hwei",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Hwei",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "흐웨이",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "异画师",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "420",
+      "slug": "illaoi",
+      "name": "Illaoi",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Illaoi",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "일라오이",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "海兽祭司",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "39",
+      "slug": "irelia",
+      "name": "Irelia",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Irelia",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "이렐리아",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "刀锋舞者",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "427",
+      "slug": "ivern",
+      "name": "Ivern",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Ivern",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "아이번",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "翠神",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "40",
+      "slug": "janna",
+      "name": "Janna",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Janna",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "잔나",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "风暴之怒",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "59",
+      "slug": "jarvaniv",
+      "name": "Jarvan IV",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Jarvan IV",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "자르반 4세",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "德玛西亚皇子",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "24",
+      "slug": "jax",
+      "name": "Jax",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Jax",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "잭스",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "武器大师",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "126",
+      "slug": "jayce",
+      "name": "Jayce",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Jayce",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "제이스",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "未来守护者",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "202",
+      "slug": "jhin",
+      "name": "Jhin",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Jhin",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "진",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "戏命师",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "222",
+      "slug": "jinx",
+      "name": "Jinx",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Jinx",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "징크스",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "暴走萝莉",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "897",
+      "slug": "ksante",
+      "name": "K'Sante",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "K'Sante",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "크산테",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "纳祖芒荣耀",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "145",
+      "slug": "kaisa",
+      "name": "Kai'Sa",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Kai'Sa",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "카이사",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "虚空之女",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "429",
+      "slug": "kalista",
+      "name": "Kalista",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Kalista",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "칼리스타",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "复仇之矛",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "43",
+      "slug": "karma",
+      "name": "Karma",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Karma",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "카르마",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "天启者",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "30",
+      "slug": "karthus",
+      "name": "Karthus",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Karthus",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "카서스",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "死亡颂唱者",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "38",
+      "slug": "kassadin",
+      "name": "Kassadin",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Kassadin",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "카사딘",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "虚空行者",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "55",
+      "slug": "katarina",
+      "name": "Katarina",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Katarina",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "카타리나",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "不祥之刃",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "10",
+      "slug": "kayle",
+      "name": "Kayle",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Kayle",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "케일",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "正义天使",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "141",
+      "slug": "kayn",
+      "name": "Kayn",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Kayn",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "케인",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "影流之镰",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "85",
+      "slug": "kennen",
+      "name": "Kennen",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Kennen",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "케넨",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "狂暴之心",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "121",
+      "slug": "khazix",
+      "name": "Kha'Zix",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Kha'Zix",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "카직스",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "虚空掠夺者",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "203",
+      "slug": "kindred",
+      "name": "Kindred",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Kindred",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "킨드레드",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "永猎双子",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "240",
+      "slug": "kled",
+      "name": "Kled",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Kled",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "클레드",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "暴怒骑士",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "96",
+      "slug": "kogmaw",
+      "name": "Kog'Maw",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Kog'Maw",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "코그모",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "深渊巨口",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "7",
+      "slug": "leblanc",
+      "name": "LeBlanc",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "LeBlanc",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "르블랑",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "诡术妖姬",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "64",
+      "slug": "leesin",
+      "name": "Lee Sin",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Lee Sin",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "리 신",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "盲僧",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "89",
+      "slug": "leona",
+      "name": "Leona",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Leona",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "레오나",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "曙光女神",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "876",
+      "slug": "lillia",
+      "name": "Lillia",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Lillia",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "릴리아",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "含羞蓓蕾",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "127",
+      "slug": "lissandra",
+      "name": "Lissandra",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Lissandra",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "리산드라",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "冰霜女巫",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "805",
+      "slug": "locke",
+      "name": "Locke",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Locke",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "로크",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "灰烬驱魔人",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "236",
+      "slug": "lucian",
+      "name": "Lucian",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Lucian",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "루시안",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "圣枪游侠",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "117",
+      "slug": "lulu",
+      "name": "Lulu",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Lulu",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "룰루",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "仙灵女巫",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "99",
+      "slug": "lux",
+      "name": "Lux",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Lux",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "럭스",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "光辉女郎",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "54",
+      "slug": "malphite",
+      "name": "Malphite",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Malphite",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "말파이트",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "熔岩巨兽",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [
+        {
+          "champion_id": 1,
+          "role": "top",
+          "capability": "engage",
+          "strength": 1,
+          "patch_version": "unknown",
+          "assessment_method": "manual",
+          "confidence": null,
+          "review_status": "curated",
+          "reasoning": null,
+          "source_key": "manually_curated"
+        },
+        {
+          "champion_id": 1,
+          "role": "top",
+          "capability": "frontline",
+          "strength": 1,
+          "patch_version": "unknown",
+          "assessment_method": "manual",
+          "confidence": null,
+          "review_status": "curated",
+          "reasoning": null,
+          "source_key": "manually_curated"
+        }
+      ],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "90",
+      "slug": "malzahar",
+      "name": "Malzahar",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Malzahar",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "말자하",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "虚空先知",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "57",
+      "slug": "maokai",
+      "name": "Maokai",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Maokai",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "마오카이",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "扭曲树精",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "11",
+      "slug": "masteryi",
+      "name": "Master Yi",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Master Yi",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "마스터 이",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "无极剑圣",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "800",
+      "slug": "mel",
+      "name": "Mel",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Mel",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "멜",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "流光镜影",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "902",
+      "slug": "milio",
+      "name": "Milio",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Milio",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "밀리오",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "明烛",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "21",
+      "slug": "missfortune",
+      "name": "Miss Fortune",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Miss Fortune",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "미스 포츈",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "赏金猎人",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "82",
+      "slug": "mordekaiser",
+      "name": "Mordekaiser",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Mordekaiser",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "모데카이저",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "铁铠冥魂",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "25",
+      "slug": "morgana",
+      "name": "Morgana",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Morgana",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "모르가나",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "堕落天使",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "950",
+      "slug": "naafiri",
+      "name": "Naafiri",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Naafiri",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "나피리",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "百裂冥犬",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "267",
+      "slug": "nami",
+      "name": "Nami",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Nami",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "나미",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "唤潮鲛姬",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "75",
+      "slug": "nasus",
+      "name": "Nasus",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Nasus",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "나서스",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "沙漠死神",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "111",
+      "slug": "nautilus",
+      "name": "Nautilus",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Nautilus",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "노틸러스",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "深海泰坦",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "518",
+      "slug": "neeko",
+      "name": "Neeko",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Neeko",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "니코",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "万花通灵",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "76",
+      "slug": "nidalee",
+      "name": "Nidalee",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Nidalee",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "니달리",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "狂野女猎手",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "895",
+      "slug": "nilah",
+      "name": "Nilah",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Nilah",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "닐라",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "不羁之悦",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "56",
+      "slug": "nocturne",
+      "name": "Nocturne",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Nocturne",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "녹턴",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "永恒梦魇",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "20",
+      "slug": "nunu",
+      "name": "Nunu & Willump",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Nunu & Willump",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "누누와 윌럼프",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "雪原双子",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "2",
+      "slug": "olaf",
+      "name": "Olaf",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Olaf",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "올라프",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "狂战士",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "61",
+      "slug": "orianna",
+      "name": "Orianna",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Orianna",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "오리아나",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "发条魔灵",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "516",
+      "slug": "ornn",
+      "name": "Ornn",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Ornn",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "오른",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "山隐之焰",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "80",
+      "slug": "pantheon",
+      "name": "Pantheon",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Pantheon",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "판테온",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "不屈之枪",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "78",
+      "slug": "poppy",
+      "name": "Poppy",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Poppy",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "뽀삐",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "圣锤之毅",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "555",
+      "slug": "pyke",
+      "name": "Pyke",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Pyke",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "파이크",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "血港鬼影",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "246",
+      "slug": "qiyana",
+      "name": "Qiyana",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Qiyana",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "키아나",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "元素女皇",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "133",
+      "slug": "quinn",
+      "name": "Quinn",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Quinn",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "퀸",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "德玛西亚之翼",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "497",
+      "slug": "rakan",
+      "name": "Rakan",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Rakan",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "라칸",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "幻翎",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "33",
+      "slug": "rammus",
+      "name": "Rammus",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Rammus",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "람머스",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "披甲龙龟",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "421",
+      "slug": "reksai",
+      "name": "Rek'Sai",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Rek'Sai",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "렉사이",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "虚空遁地兽",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "526",
+      "slug": "rell",
+      "name": "Rell",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Rell",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "렐",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "镕铁少女",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "888",
+      "slug": "renata",
+      "name": "Renata Glasc",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Renata Glasc",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "레나타 글라스크",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "炼金男爵",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "58",
+      "slug": "renekton",
+      "name": "Renekton",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Renekton",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "레넥톤",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "荒漠屠夫",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "107",
+      "slug": "rengar",
+      "name": "Rengar",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Rengar",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "렝가",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "傲之追猎者",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "92",
+      "slug": "riven",
+      "name": "Riven",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Riven",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "리븐",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "放逐之刃",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "68",
+      "slug": "rumble",
+      "name": "Rumble",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Rumble",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "럼블",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "机械公敌",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "13",
+      "slug": "ryze",
+      "name": "Ryze",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Ryze",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "라이즈",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "符文法师",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "360",
+      "slug": "samira",
+      "name": "Samira",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Samira",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "사미라",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "沙漠玫瑰",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "113",
+      "slug": "sejuani",
+      "name": "Sejuani",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Sejuani",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "세주아니",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "北地之怒",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "235",
+      "slug": "senna",
+      "name": "Senna",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Senna",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "세나",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "涤魂圣枪",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "147",
+      "slug": "seraphine",
+      "name": "Seraphine",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Seraphine",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "세라핀",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "星籁歌姬",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "875",
+      "slug": "sett",
+      "name": "Sett",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Sett",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "세트",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "腕豪",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "35",
+      "slug": "shaco",
+      "name": "Shaco",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Shaco",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "샤코",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "恶魔小丑",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "98",
+      "slug": "shen",
+      "name": "Shen",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Shen",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "쉔",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "暮光之眼",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "102",
+      "slug": "shyvana",
+      "name": "Shyvana",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Shyvana",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "쉬바나",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "龙血武姬",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "27",
+      "slug": "singed",
+      "name": "Singed",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Singed",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "신지드",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "炼金术士",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "14",
+      "slug": "sion",
+      "name": "Sion",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Sion",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "사이온",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "亡灵战神",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "15",
+      "slug": "sivir",
+      "name": "Sivir",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Sivir",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "시비르",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "战争女神",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "72",
+      "slug": "skarner",
+      "name": "Skarner",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Skarner",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "스카너",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "上古领主",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "901",
+      "slug": "smolder",
+      "name": "Smolder",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Smolder",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "스몰더",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "炽炎雏龙",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "37",
+      "slug": "sona",
+      "name": "Sona",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Sona",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "소나",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "琴瑟仙女",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "16",
+      "slug": "soraka",
+      "name": "Soraka",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Soraka",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "소라카",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "众星之子",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "50",
+      "slug": "swain",
+      "name": "Swain",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Swain",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "스웨인",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "诺克萨斯统领",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "517",
+      "slug": "sylas",
+      "name": "Sylas",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Sylas",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "사일러스",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "解脱者",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "134",
+      "slug": "syndra",
+      "name": "Syndra",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Syndra",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "신드라",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "暗黑元首",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "223",
+      "slug": "tahmkench",
+      "name": "Tahm Kench",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Tahm Kench",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "탐 켄치",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "河流之王",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "163",
+      "slug": "taliyah",
+      "name": "Taliyah",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Taliyah",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "탈리야",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "岩雀",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "91",
+      "slug": "talon",
+      "name": "Talon",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Talon",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "탈론",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "刀锋之影",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "44",
+      "slug": "taric",
+      "name": "Taric",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Taric",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "타릭",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "瓦洛兰之盾",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "17",
+      "slug": "teemo",
+      "name": "Teemo",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Teemo",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "티모",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "迅捷斥候",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "412",
+      "slug": "thresh",
+      "name": "Thresh",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Thresh",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "쓰레쉬",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "魂锁典狱长",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "18",
+      "slug": "tristana",
+      "name": "Tristana",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Tristana",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "트리스타나",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "麦林炮手",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "48",
+      "slug": "trundle",
+      "name": "Trundle",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Trundle",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "트런들",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "巨魔之王",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "23",
+      "slug": "tryndamere",
+      "name": "Tryndamere",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Tryndamere",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "트린다미어",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "蛮族之王",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "4",
+      "slug": "twistedfate",
+      "name": "Twisted Fate",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Twisted Fate",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "트위스티드 페이트",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "卡牌大师",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "29",
+      "slug": "twitch",
+      "name": "Twitch",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Twitch",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "트위치",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "瘟疫之源",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "77",
+      "slug": "udyr",
+      "name": "Udyr",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Udyr",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "우디르",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "兽灵行者",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "6",
+      "slug": "urgot",
+      "name": "Urgot",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Urgot",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "우르곳",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "无畏战车",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "110",
+      "slug": "varus",
+      "name": "Varus",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Varus",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "바루스",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "惩戒之箭",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "67",
+      "slug": "vayne",
+      "name": "Vayne",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Vayne",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "베인",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "暗夜猎手",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "45",
+      "slug": "veigar",
+      "name": "Veigar",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Veigar",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "베이가",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "邪恶小法师",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "161",
+      "slug": "velkoz",
+      "name": "Vel'Koz",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Vel'Koz",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "벨코즈",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "虚空之眼",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "711",
+      "slug": "vex",
+      "name": "Vex",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Vex",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "벡스",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "愁云使者",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "254",
+      "slug": "vi",
+      "name": "Vi",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Vi",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "바이",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "皮城执法官",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "234",
+      "slug": "viego",
+      "name": "Viego",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Viego",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "비에고",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "破败之王",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "112",
+      "slug": "viktor",
+      "name": "Viktor",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Viktor",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "빅토르",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "奥术先驱",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "8",
+      "slug": "vladimir",
+      "name": "Vladimir",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Vladimir",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "블라디미르",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "猩红收割者",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "106",
+      "slug": "volibear",
+      "name": "Volibear",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Volibear",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "볼리베어",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "不灭狂雷",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "19",
+      "slug": "warwick",
+      "name": "Warwick",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Warwick",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "워윅",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "祖安怒兽",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "62",
+      "slug": "monkeyking",
+      "name": "Wukong",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Wukong",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "오공",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "齐天大圣",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "498",
+      "slug": "xayah",
+      "name": "Xayah",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Xayah",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "자야",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "逆羽",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "101",
+      "slug": "xerath",
+      "name": "Xerath",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Xerath",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "제라스",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "远古巫灵",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "5",
+      "slug": "xinzhao",
+      "name": "Xin Zhao",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Xin Zhao",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "신 짜오",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "德邦总管",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "157",
+      "slug": "yasuo",
+      "name": "Yasuo",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Yasuo",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "야스오",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "疾风剑豪",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "777",
+      "slug": "yone",
+      "name": "Yone",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Yone",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "요네",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "封魔剑魂",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "83",
+      "slug": "yorick",
+      "name": "Yorick",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Yorick",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "요릭",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "牧魂人",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "804",
+      "slug": "yunara",
+      "name": "Yunara",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Yunara",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "유나라",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "不破之誓",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "350",
+      "slug": "yuumi",
+      "name": "Yuumi",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Yuumi",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "유미",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "魔法猫咪",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "904",
+      "slug": "zaahen",
+      "name": "Zaahen",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Zaahen",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "자헨",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "不落魔锋",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "154",
+      "slug": "zac",
+      "name": "Zac",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Zac",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "자크",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "生化魔人",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "238",
+      "slug": "zed",
+      "name": "Zed",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Zed",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "제드",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "影流之主",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "221",
+      "slug": "zeri",
+      "name": "Zeri",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Zeri",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "제리",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "祖安花火",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "115",
+      "slug": "ziggs",
+      "name": "Ziggs",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Ziggs",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "직스",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "爆破鬼才",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "26",
+      "slug": "zilean",
+      "name": "Zilean",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Zilean",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "질리언",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "时光守护者",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "142",
+      "slug": "zoe",
+      "name": "Zoe",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Zoe",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "조이",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "暮光星灵",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    },
+    {
+      "riotKey": "143",
+      "slug": "zyra",
+      "name": "Zyra",
+      "active": true,
+      "firstSeenPatch": "16.17.1",
+      "lastSeenPatch": "16.17.1",
+      "localizations": {
+        "en_US": {
+          "name": "Zyra",
+          "patch": "16.17.1"
+        },
+        "ko_KR": {
+          "name": "자이라",
+          "patch": "16.17.1"
+        },
+        "zh_CN": {
+          "name": "荆棘之兴",
+          "patch": "16.17.1"
+        }
+      },
+      "capabilities": [],
+      "strategicProfiles": [],
+      "roleObservations": []
+    }
+  ]
+}

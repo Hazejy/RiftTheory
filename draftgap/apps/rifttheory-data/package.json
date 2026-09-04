@@ -1,0 +1,24 @@
+{
+  "name": "@rifttheory/data",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "init": "bun run src/cli.ts init",
+    "build": "bun run src/cli.ts build",
+    "build:offline": "bun run src/cli.ts build --offline",
+    "sync:riot": "bun run src/cli.ts sync-riot",
+    "import:curated": "bun run src/cli.ts import-curated",
+    "export": "bun run src/cli.ts export",
+    "status": "bun run src/cli.ts status",
+    "verify": "bun run src/cli.ts verify",
+    "typecheck": "tsc --noEmit",
+    "format": "bunx prettier . --write"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "prettier": "3.8.1",
+    "typescript": "^5.9.3"
+  },
+  "packageManager": "bun@1.3.6"
+}

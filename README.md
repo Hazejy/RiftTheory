@@ -1,31 +1,46 @@
-# DraftOS
+# RiftTheory
 
-DraftOS is an explainable coaching operating system for League of Legends.
+RiftTheory (formerly DraftOS) is an explainable coaching application for League of Legends.
 It turns game knowledge into measurable hypotheses, executable game plans,
 evidence-based reviews, and optimized practice.
 
 ## Current status
 
-Phase 1 builds the first explainable Composition Debt baseline. The initial
-domain vocabulary covers engage, frontline, and wave clear. A local web interface
-now supports role-specific selections and explainable analysis. Riot integration,
-desktop packaging and machine learning are not implemented yet.
+The main application now uses a local fork of DraftGap as its foundation:
+SolidJS, TypeScript, its statistical core and its existing Tauri desktop source.
+DraftOS adds an initial Strategy tab connecting both teams' picks to our curated
+capabilities and MTG-inspired main/off colors. The Python core and earlier React
+prototype remain intact; they are not the runtime backend of the new interface.
+
+Curated knowledge is still small: Anivia Mid has a provisional color profile;
+Anivia Mid and Malphite Top have capability profiles. DraftGap's larger statistical
+catalog is separate from that coverage. No DraftOS desktop installer or machine
+learning model has been built yet.
 
 ## Local application
 
-Start the built application with `start-draftos.cmd` and open
-<http://127.0.0.1:8000>. The server must stay running while using the app.
+Start the built application with `start-rifttheory.cmd` and open
+<http://127.0.0.1:3000>. The server must stay running while using the app.
 
-For installation, startup, testing and current limits, see
-[the local application guide](docs/local-app.md).
+For setup, sources, attribution and current limits, see
+[the DraftGap-based application guide](docs/draftgap-base.md).
+The [earlier local application guide](docs/local-app.md) covers the preserved
+Python/React prototype only.
+
+The current interface supports English, Korean and Simplified Chinese for the
+draft workspace and champion names. Picks advance automatically through
+`B1 R1 R2 B2 B3 R3 R4 B4 B5 R5`. See [the RiftTheory update](docs/rifttheory-workspace.md)
+for localization scope, data sources and pick/reset behavior. Logo and visual
+redesign are intentionally deferred; DraftGap remains the technical foundation.
 
 ## Requirements
 
-- Python 3.11 or newer
-- Web application: dependencies from `requirements.txt` in `.venv`
-- Frontend build: Node.js and npm (verified with Node 24.19.0)
+- Main application: Bun 1.3.6 and dependencies from `draftgap/bun.lock`.
+- Internet access for upstream datasets and champion assets.
+- Legacy Python tools below: Python 3.11+, with optional `requirements.txt`
+  dependencies for the old FastAPI application.
 
-## Run
+## Preserved Python CLI
 
 From the repository root:
 
@@ -59,7 +74,7 @@ Anivia (mid):
   Source URL: https://www.leagueoflegends.com/en-us/champions/anivia/
 ```
 
-## Choose champions
+## Choose champions in the Python CLI
 
 List the profiles currently available locally:
 
@@ -113,7 +128,11 @@ The CLI is a development interface, not the intended final user experience.
 A local visual champion-selection and analysis screen is now implemented.
 Desktop packaging is a later milestone rather than a separate analysis rewrite.
 
-## Test
+## Optional legacy development checks
+
+These commands concern the preserved prototype, not the DraftGap-based app.
+They are not required for normal use. The migration was checked with a TypeScript
+check, production build and a brief browser startup/pick check; no test suite was run.
 
 ```powershell
 .\.venv\Scripts\python.exe -m unittest discover -s tests -v

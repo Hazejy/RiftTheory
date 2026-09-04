@@ -1,0 +1,64 @@
+{
+    "$schema": "../node_modules/@tauri-apps/cli/schema.json",
+    "build": {
+        "beforeBuildCommand": "bun run build",
+        "beforeDevCommand": "bun run dev",
+        "frontendDist": "../dist",
+        "devUrl": "http://localhost:3000"
+    },
+    "bundle": {
+        "active": true,
+        "category": "DeveloperTool",
+        "copyright": "",
+        "targets": "all",
+        "externalBin": [],
+        "icon": [
+            "icons/32x32.png",
+            "icons/128x128.png",
+            "icons/128x128@2x.png",
+            "icons/icon.icns",
+            "icons/icon.ico"
+        ],
+        "windows": {
+            "certificateThumbprint": null,
+            "digestAlgorithm": "sha256",
+            "timestampUrl": ""
+        },
+        "longDescription": "",
+        "macOS": {
+            "entitlements": null,
+            "exceptionDomain": "",
+            "frameworks": [],
+            "providerShortName": null,
+            "signingIdentity": null
+        },
+        "resources": [],
+        "shortDescription": "",
+        "linux": {
+            "deb": {
+                "depends": []
+            }
+        },
+        "createUpdaterArtifacts": false
+    },
+    "productName": "RiftTheory",
+    "mainBinaryName": "RiftTheory",
+    "version": "3.2.1",
+    "identifier": "local.rifttheory.workspace",
+    "plugins": {},
+    "app": {
+        "windows": [
+            {
+                "fullscreen": false,
+                "height": 850,
+                "resizable": true,
+                "title": "RiftTheory",
+                "width": 1600,
+                "useHttpsScheme": true
+            }
+        ],
+        "security": {
+            "csp": null
+        }
+    }
+}

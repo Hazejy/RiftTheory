@@ -1,4 +1,9 @@
-# Local DraftOS application
+# Legacy local DraftOS application
+
+This guide describes the preserved Python/React prototype. Since 2026-09-04,
+`start-draftos.cmd` launches the DraftGap-based app on port 3000 instead.
+See [the current application guide](draftgap-base.md). The prototype below is
+still available separately on port 8000.
 
 ## What this release is
 
@@ -30,19 +35,14 @@ pinned in `web/package-lock.json`; do not commit `.venv`, `node_modules` or `dis
 
 ## Normal use
 
-Double-click `start-draftos.cmd`, or run from the repository root:
-
-```powershell
-.\start-draftos.cmd
-```
-
-Once startup completes, open <http://127.0.0.1:8000>. Keep the server window open;
-Ctrl+C stops it. The launcher does not install packages or change system settings.
-An alternative start command is:
+Run from the repository root:
 
 ```powershell
 .\.venv\Scripts\python.exe -m src.draftos.web
 ```
+
+Once startup completes, open <http://127.0.0.1:8000>. Keep the server window open;
+Ctrl+C stops it. This command does not install packages or change system settings.
 
 Select Anivia in Mid and/or Malphite in Top, then choose Analyze composition.
 Starter picks selects these two without claiming a full draft. Empty roles are

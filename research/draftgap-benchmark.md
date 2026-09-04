@@ -2,6 +2,9 @@
 
 Assessment date: 2026-09-03
 
+Decision updated: 2026-09-04, following the user's explicit request to adopt
+DraftGap as the application foundation. See [the migration guide](../docs/draftgap-base.md).
+
 Repository: <https://github.com/vigovlugt/draftgap>
 
 ## Why DraftGap matters
@@ -24,17 +27,12 @@ Role probabilities are derived from observed games across possible roles.
 
 ## Reuse decision
 
-DraftOS will use DraftGap as:
-
-- a functional benchmark;
-- a research source for data structures and statistical approaches;
-- a possible source for selectively reused MIT-licensed code;
-- a comparison system for future DraftOS evaluations.
-
-DraftOS will not adopt the full repository as its foundation. The initial
-DraftOS decision and coaching engine remains an independently tested Python
-codebase. Any substantial code reuse must preserve the DraftGap copyright and
-MIT license notice and be recorded in third-party notices.
+DraftOS now adopts a pinned copy of the full DraftGap source under `draftgap/`.
+This supersedes the initial decision to use it only as a benchmark. Its UI and
+statistical core provide the main application; our explainable coaching layer
+is added incrementally. The earlier Python core and React prototype are preserved.
+The upstream copyright and MIT license are retained and the import is recorded
+in [third-party notices](../THIRD_PARTY_NOTICES.md).
 
 ## Items requiring independent validation
 
@@ -47,9 +45,10 @@ MIT license notice and be recorded in third-party notices.
 - behavior for rare and off-meta role samples;
 - optional League Client integration and Riot policy compliance.
 
-No automated test files were found in the reviewed repository snapshot. Any
-concept or implementation adopted by DraftOS must therefore receive its own
-tests and mathematical documentation.
+No automated test files were found in the original reviewed snapshot. The initial
+fork was checked with type checking, a production build and a brief browser check,
+without a new test suite or manual test loop. These checks do not validate the
+statistical model; independent mathematical review and calibration remain future work.
 
 ## DraftOS differentiation
 
@@ -83,4 +82,3 @@ Output:
 - composition capability coverage and debt;
 - uncertainty and data limitations;
 - multiple options with understandable trade-offs.
-
