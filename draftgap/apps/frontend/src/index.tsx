@@ -21,6 +21,7 @@ import { DraftAnalysisProvider } from "./contexts/DraftAnalysisContext";
 import { DatasetProvider } from "./contexts/DatasetContext";
 import { DraftFiltersProvider } from "./contexts/DraftFiltersContext";
 import { ExtraDraftAnalysisProvider } from "./contexts/ExtraDraftAnalysisContext";
+import { RiftTheoryKnowledgeProvider } from "./contexts/RiftTheoryKnowledgeContext";
 
 setupMobileVH();
 setupAnalytics();
@@ -31,34 +32,36 @@ render(
     () => (
         <QueryClientProvider client={queryClient}>
             <UserProvider>
-                <DatasetProvider>
-                    <TooltipProvider>
-                        <DraftViewProvider>
-                            <DraftFiltersProvider>
-                                <DraftProvider>
-                                    <DraftAnalysisProvider>
-                                        <ExtraDraftAnalysisProvider>
-                                            <DraftSuggestionsProvider>
-                                                <BuildProvider>
-                                                    <LolClientProvider>
-                                                        <App />
-                                                        <Toaster
-                                                            position="bottom-right"
-                                                            toastOptions={{
-                                                                duration:
-                                                                    Infinity,
-                                                            }}
-                                                        />
-                                                    </LolClientProvider>
-                                                </BuildProvider>
-                                            </DraftSuggestionsProvider>
-                                        </ExtraDraftAnalysisProvider>
-                                    </DraftAnalysisProvider>
-                                </DraftProvider>
-                            </DraftFiltersProvider>
-                        </DraftViewProvider>
-                    </TooltipProvider>
-                </DatasetProvider>
+                <RiftTheoryKnowledgeProvider>
+                    <DatasetProvider>
+                        <TooltipProvider>
+                            <DraftViewProvider>
+                                <DraftFiltersProvider>
+                                    <DraftProvider>
+                                        <DraftAnalysisProvider>
+                                            <ExtraDraftAnalysisProvider>
+                                                <DraftSuggestionsProvider>
+                                                    <BuildProvider>
+                                                        <LolClientProvider>
+                                                            <App />
+                                                            <Toaster
+                                                                position="bottom-right"
+                                                                toastOptions={{
+                                                                    duration:
+                                                                        Infinity,
+                                                                }}
+                                                            />
+                                                        </LolClientProvider>
+                                                    </BuildProvider>
+                                                </DraftSuggestionsProvider>
+                                            </ExtraDraftAnalysisProvider>
+                                        </DraftAnalysisProvider>
+                                    </DraftProvider>
+                                </DraftFiltersProvider>
+                            </DraftViewProvider>
+                        </TooltipProvider>
+                    </DatasetProvider>
+                </RiftTheoryKnowledgeProvider>
             </UserProvider>
         </QueryClientProvider>
     ),

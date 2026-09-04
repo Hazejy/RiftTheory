@@ -96,10 +96,7 @@ export function CustomThemeEditor() {
         setApplied(false);
     };
     return (
-        <details
-            class="rounded-xl border border-neutral-700 p-3"
-            open={config.theme === "custom"}
-        >
+        <details class="rounded-xl border border-neutral-700 p-3">
             <summary class="cursor-pointer text-sm font-semibold">
                 {copy().title}
             </summary>

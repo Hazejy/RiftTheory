@@ -85,6 +85,9 @@ export const en = {
     support: "Support",
     dataError:
         "Statistics could not be loaded. Check your connection and reload.",
+    knowledgeLoading: "Loading RiftTheory champion knowledge…",
+    knowledgeError:
+        "RiftTheory champion knowledge could not be loaded. Rebuild the local data export and reload.",
     localizationScope:
         "Draft interface and champion names. Source notes and some advanced tools remain in English.",
     koreanFallback:
@@ -232,6 +235,9 @@ export const ko: Messages = {
     support: "서포터",
     dataError:
         "통계를 불러오지 못했습니다. 연결 상태를 확인하고 새로고침하세요.",
+    knowledgeLoading: "RiftTheory 챔피언 지식을 불러오는 중…",
+    knowledgeError:
+        "RiftTheory 챔피언 지식을 불러오지 못했습니다. 로컬 데이터 내보내기를 다시 생성한 후 새로고침하세요.",
     localizationScope:
         "드래프트 화면과 챔피언 이름이 번역됩니다. 원문 설명과 일부 고급 기능은 영어로 표시됩니다.",
     koreanFallback:
@@ -371,6 +377,9 @@ export const zh: Messages = {
     bot: "下路",
     support: "辅助",
     dataError: "无法加载统计数据。请检查网络连接后刷新页面。",
+    knowledgeLoading: "正在加载 RiftTheory 英雄知识…",
+    knowledgeError:
+        "无法加载 RiftTheory 英雄知识。请重新生成本地数据导出后刷新页面。",
     localizationScope:
         "翻译选人界面与英雄名称。原始说明和部分高级功能仍以英文显示。",
     koreanFallback: "无法加载韩文英雄名称，暂时显示英文名称。",

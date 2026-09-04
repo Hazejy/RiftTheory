@@ -1,18 +1,27 @@
 import { createMemo, For, Show } from "solid-js";
 import { useDraft } from "../../contexts/DraftContext";
 import { useDataset } from "../../contexts/DatasetContext";
+import { useRiftTheoryKnowledge } from "../../contexts/RiftTheoryKnowledgeContext";
 import { useUser } from "../../contexts/UserContext";
 import { championName, useI18n } from "../../utils/i18n";
-import strategicProfiles from "../../../../../../data/strategic_profiles.json";
-import capabilityProfiles from "../../../../../../data/champion_profiles.json";
+import { KnowledgeStrategicProfile } from "../../types/RiftTheoryKnowledge";
 
 const roleNames = ["top", "jungle", "mid", "bot", "support"];
+const profileColors = (
+    profile: KnowledgeStrategicProfile,
+    assignment: "main" | "off",
+) =>
+    profile.colors
+        .filter((color) => color.assignment === assignment)
+        .map((color) => color.color);
 
 export default function RiftTheoryStrategy() {
     const { t, term } = useI18n();
     const { config } = useUser();
     const { allyTeam, opponentTeam } = useDraft();
     const { dataset } = useDataset();
+    const { knowledge, championForKey, championNameFor, sourceForKey } =
+        useRiftTheoryKnowledge();
     const teams = createMemo(() =>
         [
             { name: t("ally"), picks: allyTeam },
@@ -22,24 +31,26 @@ export default function RiftTheoryStrategy() {
             picks: team.picks
                 .filter((pick) => pick.championKey !== undefined)
                 .map((pick) => {
-                    const champion = dataset()?.championData[pick.championKey!];
+                    const championKey = pick.championKey!;
+                    const champion = dataset()?.championData[championKey];
+                    const knowledgeChampion = championForKey(championKey);
                     const name = champion?.name ?? "Unknown champion";
                     const role =
                         pick.role === undefined
                             ? undefined
                             : roleNames[pick.role];
                     return {
-                        name: champion ? championName(champion, config) : name,
+                        name:
+                            championNameFor(championKey, config.language) ??
+                            (champion ? championName(champion, config) : name),
                         role,
-                        strategy: strategicProfiles.find(
-                            (profile) =>
-                                profile.champion_name === name &&
-                                profile.role === role,
+                        strategy: knowledgeChampion?.strategicProfiles.find(
+                            (profile) => profile.role === role,
                         ),
-                        capabilities: capabilityProfiles.find(
-                            (profile) =>
-                                profile.name === name && profile.role === role,
-                        ),
+                        capabilities:
+                            knowledgeChampion?.capabilities.filter(
+                                (profile) => profile.role === role,
+                            ) ?? [],
                     };
                 }),
         })),
@@ -51,6 +62,22 @@ export default function RiftTheoryStrategy() {
                 RiftTheory — {t("strategy")}
             </h2>
             <p class="text-sm text-neutral-400 mb-5">{t("strategyIntro")}</p>
+            <Show when={knowledge.loading}>
+                <div
+                    class="rounded border border-neutral-700 bg-primary p-3 text-sm text-neutral-400 mb-4"
+                    role="status"
+                >
+                    {t("knowledgeLoading")}
+                </div>
+            </Show>
+            <Show when={knowledge.error}>
+                <div
+                    class="rounded border border-red-800 bg-red-950/20 p-3 text-sm text-red-200 mb-4"
+                    role="alert"
+                >
+                    {t("knowledgeError")}
+                </div>
+            </Show>
             <div class="rounded border border-amber-800 bg-amber-950/20 p-3 text-sm text-amber-200 mb-6">
                 {t("coverage")}
             </div>
@@ -82,15 +109,34 @@ export default function RiftTheoryStrategy() {
                                             </h4>
                                             <p class="text-xs text-neutral-400 my-3">
                                                 {t("capabilities")}:{" "}
-                                                {pick.capabilities?.capabilities
-                                                    .map(term)
-                                                    .join(", ") ??
-                                                    t("unassessed")}
+                                                {pick.capabilities.length
+                                                    ? pick.capabilities
+                                                          .map((capability) =>
+                                                              term(
+                                                                  capability.capability,
+                                                              ),
+                                                          )
+                                                          .join(", ")
+                                                    : t("unassessed")}
                                             </p>
-                                            <Show when={pick.capabilities}>
+                                            <Show
+                                                when={
+                                                    pick.capabilities.length > 0
+                                                }
+                                            >
                                                 <p class="text-xs text-neutral-500 mb-3">
                                                     {t("capabilitySource")}:{" "}
-                                                    {pick.capabilities?.source}
+                                                    {[
+                                                        ...new Set(
+                                                            pick.capabilities.map(
+                                                                (capability) =>
+                                                                    sourceForKey(
+                                                                        capability.source_key,
+                                                                    )?.label ??
+                                                                    capability.source_key,
+                                                            ),
+                                                        ),
+                                                    ].join(", ")}
                                                 </p>
                                             </Show>
                                             <Show
@@ -109,19 +155,21 @@ export default function RiftTheoryStrategy() {
                                                                     "mainColors",
                                                                 )}
                                                                 :{" "}
-                                                                {strategy()
-                                                                    .identity.main_colors.map(
-                                                                        term,
-                                                                    )
+                                                                {profileColors(
+                                                                    strategy(),
+                                                                    "main",
+                                                                )
+                                                                    .map(term)
                                                                     .join(", ")}
                                                             </span>
                                                             <span class="border border-neutral-500 rounded px-2 py-1">
                                                                 {t("offColors")}
                                                                 :{" "}
-                                                                {strategy()
-                                                                    .identity.off_colors.map(
-                                                                        term,
-                                                                    )
+                                                                {profileColors(
+                                                                    strategy(),
+                                                                    "off",
+                                                                )
+                                                                    .map(term)
                                                                     .join(
                                                                         ", ",
                                                                     ) ||
@@ -145,7 +193,6 @@ export default function RiftTheoryStrategy() {
                                                         >
                                                             {
                                                                 strategy()
-                                                                    .identity
                                                                     .reasoning
                                                             }
                                                         </p>
@@ -154,11 +201,12 @@ export default function RiftTheoryStrategy() {
                                                                 {t("evidence")}
                                                             </summary>
                                                             <p class="mt-2 break-words">
-                                                                {
+                                                                {sourceForKey(
                                                                     strategy()
-                                                                        .identity
-                                                                        .source_name
-                                                                }
+                                                                        .source_key,
+                                                                )?.label ??
+                                                                    strategy()
+                                                                        .source_key}
                                                             </p>
                                                             <p class="mt-2">
                                                                 {t(
@@ -166,10 +214,13 @@ export default function RiftTheoryStrategy() {
                                                                 )}
                                                                 :{" "}
                                                                 {strategy()
-                                                                    .patch ??
-                                                                    t(
-                                                                        "unknownPatch",
-                                                                    )}
+                                                                    .patch_version ===
+                                                                "unknown"
+                                                                    ? t(
+                                                                          "unknownPatch",
+                                                                      )
+                                                                    : strategy()
+                                                                          .patch_version}
                                                             </p>
                                                             <Show
                                                                 when={

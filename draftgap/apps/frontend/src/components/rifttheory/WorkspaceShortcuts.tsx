@@ -22,9 +22,9 @@ import {
 const COPY = {
     en_US: {
         title: "Keyboard shortcuts",
-        edit: "Edit a key below. Clear a field to unbind it before reassigning that key. Changes are saved on this device.",
+        edit: "Edit a key below. Duplicate keys are allowed and highlighted. Changes are saved on this device.",
         duplicate:
-            "That key is already assigned. Clear its other binding first.",
+            "This key is also assigned to another action. The first matching action in the list takes priority.",
         invalid: "Use a single visible character, or leave the field empty.",
         reset: "Restore default keys",
         slot: "Slot",
@@ -38,8 +38,9 @@ const COPY = {
     },
     ko_KR: {
         title: "키보드 단축키",
-        edit: "아래 키를 변경하세요. 이미 지정된 키는 기존 입력란을 비운 뒤 다시 지정하세요. 이 기기에 저장됩니다.",
-        duplicate: "이미 사용 중인 키입니다. 기존 지정부터 지우세요.",
+        edit: "아래에서 키를 변경하세요. 중복 키도 허용되며 경고로 표시됩니다. 변경 사항은 이 기기에 저장됩니다.",
+        duplicate:
+            "이 키는 다른 동작에도 지정되어 있습니다. 목록에서 먼저 일치하는 동작이 우선합니다.",
         invalid: "문자 하나를 입력하거나 비워 두세요.",
         reset: "기본 키 복원",
         slot: "슬롯",
@@ -53,8 +54,8 @@ const COPY = {
     },
     zh_CN: {
         title: "键盘快捷键",
-        edit: "在下方修改按键。重新分配前请清空原绑定。更改保存在此设备上。",
-        duplicate: "该按键已被使用，请先清空原绑定。",
+        edit: "在下方修改按键。允许重复按键，并会显示警告。更改保存在此设备上。",
+        duplicate: "此按键也分配给其他操作。列表中第一个匹配的操作优先。",
         invalid: "请输入单个可见字符，或留空。",
         reset: "恢复默认按键",
         slot: "槽位",
@@ -117,17 +118,13 @@ export function WorkspaceShortcuts() {
             input.value = bindings()[action];
             return;
         }
-        if (
+        const duplicate =
             key &&
             SHORTCUT_ACTIONS.some(
                 (other) => other !== action && bindings()[other] === key,
-            )
-        ) {
-            setError("duplicate");
-            input.value = bindings()[action];
-            return;
-        }
+            );
         saveBindings({ ...bindings(), [action]: key });
+        if (duplicate) setError("duplicate");
         input.value = key;
     }
 
@@ -235,7 +232,14 @@ export function WorkspaceShortcuts() {
                 </DialogTitle>
                 <p class="text-sm text-neutral-400 pr-4">{copy().note}</p>
                 <p class="text-xs text-neutral-400">{copy().edit}</p>
-                <p role="status" class="text-sm text-red-300">
+                <p
+                    role="status"
+                    class="text-sm"
+                    classList={{
+                        "text-amber-300": error() === "duplicate",
+                        "text-red-300": error() === "invalid",
+                    }}
+                >
                     {error() ? copy()[error()!] : ""}
                 </p>
                 <dl class="grid gap-2">

@@ -3,20 +3,25 @@ import { ChampionData } from "@draftgap/core/src/models/dataset/ChampionData";
 import { useDataset } from "../../contexts/DatasetContext";
 import { useUser } from "../../contexts/UserContext";
 import { useDraft } from "../../contexts/DraftContext";
+import { useRiftTheoryKnowledge } from "../../contexts/RiftTheoryKnowledgeContext";
 import { Icon, informationCircle } from "../icons/RiftIcons";
-import {
-    championName,
-    normalizeChampionSearch,
-    useI18n,
-} from "../../utils/i18n";
+import { normalizeChampionSearch, useI18n } from "../../utils/i18n";
 import { ChampionIcon } from "../icons/ChampionIcon";
-import strategicProfiles from "../../../../../../data/strategic_profiles.json";
 import { COLOR_GUIDE } from "../../locales/colorGuide";
+import {
+    KnowledgeChampion,
+    KnowledgeStrategicProfile,
+    RIFT_THEORY_COLORS,
+    RiftTheoryColor,
+} from "../../types/RiftTheoryKnowledge";
 
-type StrategicProfile = (typeof strategicProfiles)[number];
-type ColorRow = { champion: ChampionData; profile?: StrategicProfile };
+type ColorRow = {
+    champion: ChampionData;
+    knowledge: KnowledgeChampion;
+    profile?: KnowledgeStrategicProfile;
+};
 
-const COLORS = ["white", "blue", "black", "red", "green", "colorless"] as const;
+const COLORS = RIFT_THEORY_COLORS;
 const ROLES = ["top", "jungle", "mid", "bot", "support"] as const;
 const COLOR_STYLES: Record<
     string,
@@ -50,12 +55,15 @@ const COLOR_STYLES: Record<
     },
 };
 
-const profilesByChampion = new Map<string, StrategicProfile[]>();
-for (const profile of strategicProfiles) {
-    const profiles = profilesByChampion.get(profile.champion_name) ?? [];
-    profiles.push(profile);
-    profilesByChampion.set(profile.champion_name, profiles);
-}
+const profileColors = (
+    profile: KnowledgeStrategicProfile,
+    assignment: "main" | "off",
+) =>
+    profile.colors
+        .filter((color) => color.assignment === assignment)
+        .map((color) => color.color);
+const safeHttpUrl = (value: string | null) =>
+    value && /^https?:\/\//.test(value) ? value : undefined;
 
 function ColorChips(props: { colors: readonly string[] }) {
     const { t, term } = useI18n();
@@ -191,13 +199,14 @@ function ColorGuide() {
 
 export default function ChampColors() {
     const { dataset } = useDataset();
+    const { knowledge, sourceForKey } = useRiftTheoryKnowledge();
     const { config } = useUser();
     const { allyTeam, opponentTeam, bans, activeDraftPick, pickNextChampion } =
         useDraft();
     const { t, term } = useI18n();
     const [search, setSearch] = createSignal("");
     const [role, setRole] = createSignal("");
-    const [color, setColor] = createSignal("");
+    const [color, setColor] = createSignal<"" | RiftTheoryColor>("");
     const [coverage, setCoverage] = createSignal("");
     const pickBlockReason = (key: string) => {
         if (
@@ -211,46 +220,62 @@ export default function ChampColors() {
         return undefined;
     };
 
+    const localizedName = (champion: KnowledgeChampion) =>
+        champion.localizations[config.language]?.name ?? champion.name;
     const champions = createMemo(() =>
-        Object.values(dataset()?.championData ?? {}).sort((a, b) =>
-            championName(a, config).localeCompare(
-                championName(b, config),
-                config.language.replace("_", "-"),
+        (knowledge()?.champions ?? [])
+            .flatMap((knowledgeChampion) => {
+                if (!knowledgeChampion.riotKey) return [];
+                const champion =
+                    dataset()?.championData[knowledgeChampion.riotKey];
+                return champion
+                    ? [{ champion, knowledge: knowledgeChampion }]
+                    : [];
+            })
+            .sort((a, b) =>
+                localizedName(a.knowledge).localeCompare(
+                    localizedName(b.knowledge),
+                    config.language.replace("_", "-"),
+                ),
             ),
-        ),
     );
     const rows = createMemo(() =>
-        champions().flatMap<ColorRow>((champion) => {
-            const profiles = profilesByChampion.get(champion.name);
+        champions().flatMap<ColorRow>(({ champion, knowledge }) => {
+            const profiles = knowledge.strategicProfiles;
             return profiles?.length
-                ? profiles.map((profile) => ({ champion, profile }))
-                : [{ champion }];
+                ? profiles.map((profile) => ({
+                      champion,
+                      knowledge,
+                      profile,
+                  }))
+                : [{ champion, knowledge }];
         }),
     );
     const profiledCount = createMemo(
         () =>
-            champions().filter((champion) =>
-                profilesByChampion.has(champion.name),
+            champions().filter(
+                ({ knowledge }) => knowledge.strategicProfiles.length > 0,
             ).length,
     );
     const filtered = createMemo(() => {
         const query = normalizeChampionSearch(search());
+        const selectedColor = color();
         return rows().filter((row) => {
             if (
                 query &&
-                !normalizeChampionSearch(row.champion.name).includes(query) &&
-                !normalizeChampionSearch(
-                    championName(row.champion, config),
-                ).includes(query)
+                !normalizeChampionSearch(row.knowledge.name).includes(query) &&
+                !normalizeChampionSearch(localizedName(row.knowledge)).includes(
+                    query,
+                )
             )
                 return false;
             if (role() && row.profile?.role !== role()) return false;
             if (
-                color() &&
+                selectedColor &&
                 ![
-                    ...(row.profile?.identity.main_colors ?? []),
-                    ...(row.profile?.identity.off_colors ?? []),
-                ].includes(color())
+                    ...(row.profile ? profileColors(row.profile, "main") : []),
+                    ...(row.profile ? profileColors(row.profile, "off") : []),
+                ].includes(selectedColor)
             )
                 return false;
             if (coverage() === "profiled" && !row.profile) return false;
@@ -285,6 +310,23 @@ export default function ChampColors() {
             <p class="text-xs text-neutral-400 leading-relaxed">
                 {t("colorsPickHelp")}
             </p>
+
+            <Show when={knowledge.loading}>
+                <div
+                    class="rounded-lg border border-neutral-700 bg-primary p-3 text-sm text-neutral-400"
+                    role="status"
+                >
+                    {t("knowledgeLoading")}
+                </div>
+            </Show>
+            <Show when={knowledge.error}>
+                <div
+                    class="rounded-lg border border-red-800 bg-red-950/20 p-3 text-sm text-red-200"
+                    role="alert"
+                >
+                    {t("knowledgeError")}
+                </div>
+            </Show>
 
             <div class="grid grid-cols-3 gap-2 sm:gap-3">
                 <For
@@ -337,7 +379,11 @@ export default function ChampColors() {
                     class={filterClass}
                     aria-label={t("allColors")}
                     value={color()}
-                    onChange={(event) => setColor(event.currentTarget.value)}
+                    onChange={(event) =>
+                        setColor(
+                            event.currentTarget.value as "" | RiftTheoryColor,
+                        )
+                    }
                 >
                     <option value="">{t("allColors")}</option>
                     <For each={COLORS}>
@@ -371,8 +417,10 @@ export default function ChampColors() {
                     {t("shownRows")}: {filtered().length}
                 </p>
                 <p>
-                    {t("cataloguePatch")}: {dataset()?.version} ·{" "}
-                    {t("sourceLanguage")}
+                    {t("cataloguePatch")}:{" "}
+                    {knowledge()?.metadata.latestPatch?.version ??
+                        t("unknownPatch")}{" "}
+                    · {t("sourceLanguage")}
                 </p>
             </div>
             <div class="rounded-xl border border-neutral-700 overflow-auto max-h-[65vh] bg-primary">
@@ -426,7 +474,7 @@ export default function ChampColors() {
                                         <button
                                             type="button"
                                             class="flex items-center gap-3 text-left rounded-md hover:text-accent disabled:opacity-40 disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-accent"
-                                            aria-label={`${t("addToDraft")}: ${championName(row.champion, config)}`}
+                                            aria-label={`${t("addToDraft")}: ${localizedName(row.knowledge)}`}
                                             title={
                                                 pickBlockReason(
                                                     row.champion.key,
@@ -451,10 +499,7 @@ export default function ChampColors() {
                                                 class="shrink-0 rounded-md"
                                             />
                                             <span>
-                                                {championName(
-                                                    row.champion,
-                                                    config,
-                                                )}
+                                                {localizedName(row.knowledge)}
                                             </span>
                                         </button>
                                     </th>
@@ -478,10 +523,10 @@ export default function ChampColors() {
                                         >
                                             {(profile) => (
                                                 <ColorChips
-                                                    colors={
-                                                        profile().identity
-                                                            .main_colors
-                                                    }
+                                                    colors={profileColors(
+                                                        profile(),
+                                                        "main",
+                                                    )}
                                                 />
                                             )}
                                         </Show>
@@ -500,10 +545,10 @@ export default function ChampColors() {
                                         >
                                             {(profile) => (
                                                 <ColorChips
-                                                    colors={
-                                                        profile().identity
-                                                            .off_colors
-                                                    }
+                                                    colors={profileColors(
+                                                        profile(),
+                                                        "off",
+                                                    )}
                                                 />
                                             )}
                                         </Show>
@@ -544,15 +589,18 @@ export default function ChampColors() {
                                                                 "assessmentPatch",
                                                             )}
                                                             :{" "}
-                                                            {profile().patch ??
-                                                                t(
-                                                                    "unknownPatch",
-                                                                )}
+                                                            {profile()
+                                                                .patch_version ===
+                                                            "unknown"
+                                                                ? t(
+                                                                      "unknownPatch",
+                                                                  )
+                                                                : profile()
+                                                                      .patch_version}
                                                         </p>
                                                         <p lang="en">
                                                             {
                                                                 profile()
-                                                                    .identity
                                                                     .reasoning
                                                             }
                                                         </p>
@@ -560,33 +608,31 @@ export default function ChampColors() {
                                                             lang="en"
                                                             class="break-words"
                                                         >
-                                                            {
+                                                            {sourceForKey(
                                                                 profile()
-                                                                    .identity
-                                                                    .source_name
-                                                            }
+                                                                    .source_key,
+                                                            )?.label ??
+                                                                profile()
+                                                                    .source_key}
                                                         </p>
                                                         <Show
-                                                            when={
+                                                            when={safeHttpUrl(
                                                                 profile()
-                                                                    .source_url &&
-                                                                /^https?:\/\//.test(
-                                                                    profile()
-                                                                        .source_url,
-                                                                )
-                                                            }
+                                                                    .source_url,
+                                                            )}
                                                         >
-                                                            <a
-                                                                href={
-                                                                    profile()
-                                                                        .source_url
-                                                                }
-                                                                target="_blank"
-                                                                rel="noopener noreferrer"
-                                                                class="text-accent underline"
-                                                            >
-                                                                {t("reference")}
-                                                            </a>
+                                                            {(url) => (
+                                                                <a
+                                                                    href={url()}
+                                                                    target="_blank"
+                                                                    rel="noopener noreferrer"
+                                                                    class="text-accent underline"
+                                                                >
+                                                                    {t(
+                                                                        "reference",
+                                                                    )}
+                                                                </a>
+                                                            )}
                                                         </Show>
                                                     </div>
                                                 </details>

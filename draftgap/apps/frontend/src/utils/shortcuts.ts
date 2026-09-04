@@ -31,13 +31,10 @@ export function normalizeShortcuts(value: unknown): ShortcutBindings {
     if (!value || typeof value !== "object") return { ...DEFAULT_SHORTCUTS };
     const saved = value as Record<string, unknown>;
     const result = { ...DEFAULT_SHORTCUTS };
-    const seen = new Set<string>();
     for (const action of SHORTCUT_ACTIONS) {
         const key = saved[action];
         if (!validShortcutKey(key)) return { ...DEFAULT_SHORTCUTS };
         const normalized = key.toLowerCase();
-        if (normalized && seen.has(normalized)) return { ...DEFAULT_SHORTCUTS };
-        if (normalized) seen.add(normalized);
         result[action] = normalized;
     }
     return result;
