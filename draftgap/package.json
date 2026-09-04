@@ -12,6 +12,7 @@
         "data:check": "bun run --filter @rifttheory/data check:patch",
         "data:refresh": "bun run --filter @rifttheory/data refresh",
         "data:import:roles": "bun run --filter @rifttheory/data import:roles",
+        "data:sync:draftgap-roles": "bun run --filter @rifttheory/data sync:draftgap-roles",
         "data:status": "bun run --filter @rifttheory/data status",
         "bump-version": "bun run typecheck && bun scripts/bump-version.ts",
         "typecheck": "turbo typecheck",

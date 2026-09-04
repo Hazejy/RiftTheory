@@ -7,7 +7,7 @@ const ROLES = new Set(["top", "jungle", "mid", "bot", "support"]);
 const PATCH_PATTERN = /^\d+\.\d+(?:\.\d+)?$/;
 const SOURCE_KEY_PATTERN = /^[a-z][a-z0-9_]{2,79}$/;
 
-type RoleObservationInput = {
+export type RoleObservationInput = {
   champion: {
     riotKey?: string;
     name?: string;
@@ -18,7 +18,7 @@ type RoleObservationInput = {
   pickRate?: number | null;
 };
 
-type RoleObservationFile = {
+export type RoleObservationFile = {
   schemaVersion: number;
   source: {
     key: string;
@@ -136,12 +136,11 @@ function validateObservation(input: RoleObservationInput, index: number) {
   return role;
 }
 
-export async function importObservedRoles(
+export async function importObservedRoleSnapshot(
   database: Database,
-  inputPath: string,
+  raw: unknown,
+  importer = "observed-role-json",
 ) {
-  const path = resolve(inputPath);
-  const raw: unknown = await Bun.file(path).json();
   if (!raw || typeof raw !== "object")
     throw new Error("Role observation input must be a JSON object");
   const input = raw as RoleObservationFile;
@@ -164,12 +163,7 @@ export async function importObservedRoles(
     url: sourceUrl,
     accessNote: requireString(input.source?.accessNote, "source.accessNote"),
   });
-  const runId = startImportRun(
-    database,
-    "observed-role-json",
-    sourceId,
-    context.patch,
-  );
+  const runId = startImportRun(database, importer, sourceId, context.patch);
 
   try {
     const observations = input.observations.map((observation, index) => {
@@ -226,7 +220,6 @@ export async function importObservedRoles(
     })();
     finishImportRun(database, runId, "succeeded", observations.length);
     return {
-      path,
       records: observations.length,
       source: sourceKey,
       context,
@@ -235,4 +228,16 @@ export async function importObservedRoles(
     finishImportRun(database, runId, "failed", 0, error);
     throw error;
   }
+}
+
+export async function importObservedRoles(
+  database: Database,
+  inputPath: string,
+) {
+  const path = resolve(inputPath);
+  const raw: unknown = await Bun.file(path).json();
+  return {
+    ...(await importObservedRoleSnapshot(database, raw)),
+    path,
+  };
 }

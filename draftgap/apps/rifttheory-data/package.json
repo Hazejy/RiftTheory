@@ -10,6 +10,7 @@
     "check:patch": "bun run src/cli.ts check-patch",
     "refresh": "bun run src/cli.ts refresh",
     "sync:riot": "bun run src/cli.ts sync-riot",
+    "sync:draftgap-roles": "bun run src/cli.ts sync-draftgap-roles",
     "import:curated": "bun run src/cli.ts import-curated",
     "import:roles": "bun run src/cli.ts import-roles",
     "export": "bun run src/cli.ts export",

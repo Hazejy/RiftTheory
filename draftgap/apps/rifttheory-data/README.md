@@ -15,6 +15,7 @@ bun run data:build:offline
 bun run data:check
 bun run data:refresh
 bun run data:import:roles -- C:\path\to\role-snapshot.json
+bun run data:sync:draftgap-roles
 bun run data:status
 ```
 
@@ -44,6 +45,19 @@ database state to the frontend. The export derives `role_share` and
 `sample_total` per champion and context; it deliberately does not label a role
 as a valid flex pick yet. That policy will be calibrated separately rather than
 presented as source data.
+
+### DraftGap compatibility provider
+
+`data:sync:draftgap-roles` reads the public DraftGap v5 current-patch dataset,
+imports positive role game samples and updates the frontend export. Its context
+is recorded as Emerald+, ranked solo, all regions, matching the collector in the
+vendored upstream code. DraftGap queries two-part Lolalytics patches, so an
+upstream dataset version such as `16.17.1` is stored as observed patch `16.17`.
+
+The adapter intentionally discards DraftGap's wins because its dataset applies a
+rank-bias transformation that produces modeled fractional values. It also does
+not import matchup or synergy estimates. Those require separate provenance and
+validation contracts before RiftTheory may use them.
 
 Runtime database:
 

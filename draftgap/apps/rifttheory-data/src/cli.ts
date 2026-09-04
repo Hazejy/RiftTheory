@@ -6,6 +6,7 @@ import { getStatus } from "./status";
 import { DATABASE_PATH } from "./paths";
 import { checkPatchStatus } from "./patch";
 import { importObservedRoles } from "./observedRoles";
+import { syncDraftGapRoleSamples } from "./providers/draftGap";
 
 const command = process.argv[2] ?? "status";
 const offline = process.argv.includes("--offline");
@@ -61,6 +62,15 @@ try {
       );
       break;
     }
+    case "sync-draftgap-roles": {
+      const result = await syncDraftGapRoleSamples(database, process.argv[3]);
+      const output = await exportWebData(database);
+      verifyDatabase(database);
+      console.log(
+        `Imported ${result.records} DraftGap role samples for observed patch ${result.context.patch} and exported ${output.champions} champions`,
+      );
+      break;
+    }
     case "export": {
       const result = await exportWebData(database);
       console.log(
@@ -90,7 +100,7 @@ try {
       break;
     default:
       throw new Error(
-        `Unknown command: ${command}. Use init, check-patch, refresh, sync-riot, import-curated, import-roles, export, build, status or verify.`,
+        `Unknown command: ${command}. Use init, check-patch, refresh, sync-riot, sync-draftgap-roles, import-curated, import-roles, export, build, status or verify.`,
       );
   }
 } catch (error) {
