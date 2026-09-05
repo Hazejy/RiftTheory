@@ -32,6 +32,7 @@ import {
 } from "../../utils/i18n";
 import SuggestionEvidenceBadges from "../rifttheory/SuggestionEvidenceBadges";
 import { suggestionEvidenceKey } from "../../utils/interactionEvidence";
+import { compareSuggestionEvidence } from "@draftgap/core/src/draft/suggestion-evidence";
 
 export default function DraftTable() {
     const { t } = useI18n();
@@ -323,12 +324,23 @@ export default function DraftTable() {
                 ),
             cell: (info) => (
                 <SuggestionEvidenceBadges
+                    championKey={info.row.original.championKey}
+                    role={info.row.original.role}
                     evidence={info.getValue<
                         RiftTheorySuggestionEvidence | undefined
                     >()}
                 />
             ),
-            enableSorting: false,
+            sortingFn: (left, right, columnId) =>
+                compareSuggestionEvidence(
+                    left.getValue<RiftTheorySuggestionEvidence | undefined>(
+                        columnId,
+                    ),
+                    right.getValue<RiftTheorySuggestionEvidence | undefined>(
+                        columnId,
+                    ),
+                ),
+            sortDescFirst: true,
             meta: {
                 headerClass: "w-1",
                 cellClass: "max-w-72",

@@ -7,7 +7,13 @@ import type {
     KnowledgeInteractionRule,
 } from "../types/RiftTheoryKnowledge";
 
-const ROLE_NAMES = ["top", "jungle", "mid", "bot", "support"] as const;
+export const EVIDENCE_ROLE_NAMES = [
+    "top",
+    "jungle",
+    "mid",
+    "bot",
+    "support",
+] as const;
 
 export function toInteractionRule(
     rule: KnowledgeInteractionRule,
@@ -38,7 +44,7 @@ export function toSuggestionEvidenceChampion(
     team: InteractionTeam,
     champion?: KnowledgeChampion,
 ): SuggestionEvidenceChampion {
-    const roleName = ROLE_NAMES[role];
+    const roleName = EVIDENCE_ROLE_NAMES[role];
     return {
         championKey,
         championName: champion?.name ?? championKey,

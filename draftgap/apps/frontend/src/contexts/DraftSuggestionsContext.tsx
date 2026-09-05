@@ -4,7 +4,7 @@ import { useDraftAnalysis } from "./DraftAnalysisContext";
 import { useDataset } from "./DatasetContext";
 import { useDraft } from "./DraftContext";
 import { Team } from "@draftgap/core/src/models/Team";
-import { Role } from "@draftgap/core/src/models/Role";
+import { Role, ROLES } from "@draftgap/core/src/models/Role";
 import {
     assessSuggestionEvidence,
     SuggestionEvidence,
@@ -12,6 +12,7 @@ import {
 import { useRiftTheoryKnowledge } from "./RiftTheoryKnowledgeContext";
 import {
     suggestionEvidenceKey,
+    EVIDENCE_ROLE_NAMES,
     toInteractionRule,
     toSuggestionEvidenceChampion,
 } from "../utils/interactionEvidence";
@@ -25,6 +26,12 @@ export type RiftTheorySuggestionEvidence = SuggestionEvidence & {
               roleShare: number;
           }
         | undefined;
+    flexOptions: Array<{
+        role: Role;
+        tier: "primary" | "established" | "emerging";
+        games: number;
+        roleShare: number;
+    }>;
 };
 
 export function createDraftSuggestionsContext() {
@@ -97,6 +104,9 @@ export function createDraftSuggestionsContext() {
         const rules = (knowledge()?.interactionRules ?? []).map(
             toInteractionRule,
         );
+        const openRoles = new Set(
+            ROLES.filter((role) => !composition.has(role)),
+        );
         return new Map(
             suggestions.map((suggestion) => {
                 const champion = championForKey(suggestion.championKey);
@@ -118,6 +128,29 @@ export function createDraftSuggestionsContext() {
                               roleShare: observed.roleShare,
                           }
                         : undefined;
+                const flexOptions = latestRoleEvidence(champion)
+                    .roles.filter((role) => role.role !== roleName)
+                    .flatMap((role) => {
+                        if (role.tier === "insufficient") return [];
+                        const mappedRole = ROLES.find(
+                            (candidateRole) =>
+                                EVIDENCE_ROLE_NAMES[candidateRole] ===
+                                role.role,
+                        );
+                        if (
+                            mappedRole === undefined ||
+                            !openRoles.has(mappedRole)
+                        )
+                            return [];
+                        return [
+                            {
+                                role: mappedRole,
+                                tier: role.tier,
+                                games: role.games,
+                                roleShare: role.roleShare,
+                            },
+                        ];
+                    });
                 return [
                     suggestionEvidenceKey(
                         suggestion.championKey,
@@ -131,6 +164,7 @@ export function createDraftSuggestionsContext() {
                             rules,
                         ),
                         observedRole,
+                        flexOptions,
                     } satisfies RiftTheorySuggestionEvidence,
                 ] as const;
             }),

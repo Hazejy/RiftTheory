@@ -25,6 +25,51 @@ export type SuggestionEvidence = {
     assessed: boolean;
 };
 
+export type ObservedRoleTier = "primary" | "established" | "emerging";
+
+export type ComparableSuggestionEvidence = SuggestionEvidence & {
+    observedRole?: { tier: ObservedRoleTier };
+    flexOptions: readonly unknown[];
+};
+
+export const SUGGESTION_EVIDENCE_ORDER = [
+    "observed_role",
+    "fewer_known_risks",
+    "foundation_coverage",
+    "known_edges",
+    "flex_options",
+    "assessment_coverage",
+] as const;
+
+const roleTierPriority: Record<ObservedRoleTier, number> = {
+    primary: 3,
+    established: 2,
+    emerging: 1,
+};
+
+export function compareSuggestionEvidence(
+    left?: ComparableSuggestionEvidence,
+    right?: ComparableSuggestionEvidence,
+) {
+    const vector = (evidence?: ComparableSuggestionEvidence) => [
+        evidence?.observedRole
+            ? roleTierPriority[evidence.observedRole.tier]
+            : 0,
+        -(evidence?.unfavorableInteractions.length ?? 0),
+        evidence?.coveredCapabilities.length ?? 0,
+        evidence?.favorableInteractions.length ?? 0,
+        evidence?.flexOptions.length ?? 0,
+        evidence?.assessed ? 1 : 0,
+    ];
+    const leftVector = vector(left);
+    const rightVector = vector(right);
+    for (let index = 0; index < leftVector.length; index += 1) {
+        const difference = leftVector[index]! - rightVector[index]!;
+        if (difference !== 0) return difference;
+    }
+    return 0;
+}
+
 function impactForCandidate(
     finding: InteractionFinding,
     candidateKey: string,
