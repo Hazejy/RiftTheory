@@ -7,6 +7,10 @@ import {
     itemCube,
     presentationChartLine,
     cog_6Tooth,
+    prepBoard,
+    riftPlanner,
+    liveDraft,
+    tierList,
 } from "./components/icons/RiftIcons";
 import {
     Component,
@@ -50,9 +54,12 @@ import { cn } from "./utils/style";
 import { formatPatch } from "./utils/strings";
 import { LanguageDropdownMenu } from "./components/LanguageMenu";
 import { FONT_PRESETS } from "./utils/appearance";
-import { WorkspaceShortcuts } from "./components/rifttheory/WorkspaceShortcuts";
 import { customThemeVariables } from "./utils/customTheme";
 import { DraftSnapshotButton } from "./components/rifttheory/DraftSnapshotButton";
+import DraftPrepView from "./components/workspaces/DraftPrepView";
+import RiftPlannerView from "./components/workspaces/RiftPlannerView";
+import LiveDraftView from "./components/workspaces/LiveDraftView";
+import TierListView from "./components/workspaces/TierListView";
 
 const App: Component = () => {
     const { t } = useI18n();
@@ -174,6 +181,26 @@ const App: Component = () => {
                                             value: "colors",
                                             icon: colorLayers,
                                         },
+                                        {
+                                            label: t("draftPrep"),
+                                            value: "draftPrep",
+                                            icon: prepBoard,
+                                        },
+                                        {
+                                            label: t("riftPlanner"),
+                                            value: "riftPlanner",
+                                            icon: riftPlanner,
+                                        },
+                                        {
+                                            label: t("liveDraft"),
+                                            value: "liveDraft",
+                                            icon: liveDraft,
+                                        },
+                                        {
+                                            label: t("tierListMaker"),
+                                            value: "tierList",
+                                            icon: tierList,
+                                        },
                                         ...(config.enableBetaFeatures
                                             ? ([
                                                   {
@@ -195,6 +222,35 @@ const App: Component = () => {
                                 class="xl:px-8"
                             />
                             <Switch>
+                                <Match
+                                    when={
+                                        currentDraftView().type === "draftPrep"
+                                    }
+                                >
+                                    <DraftPrepView />
+                                </Match>
+                                <Match
+                                    when={
+                                        currentDraftView().type ===
+                                        "riftPlanner"
+                                    }
+                                >
+                                    <RiftPlannerView />
+                                </Match>
+                                <Match
+                                    when={
+                                        currentDraftView().type === "liveDraft"
+                                    }
+                                >
+                                    <LiveDraftView />
+                                </Match>
+                                <Match
+                                    when={
+                                        currentDraftView().type === "tierList"
+                                    }
+                                >
+                                    <TierListView />
+                                </Match>
                                 <Match
                                     when={currentDraftView().type === "colors"}
                                 >
@@ -261,6 +317,12 @@ const App: Component = () => {
         return undefined;
     };
 
+    const isFullWidthWorkspace = () =>
+        currentDraftView().type === "draftPrep" ||
+        currentDraftView().type === "riftPlanner" ||
+        currentDraftView().type === "liveDraft" ||
+        currentDraftView().type === "tierList";
+
     return (
         <div
             class="h-screen flex flex-col"
@@ -286,7 +348,6 @@ const App: Component = () => {
                 </h1>
                 <div class="rt-header-actions flex gap-1">
                     <LanguageDropdownMenu />
-                    <WorkspaceShortcuts />
                     <DraftSnapshotButton />
                     <Dialog
                         open={showSettings()}
@@ -312,16 +373,21 @@ const App: Component = () => {
             <main
                 class="rt-draft-layout min-h-0 flex-1 lg:grid overflow-hidden hidden"
                 style={{
-                    "grid-template-columns":
-                        "minmax(170px, 1fr) minmax(0, 4fr) minmax(170px, 1fr)",
+                    "grid-template-columns": isFullWidthWorkspace()
+                        ? "minmax(0, 1fr)"
+                        : "minmax(170px, 1fr) minmax(0, 4fr) minmax(170px, 1fr)",
                     "grid-template-rows": "100%",
                 }}
             >
-                <TeamSidebar team="ally" />
+                <Show when={!isFullWidthWorkspace()}>
+                    <TeamSidebar team="ally" />
+                </Show>
 
                 <MainView />
 
-                <TeamSidebar team="opponent" />
+                <Show when={!isFullWidthWorkspace()}>
+                    <TeamSidebar team="opponent" />
+                </Show>
             </main>
 
             {/* Mobile main */}

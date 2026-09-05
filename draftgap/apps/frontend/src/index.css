@@ -202,8 +202,19 @@
     align-items: center;
     gap: 4px;
     overflow-x: auto;
-    padding: 12px;
+    padding: 9px 16px;
     flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    background: color-mix(in srgb, var(--color-primary) 94%, transparent);
+    box-shadow: 0 8px 24px #0002;
+    backdrop-filter: blur(14px);
+    scrollbar-width: none;
+}
+
+.rt-view-tabs::-webkit-scrollbar {
+    display: none;
 }
 
 .rt-view-tab {
@@ -213,10 +224,16 @@
     gap: 8px;
     border: 1px solid transparent;
     border-radius: 9px;
-    padding: 9px 13px;
-    font-size: 12px;
+    padding: 8px 12px;
+    font-size: 11.5px;
     text-transform: none;
     white-space: nowrap;
+}
+
+@media (min-width: 1536px) {
+    .rt-view-tabs {
+        justify-content: center;
+    }
 }
 
 .rt-role-filter button {

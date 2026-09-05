@@ -3,6 +3,10 @@ import { JSXElement, createContext, createSignal, useContext } from "solid-js";
 type DraftView =
     | { type: "colors" }
     | { type: "strategy" }
+    | { type: "draftPrep" }
+    | { type: "riftPlanner" }
+    | { type: "liveDraft" }
+    | { type: "tierList" }
     | {
           type: "draft";
           subType: "ally" | "opponent" | "draft";

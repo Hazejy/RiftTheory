@@ -10,5 +10,11 @@
     "role": "mid",
     "capabilities": ["wave_clear"],
     "source": "manually_curated"
+  },
+  {
+    "name": "Vi",
+    "role": "jungle",
+    "capabilities": ["engage", "target_access"],
+    "source": "rifttheory_vi_official_kit_interpretation"
   }
 ]

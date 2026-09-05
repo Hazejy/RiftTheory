@@ -16,6 +16,7 @@ import {
 } from "../../types/RiftTheoryKnowledge";
 import { latestRoleEvidence } from "../../utils/flexEvidence";
 import ObservedRoleBadges from "./ObservedRoleBadges";
+import StrategicColorChips from "./StrategicColorChips";
 
 type ColorRow = {
     champion: ChampionData;
@@ -25,38 +26,6 @@ type ColorRow = {
 
 const COLORS = RIFT_THEORY_COLORS;
 const ROLES = ["top", "jungle", "mid", "bot", "support"] as const;
-const COLOR_STYLES: Record<
-    string,
-    { background: string; color: string; "border-color": string }
-> = {
-    white: {
-        background: "#eeeadd",
-        color: "#333126",
-        "border-color": "#d7d1bc",
-    },
-    blue: {
-        background: "#132e52",
-        color: "#a9d0ff",
-        "border-color": "#355c85",
-    },
-    black: {
-        background: "#26212d",
-        color: "#d8c8e5",
-        "border-color": "#665672",
-    },
-    red: { background: "#421d25", color: "#ffb9bb", "border-color": "#83424b" },
-    green: {
-        background: "#163a2a",
-        color: "#a3e0ba",
-        "border-color": "#3e7653",
-    },
-    colorless: {
-        background: "#293036",
-        color: "#dae0e5",
-        "border-color": "#65717b",
-    },
-};
-
 const profileColors = (
     profile: KnowledgeStrategicProfile,
     assignment: "main" | "off",
@@ -66,29 +35,6 @@ const profileColors = (
         .map((color) => color.color);
 const safeHttpUrl = (value: string | null) =>
     value && /^https?:\/\//.test(value) ? value : undefined;
-
-function ColorChips(props: { colors: readonly string[] }) {
-    const { t, term } = useI18n();
-    return (
-        <div class="flex flex-wrap gap-1.5">
-            <For
-                each={props.colors}
-                fallback={
-                    <span class="text-neutral-500 text-xs">{t("none")}</span>
-                }
-            >
-                {(color) => (
-                    <span
-                        class="inline-flex rounded-md border px-2 py-1 text-xs font-medium whitespace-nowrap"
-                        style={COLOR_STYLES[color]}
-                    >
-                        {term(color)}
-                    </span>
-                )}
-            </For>
-        </div>
-    );
-}
 
 function ColorGuide() {
     const { t } = useI18n();
@@ -137,7 +83,7 @@ function ColorGuide() {
                                 }}
                                 onClick={() => setSelected(color)}
                             >
-                                <ColorChips colors={[color]} />
+                                <StrategicColorChips colors={[color]} />
                             </button>
                         )}
                     </For>
@@ -578,7 +524,7 @@ export default function ChampColors() {
                                             }
                                         >
                                             {(profile) => (
-                                                <ColorChips
+                                                <StrategicColorChips
                                                     colors={profileColors(
                                                         profile(),
                                                         "main",
@@ -600,7 +546,7 @@ export default function ChampColors() {
                                             }
                                         >
                                             {(profile) => (
-                                                <ColorChips
+                                                <StrategicColorChips
                                                     colors={profileColors(
                                                         profile(),
                                                         "off",

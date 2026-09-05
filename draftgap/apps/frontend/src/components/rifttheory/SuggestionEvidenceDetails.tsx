@@ -7,6 +7,7 @@ import { useRiftTheoryKnowledge } from "../../contexts/RiftTheoryKnowledgeContex
 import { useUser } from "../../contexts/UserContext";
 import { championName, useI18n } from "../../utils/i18n";
 import { DialogDescription, DialogHeader, DialogTitle } from "../common/Dialog";
+import StrategicColorChips from "./StrategicColorChips";
 
 const ROLE_TIER_LABELS = {
     primary: "flexPrimary",
@@ -108,6 +109,46 @@ export default function SuggestionEvidenceDetails(props: {
                     {t("draftFitDetailsIntro")}
                 </DialogDescription>
             </DialogHeader>
+
+            <section class="rounded border border-accent/30 bg-accent/5 p-3">
+                <h4 class="text-sm font-semibold">{t("strategicIdentity")}</h4>
+                <Show
+                    when={props.evidence.strategicIdentity}
+                    fallback={
+                        <p class="mt-2 text-xs text-neutral-500">
+                            {t("strategicIdentityMissing")}
+                        </p>
+                    }
+                >
+                    {(identity) => (
+                        <div class="mt-3 space-y-3">
+                            <div class="flex flex-wrap items-center gap-4">
+                                <div>
+                                    <p class="mb-1 text-[10px] uppercase tracking-wider text-neutral-500">
+                                        {t("mainColors")}
+                                    </p>
+                                    <StrategicColorChips
+                                        colors={identity().mainColors}
+                                        prefix="X"
+                                    />
+                                </div>
+                                <div>
+                                    <p class="mb-1 text-[10px] uppercase tracking-wider text-neutral-500">
+                                        {t("offColors")}
+                                    </p>
+                                    <StrategicColorChips
+                                        colors={identity().offColors}
+                                        prefix="O"
+                                    />
+                                </div>
+                            </div>
+                            <p class="text-xs leading-relaxed text-neutral-300">
+                                {identity().reasoning}
+                            </p>
+                        </div>
+                    )}
+                </Show>
+            </section>
 
             <section class="rounded border border-neutral-800 p-3">
                 <h4 class="text-sm font-semibold">

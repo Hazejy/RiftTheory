@@ -1,4 +1,4 @@
-import { For, Show } from "solid-js";
+import { createEffect, For, Show } from "solid-js";
 import { Icon } from "../icons/RiftIcons";
 import { ComponentProps } from "solid-js";
 import { cn } from "../../utils/style";
@@ -16,8 +16,23 @@ type Props<T> = {
 };
 
 export const ViewTabs = <T,>(props: Props<T>) => {
+    let tabList!: HTMLDivElement;
+    createEffect(() => {
+        void props.selected;
+        requestAnimationFrame(() =>
+            tabList
+                .querySelector<HTMLElement>('[aria-pressed="true"]')
+                ?.scrollIntoView({
+                    behavior: "smooth",
+                    block: "nearest",
+                    inline: "nearest",
+                }),
+        );
+    });
+
     return (
         <div
+            ref={tabList}
             class={cn(
                 "rt-view-tabs bg-primary w-full border-b border-neutral-700",
                 props.class,

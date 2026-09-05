@@ -46,6 +46,22 @@ export const strategy = glyph("M4 18 12 4l8 14-8-3Z M12 4v11 M4 18v3 M20 18v3");
 export const colorLayers = glyph(
     "m12 3 9 5-9 5-9-5Z M3 12l9 5 9-5 M3 16l9 5 9-5",
 );
+export const prepBoard = glyph(
+    "M4 4h16v16H4Z M8 8h3v3H8Z M14 8h3 M14 12h3 M8 15h9",
+);
+export const riftPlanner = glyph(
+    "M4 5h16v14H4Z M7 15l4-5 3 3 3-5 M7 8h.1 M17 16h.1",
+);
+export const liveDraft = glyph(
+    "M4 5h6v6H4Z M14 13h6v6h-6Z M14 5h6 M4 15h6 M10 8h4 M12 8v7",
+);
+export const tierList = glyph(
+    "M4 5h4v4H4Z M11 6h9 M4 11h4v4H4Z M11 12h7 M4 17h4v4H4Z M11 18h5",
+);
+export const columns = glyph("M4 4h16v16H4Z M12 4v16 M4 9h16");
+export const broadcast = glyph(
+    "M3 5h18v12H3Z M8 21h8 M12 17v4 M8 9l4-2 4 2v4l-4 2-4-2Z",
+);
 export const itemCube = glyph(
     "m12 3 8 4v10l-8 4-8-4V7Z M4 7l8 5 8-5 M12 12v9 M8 5l8 5",
 );
@@ -84,6 +100,8 @@ export const user = glyph("m12 3 4 3-1 5H9L8 6Z M4 21v-4l5-3h6l5 3v4");
 export const users = glyph(
     "m9 3 3 3-1 4H7L6 6Z M2 20v-4l5-3h4l5 3v4 M16 4l3 2v4l-3 2 M18 14l4 3v3",
 );
+export const calendar = glyph("M4 6h16v14H4Z M4 10h16 M8 3v6 M16 3v6");
+export const folder = glyph("M3 6h7l2 2h9v11H3Z");
 export const hashtag = glyph("M9 3 6 21 M18 3l-3 18 M3 9h18 M2 15h18");
 export const lockClosed = glyph("M7 10V6l3-3h4l3 3v4 M5 10h14v10H5Z M12 14v3");
 export const lockOpen = glyph("M7 10V6l3-3h4l3 3 M5 10h14v10H5Z M12 14v3");
@@ -93,11 +111,17 @@ export const star = glyph("M6 3h12v18l-6-4-6 4Z", true);
 export const starOutline = glyph("M6 3h12v18l-6-4-6 4Z");
 export const globeAlt = itemCube;
 export const camera = glyph("M3 7h4l2-3h6l2 3h4v13H3Z m9 3 4 4-4 4-4-4Z");
+export const cursorArrow = glyph("M5 3l14 9-7 2-3 7Z M12 14l5 6");
+export const penTool = glyph(
+    "M4 20l4-1L20 7l-3-3L5 16Z M14 7l3 3 M4 20l1-4 3 3",
+);
+export const eraser = glyph("M4 14 13 5l6 6-8 8H7Z M10 19h10 M10 8l6 6");
+export const textTool = glyph("M5 5h14 M12 5v14 M8 19h8");
+export const mapPin = glyph(
+    "M12 21s6-6 6-11a6 6 0 1 0-12 0c0 5 6 11 6 11Z M9 10h6",
+);
 export const resetDraft = glyph(
     "M4 10V4 M4 10h6 M4 10l4-5h9l4 4v8l-4 4H8l-4-4",
-);
-export const keyboard = glyph(
-    "M3 5h18v14H3Z M6 9h1 M11 9h1 M16 9h1 M6 12h1 M11 12h1 M16 12h1 M8 16h8",
 );
 export const topLane = glyph("M4 20V7l3-3h13 M9 20V9h11 M4 14h5 M14 4v5");
 export const middleLane = glyph(

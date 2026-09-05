@@ -33,6 +33,7 @@ import {
 import SuggestionEvidenceBadges from "../rifttheory/SuggestionEvidenceBadges";
 import { suggestionEvidenceKey } from "../../utils/interactionEvidence";
 import { compareSuggestionEvidence } from "@draftgap/core/src/draft/suggestion-evidence";
+import DraftResponsePlanner from "../rifttheory/DraftResponsePlanner";
 
 export default function DraftTable() {
     const { t } = useI18n();
@@ -442,9 +443,9 @@ export default function DraftTable() {
         }
 
         pickNextChampion(row.original.championKey, row.original.role);
-
-        // Leave slot shortcuts available after picking; `/` returns to search.
-        document.getElementById("draftTableSearch")?.blur();
+        requestAnimationFrame(() => {
+            document.getElementById("draftTableSearch")?.focus();
+        });
     }
 
     onMount(() => {
@@ -514,7 +515,9 @@ export default function DraftTable() {
 
     return (
         <>
+            <DraftResponsePlanner />
             <Table
+                class="min-h-0 flex-1"
                 table={table}
                 onClickRow={pick}
                 rowClassName={(r) =>

@@ -7,9 +7,15 @@ export function ChampionIcon(
         championKey: string;
         imgClass?: string;
         size: number;
+        cover?: boolean;
     } & JSX.HTMLAttributes<HTMLDivElement>,
 ) {
-    const [, other] = splitProps(props, ["championKey", "imgClass", "size"]);
+    const [, other] = splitProps(props, [
+        "championKey",
+        "imgClass",
+        "size",
+        "cover",
+    ]);
     const { dataset } = useDataset();
 
     return (
@@ -28,14 +34,19 @@ export function ChampionIcon(
                     dataset()!.championData[props.championKey].id
                 }.png`}
                 loading="lazy"
+                draggable={false}
                 class={`absolute ${props.imgClass}`}
                 alt={dataset()!.championData[props.championKey].name}
                 style={{
-                    width: props.size * 1.11 + "px",
-                    height: props.size * 1.11 + "px",
-                    "max-width": props.size * 1.11 + "px",
-                    top: -props.size * 0.055 + "px",
-                    left: -props.size * 0.055 + "px",
+                    width: props.cover ? "100%" : props.size * 1.11 + "px",
+                    height: props.cover ? "100%" : props.size * 1.11 + "px",
+                    "max-width": props.cover
+                        ? "none"
+                        : props.size * 1.11 + "px",
+                    top: props.cover ? "0" : -props.size * 0.055 + "px",
+                    left: props.cover ? "0" : -props.size * 0.055 + "px",
+                    "object-fit": props.cover ? "cover" : undefined,
+                    "object-position": props.cover ? "center" : undefined,
                 }}
             />
         </div>

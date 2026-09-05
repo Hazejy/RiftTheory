@@ -6,6 +6,7 @@ import type { Role } from "@draftgap/core/src/models/Role";
 import { Dialog, DialogContent, DialogTrigger } from "../common/Dialog";
 import { chevronRight, Icon } from "../icons/RiftIcons";
 import SuggestionEvidenceDetails from "./SuggestionEvidenceDetails";
+import StrategicColorChips from "./StrategicColorChips";
 
 const ROLE_TIER_CLASSES = {
     primary: "border-accent/60 bg-accent/10 text-accent",
@@ -47,6 +48,15 @@ export default function SuggestionEvidenceBadges(props: {
                         aria-label={t("openDraftFitDetails")}
                         onClick={(event: MouseEvent) => event.stopPropagation()}
                     >
+                        <Show when={evidence().strategicIdentity}>
+                            {(identity) => (
+                                <StrategicColorChips
+                                    colors={identity().mainColors}
+                                    prefix="X"
+                                    compact
+                                />
+                            )}
+                        </Show>
                         <Show when={evidence().observedRole}>
                             {(role) => (
                                 <span

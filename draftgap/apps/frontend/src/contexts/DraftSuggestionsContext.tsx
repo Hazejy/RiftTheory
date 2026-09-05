@@ -19,6 +19,14 @@ import {
 import { latestRoleEvidence } from "../utils/flexEvidence";
 
 export type RiftTheorySuggestionEvidence = SuggestionEvidence & {
+    strategicIdentity:
+        | {
+              mainColors: string[];
+              offColors: string[];
+              reasoning: string;
+              reviewStatus: string;
+          }
+        | undefined;
     observedRole:
         | {
               tier: "primary" | "established" | "emerging";
@@ -110,13 +118,16 @@ export function createDraftSuggestionsContext() {
         return new Map(
             suggestions.map((suggestion) => {
                 const champion = championForKey(suggestion.championKey);
+                const roleName = EVIDENCE_ROLE_NAMES[suggestion.role];
+                const strategicProfile = champion?.strategicProfiles.find(
+                    (profile) => profile.role === roleName,
+                );
                 const candidate = toSuggestionEvidenceChampion(
                     suggestion.championKey,
                     suggestion.role,
                     candidateTeam,
                     champion,
                 );
-                const roleName = candidate.role;
                 const observed = latestRoleEvidence(champion).roles.find(
                     (role) => role.role === roleName,
                 );
@@ -163,6 +174,23 @@ export function createDraftSuggestionsContext() {
                             enemies,
                             rules,
                         ),
+                        strategicIdentity: strategicProfile
+                            ? {
+                                  mainColors: strategicProfile.colors
+                                      .filter(
+                                          (color) =>
+                                              color.assignment === "main",
+                                      )
+                                      .map((color) => color.color),
+                                  offColors: strategicProfile.colors
+                                      .filter(
+                                          (color) => color.assignment === "off",
+                                      )
+                                      .map((color) => color.color),
+                                  reasoning: strategicProfile.reasoning,
+                                  reviewStatus: strategicProfile.review_status,
+                              }
+                            : undefined,
                         observedRole,
                         flexOptions,
                     } satisfies RiftTheorySuggestionEvidence,

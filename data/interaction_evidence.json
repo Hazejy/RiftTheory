@@ -16,6 +16,13 @@
       "accessNote": "Riot documents the ability kit. Trait levels and contextual conclusions are provisional RiftTheory interpretations, not Riot ratings."
     },
     {
+      "key": "rifttheory_vi_official_kit_interpretation",
+      "label": "RiftTheory provisional interpretation of the official Vi kit",
+      "kind": "ai_assisted",
+      "url": "https://www.leagueoflegends.com/en-us/champions/vi/",
+      "accessNote": "Riot documents Vi as a Fighter/Assassin and documents Vault Breaker and Cease and Desist. Trait levels and draft conclusions are provisional RiftTheory interpretations, not Riot ratings or counter statistics."
+    },
+    {
       "key": "rifttheory_interaction_model_v1",
       "label": "RiftTheory interaction model v1",
       "kind": "manual",
@@ -91,6 +98,43 @@
           "confidence": 0.6,
           "reasoning": "Area spells can affect multiple minions while maintaining distance.",
           "conditions": ["The rating does not represent a measured clear time."]
+        }
+      ]
+    },
+    {
+      "champion": { "name": "Vi" },
+      "role": "jungle",
+      "patch": null,
+      "assessmentMethod": "ai_assisted",
+      "reviewStatus": "provisional",
+      "sourceKey": "rifttheory_vi_official_kit_interpretation",
+      "traits": [
+        {
+          "trait": "engage",
+          "level": 5,
+          "confidence": 0.75,
+          "reasoning": "Vault Breaker can begin contact and Cease and Desist supplies committed targeted initiation.",
+          "conditions": [
+            "Engage value depends on approach access, target selection and allied follow-up."
+          ]
+        },
+        {
+          "trait": "target_access",
+          "level": 5,
+          "confidence": 0.8,
+          "reasoning": "Cease and Desist selects an enemy champion, carries Vi toward that target, knocks intervening enemies aside and knocks the target up.",
+          "conditions": [
+            "Reaching a target does not guarantee a favorable exit or enough follow-up damage."
+          ]
+        },
+        {
+          "trait": "mobility",
+          "level": 3,
+          "confidence": 0.65,
+          "reasoning": "Vault Breaker provides directional movement, while Cease and Desist provides target-bound access.",
+          "conditions": [
+            "Directional access still requires a usable approach and does not itself provide a safe exit."
+          ]
         }
       ]
     }

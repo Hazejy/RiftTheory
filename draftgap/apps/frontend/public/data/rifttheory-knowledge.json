@@ -6,7 +6,7 @@
       "version": "16.17.1",
       "discovered_at": "2026-09-04T18:41:58.403Z"
     },
-    "sourceCount": 7
+    "sourceCount": 8
   },
   "sources": [
     {
@@ -50,6 +50,13 @@
       "kind": "ai_assisted",
       "url": "https://www.leagueoflegends.com/en-us/champions/xerath/",
       "access_note": "Riot documents the ability kit. Trait levels and contextual conclusions are provisional RiftTheory interpretations, not Riot ratings."
+    },
+    {
+      "source_key": "rifttheory_vi_official_kit_interpretation",
+      "label": "RiftTheory provisional interpretation of the official Vi kit",
+      "kind": "ai_assisted",
+      "url": "https://www.leagueoflegends.com/en-us/champions/vi/",
+      "access_note": "Riot documents Vi as a Fighter/Assassin and documents Vault Breaker and Cease and Desist. Trait levels and draft conclusions are provisional RiftTheory interpretations, not Riot ratings or counter statistics."
     },
     {
       "source_key": "riot_data_dragon",
@@ -15579,8 +15586,59 @@
           "patch": "16.17.1"
         }
       },
-      "capabilities": [],
-      "strategicProfiles": [],
+      "capabilities": [
+        {
+          "champion_id": 152,
+          "role": "jungle",
+          "capability": "engage",
+          "strength": 1,
+          "patch_version": "unknown",
+          "assessment_method": "ai_assisted",
+          "confidence": null,
+          "review_status": "curated",
+          "reasoning": null,
+          "source_key": "rifttheory_vi_official_kit_interpretation"
+        },
+        {
+          "champion_id": 152,
+          "role": "jungle",
+          "capability": "target_access",
+          "strength": 1,
+          "patch_version": "unknown",
+          "assessment_method": "ai_assisted",
+          "confidence": null,
+          "review_status": "curated",
+          "reasoning": null,
+          "source_key": "rifttheory_vi_official_kit_interpretation"
+        }
+      ],
+      "strategicProfiles": [
+        {
+          "id": 2,
+          "champion_id": 152,
+          "role": "jungle",
+          "patch_version": "unknown",
+          "reasoning": "AI-assisted provisional interpretation: Red represents Vi's direct, proactive and commitment-heavy access pattern through Vault Breaker and Cease and Desist. Black is conditional: committing onto a chosen target can create power at the cost of position and requires the draft to supply follow-up or a survivable exit. This profile does not mean every Vi draft must snowball, and it does not establish automatic counters or a win probability.",
+          "review_status": "provisional",
+          "confidence": null,
+          "source_key": "rifttheory_vi_official_kit_interpretation",
+          "source_url": "https://www.leagueoflegends.com/en-us/champions/vi/",
+          "colors": [
+            {
+              "strategic_profile_id": 2,
+              "color": "red",
+              "assignment": "main",
+              "weight": 1
+            },
+            {
+              "strategic_profile_id": 2,
+              "color": "black",
+              "assignment": "off",
+              "weight": 1
+            }
+          ]
+        }
+      ],
       "roleObservations": [
         {
           "champion_id": 152,
@@ -15658,7 +15716,50 @@
           "role_share": 0.013529874689751196
         }
       ],
-      "roleTraits": []
+      "roleTraits": [
+        {
+          "role": "jungle",
+          "trait": "engage",
+          "level": 5,
+          "patch_version": "unknown",
+          "assessment_method": "ai_assisted",
+          "confidence": 0.75,
+          "review_status": "provisional",
+          "reasoning": "Vault Breaker can begin contact and Cease and Desist supplies committed targeted initiation.",
+          "source_key": "rifttheory_vi_official_kit_interpretation",
+          "conditions": [
+            "Engage value depends on approach access, target selection and allied follow-up."
+          ]
+        },
+        {
+          "role": "jungle",
+          "trait": "target_access",
+          "level": 5,
+          "patch_version": "unknown",
+          "assessment_method": "ai_assisted",
+          "confidence": 0.8,
+          "review_status": "provisional",
+          "reasoning": "Cease and Desist selects an enemy champion, carries Vi toward that target, knocks intervening enemies aside and knocks the target up.",
+          "source_key": "rifttheory_vi_official_kit_interpretation",
+          "conditions": [
+            "Reaching a target does not guarantee a favorable exit or enough follow-up damage."
+          ]
+        },
+        {
+          "role": "jungle",
+          "trait": "mobility",
+          "level": 3,
+          "patch_version": "unknown",
+          "assessment_method": "ai_assisted",
+          "confidence": 0.65,
+          "review_status": "provisional",
+          "reasoning": "Vault Breaker provides directional movement, while Cease and Desist provides target-bound access.",
+          "source_key": "rifttheory_vi_official_kit_interpretation",
+          "conditions": [
+            "Directional access still requires a usable approach and does not itself provide a safe exit."
+          ]
+        }
+      ]
     },
     {
       "riotKey": "234",

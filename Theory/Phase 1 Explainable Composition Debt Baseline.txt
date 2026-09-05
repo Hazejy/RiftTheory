@@ -1,0 +1,47 @@
+Current composition:
+- has engage
+- has wave clear
+- lacks frontline
+- lacks disengage
+
+Composition debt:
+- frontline
+- disengage
+- poke 
+
+
+required capabilities - provided capabilities = composition debt
+
+##  equals
+
+
+
+1/
+required capabilities
+minus provided capabilities
+equals composition debt
+
+2/
+Missing wave clear.
+Engage is provided by Example Vanguard.
+Frontline is provided by Example Vanguard.
+
+
+3/
+JSON/ PROFILES
+
+Champion: Malphite
+Role: Top
+Capabilities:
+- engage
+- frontline
+
+Source type: manually curated
+Confidence: high
+Patch context: required
+
+4/
+
+
+
+

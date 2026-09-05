@@ -11,5 +11,18 @@
       "reasoning": "AI-assisted interpretation: Blue reflects space control and denial through stun, wall and persistent area damage. White is a conditional defensive/peel interpretation, not universal draft flexibility. Wave clear does not guarantee safe access against long-range pressure; positioning, mana and allied setup must be assessed. No win probability is inferred.",
       "source_name": "RiftTheory AI-assisted synthesis; evidence and limits: research/anivia-mid-profile.md"
     }
+  },
+  {
+    "champion_name": "Vi",
+    "role": "jungle",
+    "patch": null,
+    "review_status": "provisional",
+    "source_url": "https://www.leagueoflegends.com/en-us/champions/vi/",
+    "identity": {
+      "main_colors": ["red"],
+      "off_colors": ["black"],
+      "reasoning": "AI-assisted provisional interpretation: Red represents Vi's direct, proactive and commitment-heavy access pattern through Vault Breaker and Cease and Desist. Black is conditional: committing onto a chosen target can create power at the cost of position and requires the draft to supply follow-up or a survivable exit. This profile does not mean every Vi draft must snowball, and it does not establish automatic counters or a win probability.",
+      "source_name": "rifttheory_vi_official_kit_interpretation"
+    }
   }
 ]
