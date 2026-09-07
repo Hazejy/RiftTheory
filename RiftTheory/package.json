@@ -1,0 +1,31 @@
+{
+  "name": "draftgap",
+  "version": "3.2.1",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "data:init": "bun run --filter @rifttheory/data init",
+    "data:build": "bun run --filter @rifttheory/data build",
+    "data:build:offline": "bun run --filter @rifttheory/data build:offline",
+    "data:check": "bun run --filter @rifttheory/data check:patch",
+    "data:refresh": "bun run --filter @rifttheory/data refresh",
+    "data:import:roles": "bun run --filter @rifttheory/data import:roles",
+    "data:import:interactions": "bun run --filter @rifttheory/data import:interactions",
+    "data:import:color-baselines": "bun run --filter @rifttheory/data import:color-baselines",
+    "data:sync:draftgap-roles": "bun run --filter @rifttheory/data sync:draftgap-roles",
+    "data:status": "bun run --filter @rifttheory/data status",
+    "bump-version": "bun run typecheck && bun scripts/bump-version.ts",
+    "typecheck": "turbo typecheck",
+    "dev": "bun run --filter @draftgap/frontend dev",
+    "tauri": "bun run --filter @draftgap/frontend tauri"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "dependencies": {
+    "turbo": "^2.8.1"
+  },
+  "packageManager": "bun@1.3.6"
+}

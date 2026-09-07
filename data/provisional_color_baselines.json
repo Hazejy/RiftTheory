@@ -1,0 +1,202 @@
+[
+  {
+    "champion_name": "Akshan",
+    "main_colors": ["red", "black"],
+    "off_colors": ["blue"],
+    "reasoning": "Red is the core because Akshan converts early lane pressure, roaming speed and aggressive takedowns into tempo. Black is also main: Scoundrel marks make resurrection and bonus gold conditional on killing a specific enemy. Blue is off because camouflage, terrain-based movement and target selection can support an information-and-evasion plan, but do not replace his proactive baseline.",
+    "review_status": "provisional",
+    "source_version": "16.17.1"
+  },
+  {
+    "champion_name": "Ambessa",
+    "main_colors": ["red"],
+    "off_colors": ["black"],
+    "reasoning": "Red is main because repeated ability-linked dashes and direct backline access reward initiative, continuous pressure and committed fights. Black is off because her strongest sequences depend on satisfying execution conditions such as correct movement weaving, energy recovery and isolating a target with Public Execution; failed commitment carries a positional cost.",
+    "review_status": "provisional",
+    "source_version": "16.17.1"
+  },
+  {
+    "champion_name": "Aurora",
+    "main_colors": ["blue"],
+    "off_colors": ["red"],
+    "reasoning": "Blue is main through invisibility, evasive movement, slows and Between Worlds reshaping the fight area while restricting enemy movement. Red is off when mobility and repeated spell hits are used for proactive burst and target pursuit rather than patient space control.",
+    "review_status": "provisional",
+    "source_version": "16.17.1"
+  },
+  {
+    "champion_name": "Bel'Veth",
+    "main_colors": ["black", "green"],
+    "off_colors": [],
+    "reasoning": "Black is main because permanent attack-speed growth and her true form are earned through takedowns, large monsters and Void Coral conditions. Green is main because her power curves through accumulated stacks, extended combat and major item or objective timings; she is substantially stronger when the team enables access to those timings.",
+    "review_status": "provisional",
+    "source_version": "16.17.1"
+  },
+  {
+    "champion_name": "Briar",
+    "main_colors": ["red", "black"],
+    "off_colors": [],
+    "reasoning": "Red is main through direct pursuit, high-speed commitment and snowball-oriented target access. Black is equally central: Briar trades health, control over her movement and safe positioning for damage and healing, and her ultimate locks her into a conditional hunt until the target or Briar dies.",
+    "review_status": "provisional",
+    "source_version": "16.17.1"
+  },
+  {
+    "champion_name": "Gwen",
+    "main_colors": ["green"],
+    "off_colors": ["blue"],
+    "reasoning": "Green is main because Gwen's sustained damage, healing and repeated passive applications become powerful through item and level timings and extended fights. Blue is off because Hallowed Mist denies interaction from outside its area and lets her manipulate which opponents are allowed to affect her, but that control serves her scaling damage plan.",
+    "review_status": "provisional",
+    "source_version": "16.17.1"
+  },
+  {
+    "champion_name": "Hwei",
+    "main_colors": ["blue"],
+    "off_colors": ["white"],
+    "reasoning": "Blue is main because Hwei wins through option knowledge, range, zone control, denial and choosing the correct spell from several control, damage and utility tools. White is off when Serenity spells and crowd-control choices are used to support allies or fill a composition gap; this depends on role and game state rather than defining every Hwei draft.",
+    "review_status": "provisional",
+    "source_version": "16.17.1"
+  },
+  {
+    "champion_name": "K'Sante",
+    "main_colors": ["white", "black"],
+    "off_colors": ["blue"],
+    "reasoning": "White is main because K'Sante can protect allies, frontline, reposition enemies and switch between several team needs. Black is main because All Out explicitly exchanges defenses and control for damage, healing and isolation power. Blue is off where wall interaction, displacement and charged damage reduction are used to reshape access to a fight.",
+    "review_status": "provisional",
+    "source_version": "16.17.1"
+  },
+  {
+    "champion_name": "Lillia",
+    "main_colors": ["blue", "green"],
+    "off_colors": [],
+    "reasoning": "Blue is main through movement-based evasion, spacing, slows and delayed sleep that lets her control when interaction occurs. Green is main because repeated spell hits build movement speed and percent-health attrition, while levels and items amplify a curved sustained-fight plan that works best with allied setup.",
+    "review_status": "provisional",
+    "source_version": "16.17.1"
+  },
+  {
+    "champion_name": "Locke",
+    "main_colors": ["black", "red"],
+    "off_colors": [],
+    "reasoning": "Black is main because Locke spends his own health for acceleration, consumes marks for bonus damage and gains power by sealing or executing enemy champions. Red is main because attack speed, movement speed, teleporting pursuit and missing-health damage produce a direct, accelerating kill pattern that must keep converting pressure.",
+    "review_status": "provisional",
+    "source_version": "16.17.1"
+  },
+  {
+    "champion_name": "Mel",
+    "main_colors": ["blue", "black"],
+    "off_colors": ["white"],
+    "reasoning": "Blue is main through projectile reflection, ranged control and manipulating enemy actions into unfavorable outcomes. Black is main because Overwhelm stacks and the execute reward satisfying a cumulative condition before power is realized. White is off when shields, roots and zone control are used primarily to support and stabilize allies.",
+    "review_status": "provisional",
+    "source_version": "16.17.1"
+  },
+  {
+    "champion_name": "Milio",
+    "main_colors": ["green", "white"],
+    "off_colors": ["blue"],
+    "reasoning": "Green is main because Milio amplifies allied attack range, damage and movement and is weak as an isolated plan. White is main because healing, shielding and cleansing let him support several compatible carry plans. Blue is off through knockback and crowd-control removal denying an enemy engage, but denial is secondary to ally amplification.",
+    "review_status": "provisional",
+    "source_version": "16.17.1"
+  },
+  {
+    "champion_name": "Naafiri",
+    "main_colors": ["red"],
+    "off_colors": ["black"],
+    "reasoning": "Red is main because Naafiri follows a direct target-access and execution plan with movement speed, coordinated pack pursuit and takedown resets. Black is off because bleed sequencing, marked targets and the takedown requirement for renewed pursuit and shielding condition her strongest continuation patterns.",
+    "review_status": "provisional",
+    "source_version": "16.17.1"
+  },
+  {
+    "champion_name": "Nilah",
+    "main_colors": ["green", "black"],
+    "off_colors": ["white"],
+    "reasoning": "Green is main because Nilah gains exceptional value from close allied healing, shielding and shared experience, making partner synergy and coordinated timings fundamental. Black is main because she accepts melee-range and lane-structure constraints for accelerated experience and combat power. White is off through sharing defensive effects and providing a brief attack-denial choice to allies.",
+    "review_status": "provisional",
+    "source_version": "16.17.1"
+  },
+  {
+    "champion_name": "Rell",
+    "main_colors": ["white", "red"],
+    "off_colors": ["black"],
+    "reasoning": "White is main because Rell supplies frontline, ally acceleration, shield breaking and layered control for multiple team plans. Red is main because her value is usually realized by decisive, committed engage. Black is off because Crash Down trades speed and safety for defenses, shielding and stronger commitment, creating a meaningful cost when used poorly.",
+    "review_status": "provisional",
+    "source_version": "16.17.1"
+  },
+  {
+    "champion_name": "Renata Glasc",
+    "main_colors": ["blue", "black"],
+    "off_colors": ["white"],
+    "reasoning": "Blue is main because Renata manipulates enemy positioning and actions through roots, displacement and Berserk. Black is main because Bailout grants power through a delayed-death condition that must be paid back with a takedown. White is off through shielding and ally enhancement, but her defining identity is conditional manipulation rather than generic protection.",
+    "review_status": "provisional",
+    "source_version": "16.17.1"
+  },
+  {
+    "champion_name": "Samira",
+    "main_colors": ["red", "black"],
+    "off_colors": ["green"],
+    "reasoning": "Red is main because Samira relies on aggressive close-range conversion, resets and rapidly accelerating fights. Black is main because Inferno Trigger is gated behind a sequence of unique actions and committing into dangerous range exchanges safety for payoff. Green is off because allied immobilization directly enables her access and extended knock-up, making some compositions much more coherent than others.",
+    "review_status": "provisional",
+    "source_version": "16.17.1"
+  },
+  {
+    "champion_name": "Seraphine",
+    "main_colors": ["green", "blue"],
+    "off_colors": ["white"],
+    "reasoning": "Green is main because nearby allies amplify her notes, shields, healing and chained ultimate range, so coordinated team interaction multiplies her kit. Blue is main through long-range slows, roots, charm and repeated spell management. White is off when her build and role prioritize broad shielding, healing and supportive coverage over damage.",
+    "review_status": "provisional",
+    "source_version": "16.17.1"
+  },
+  {
+    "champion_name": "Smolder",
+    "main_colors": ["green", "black"],
+    "off_colors": ["blue"],
+    "reasoning": "Green is main because Smolder follows pronounced stack, level and item curves and becomes stronger through protected farming and allied time-buying. Black is main because Dragon Practice is an explicit quest that must be completed to unlock enhanced ability power. Blue is off where range, terrain-crossing escape and delayed scaling are used to avoid interaction until those conditions are met.",
+    "review_status": "provisional",
+    "source_version": "16.17.1"
+  },
+  {
+    "champion_name": "Vex",
+    "main_colors": ["blue"],
+    "off_colors": ["red"],
+    "reasoning": "Blue is main because Doom interrupts dashes, Gloom punishes mobility and her fear and slows remove enemy options. Red is off when Shadow Surge is used as proactive long-range access that converts a marked target and takedown into continued aggression.",
+    "review_status": "provisional",
+    "source_version": "16.17.1"
+  },
+  {
+    "champion_name": "Viego",
+    "main_colors": ["black"],
+    "off_colors": ["red", "green"],
+    "reasoning": "Black is main because Viego's defining power is conditional on enemy deaths: possession steals a fallen champion's body, items and basic abilities and enables another ultimate. Red is off when he is drafted to force the first takedown quickly. Green is off when allied setup and extended reset chains are the composition's central synergy.",
+    "review_status": "provisional",
+    "source_version": "16.17.1"
+  },
+  {
+    "champion_name": "Yone",
+    "main_colors": ["red", "black"],
+    "off_colors": ["green"],
+    "reasoning": "Red is main through direct repeated access, knock-up chains and decisive multi-target engage. Black is main because Soul Unbound exchanges positional safety for a timed damage window and forced return, while repeating part of the damage dealt. Green is off because attack-speed and critical-strike timings can shift his plan toward a stronger curved scaling profile.",
+    "review_status": "provisional",
+    "source_version": "16.17.1"
+  },
+  {
+    "champion_name": "Yunara",
+    "main_colors": ["green", "black"],
+    "off_colors": ["blue"],
+    "reasoning": "Green is main because critical strikes, attack speed and on-hit amplification produce a strong item-linked sustained-damage curve. Black is main because Transcend One's Self is a gated state that upgrades every basic ability and concentrates power into a conditionally available window. Blue is off through slowing, ghosting and upgraded repositioning that can control access during that window.",
+    "review_status": "provisional",
+    "source_version": "16.17.1"
+  },
+  {
+    "champion_name": "Zaahen",
+    "main_colors": ["black", "green"],
+    "off_colors": ["red"],
+    "reasoning": "Black is main because Determination is a combat quest whose completion grants increased damage and access to revival. Green is main because repeated champion contact, healing and sustained combat build toward that payoff and reward allied support in wars of attrition. Red is off when his dashes, pull and knock-up are used to force immediate commitment before the full attrition plan develops.",
+    "review_status": "provisional",
+    "source_version": "16.17.1"
+  },
+  {
+    "champion_name": "Zeri",
+    "main_colors": ["blue", "green"],
+    "off_colors": ["red"],
+    "reasoning": "Blue is main because Zeri uses stored energy, extreme movement, terrain crossing and range manipulation to evade and reshape engagement. Green is main because sustained hits, critical or on-hit item timings and stacking movement during extended combat amplify her power. Red is off when Lightning Crash is used to accelerate a fight aggressively and maintain nonstop pursuit.",
+    "review_status": "provisional",
+    "source_version": "16.17.1"
+  }
+]

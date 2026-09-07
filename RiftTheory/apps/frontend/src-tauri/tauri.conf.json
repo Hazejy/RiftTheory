@@ -1,0 +1,65 @@
+{
+    "$schema": "../node_modules/@tauri-apps/cli/schema.json",
+    "build": {
+        "beforeBuildCommand": "..\\..\\..\\.upstream-cache\\tools\\node_modules\\bun\\bin\\bun.exe x --bun vite build",
+        "beforeDevCommand": "..\\..\\..\\.upstream-cache\\tools\\node_modules\\bun\\bin\\bun.exe x --bun vite --host 127.0.0.1 --port 3000",
+        "frontendDist": "../dist",
+        "devUrl": "http://127.0.0.1:3000"
+    },
+    "bundle": {
+        "active": true,
+        "category": "DeveloperTool",
+        "copyright": "",
+        "targets": "all",
+        "externalBin": [],
+        "icon": [
+            "icons/32x32.png",
+            "icons/128x128.png",
+            "icons/128x128@2x.png",
+            "icons/icon.icns",
+            "icons/icon.ico"
+        ],
+        "windows": {
+            "certificateThumbprint": null,
+            "digestAlgorithm": "sha256",
+            "timestampUrl": ""
+        },
+        "longDescription": "",
+        "macOS": {
+            "entitlements": null,
+            "exceptionDomain": "",
+            "frameworks": [],
+            "providerShortName": null,
+            "signingIdentity": null
+        },
+        "resources": [],
+        "shortDescription": "",
+        "linux": {
+            "deb": {
+                "depends": []
+            }
+        },
+        "createUpdaterArtifacts": false
+    },
+    "productName": "RiftTheory",
+    "mainBinaryName": "RiftTheory",
+    "version": "3.2.1",
+    "identifier": "local.rifttheory.workspace",
+    "plugins": {},
+    "app": {
+        "windows": [
+            {
+                "fullscreen": false,
+                "height": 850,
+                "resizable": true,
+                "dragDropEnabled": false,
+                "title": "RiftTheory",
+                "width": 1600,
+                "useHttpsScheme": true
+            }
+        ],
+        "security": {
+            "csp": null
+        }
+    }
+}

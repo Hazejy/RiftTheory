@@ -19,5 +19,5 @@ echo Press Ctrl+C to stop RiftTheory.
 if errorlevel 1 (
   echo RiftTheory could not start. Check whether port 3000 is already in use.
   pause
-  exit /b 1
+    exit /b 
 )
