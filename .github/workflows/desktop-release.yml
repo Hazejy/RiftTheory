@@ -1,0 +1,47 @@
+name: Build desktop release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build ${{ matrix.platform }} installer
+    runs-on: ${{ matrix.platform }}
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [windows-latest, macos-latest]
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.6
+
+      - name: Install dependencies
+        working-directory: draftgap
+        run: bun install --frozen-lockfile
+
+      - name: Build and publish installer
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          projectPath: draftgap/apps/frontend
+          tauriScript: bunx tauri build
+          tagName: ${{ github.ref_name }}
+          releaseName: RiftTheory ${{ github.ref_name }}
+          releaseBody: |
+            Download the installer for your operating system from the assets below.
+            For a private repository, your friend must first be invited as a repository collaborator.

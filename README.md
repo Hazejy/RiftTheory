@@ -14,8 +14,12 @@ prototype remain intact; they are not the runtime backend of the new interface.
 
 Curated knowledge is still small: Anivia Mid has a provisional color profile;
 Anivia Mid and Malphite Top have capability profiles. DraftGap's larger statistical
-catalog is separate from that coverage. No DraftOS desktop installer or machine
-learning model has been built yet.
+catalog is separate from that coverage. The repository includes a GitHub Actions workflow that builds Windows and macOS
+installers when a `v*` tag is pushed. The generated installers are attached to
+the corresponding GitHub Release.
+
+For a private repository, anyone downloading the installer must be invited as a
+repository collaborator and sign in to GitHub.
 
 ## Local application
 
@@ -39,6 +43,19 @@ redesign are intentionally deferred; DraftGap remains the technical foundation.
 - Internet access for upstream datasets and champion assets.
 - Legacy Python tools below: Python 3.11+, with optional `requirements.txt`
   dependencies for the old FastAPI application.
+
+## Download the desktop application
+
+After the repository owner pushes a version tag, for example:
+
+```powershell
+git tag v3.2.1
+git push origin v3.2.1
+```
+
+GitHub Actions creates a release with Windows and macOS installers. Open the
+repository's **Releases** page and download the installer for your operating
+system.
 
 ## Preserved Python CLI
 
