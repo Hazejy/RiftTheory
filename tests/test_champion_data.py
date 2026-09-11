@@ -19,23 +19,19 @@ class ChampionDataTests(unittest.TestCase):
 
         champions = load_champion_profiles(data_file)
 
+        self.assertGreaterEqual(len(champions), 100)
+        anivia = [champion for champion in champions if champion.name == "Anivia"]
         self.assertEqual(
-            [champion.name for champion in champions],
-            ["Malphite", "Anivia"],
+            {champion.role for champion in anivia},
+            {ChampionRole.MID, ChampionRole.TOP},
         )
+        braum = next(champion for champion in champions if champion.name == "Braum")
         self.assertEqual(
-            champions[0].capabilities,
-            {
-                CompositionCapability.ENGAGE,
-                CompositionCapability.FRONTLINE,
-            },
+            braum.capabilities,
+            {CompositionCapability.DISENGAGE},
         )
-        self.assertEqual(
-            champions[1].capabilities,
-            {CompositionCapability.WAVE_CLEAR},
-        )
-        self.assertEqual(champions[0].role, ChampionRole.TOP)
-        self.assertEqual(champions[1].role, ChampionRole.MID)
+        brand = [champion for champion in champions if champion.name == "Brand"]
+        self.assertIn(ChampionRole.BOT, {champion.role for champion in brand})
         self.assertTrue(
             all(
                 champion.source is KnowledgeSource.MANUALLY_CURATED

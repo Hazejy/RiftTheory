@@ -8,6 +8,9 @@ class CompositionCapability(Enum):
     """A capability that a team composition may provide."""
 
     ENGAGE = "engage"
+    DISENGAGE = "disengage"
+    PICK = "pick"
+    POKE = "poke"
     FRONTLINE = "frontline"
     WAVE_CLEAR = "wave_clear"
 

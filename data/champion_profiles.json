@@ -1,20 +1,631 @@
 [
   {
-    "name": "Malphite",
+    "name": "Aatrox",
     "role": "top",
-    "capabilities": ["engage", "frontline"],
+    "capabilities": ["engage"],
+    "source": "manually_curated"
+  },
+  {
+    "name": "Ahri",
+    "role": "mid",
+    "capabilities": ["engage","pick"],
+    "source": "manually_curated"
+  },
+  {
+    "name": "Akali",
+    "role": "mid",
+    "capabilities": ["engage"],
+    "source": "manually_curated"
+  },
+  {
+    "name": "Alistar",
+    "role": "support",
+    "capabilities": ["engage", "disengage"],
+    "source": "manually_curated"
+  },
+  {
+    "name": "Amumu",
+    "role": "Jungle",
+    "capabilities": ["engage"],
     "source": "manually_curated"
   },
   {
     "name": "Anivia",
-    "role": "mid",
-    "capabilities": ["wave_clear"],
-    "source": "manually_curated"
+    "role":["mid","top"],
+    "capabilities": ["disengage"],
+    "source":"manually_curated"
   },
   {
-    "name": "Vi",
-    "role": "jungle",
-    "capabilities": ["engage", "target_access"],
-    "source": "rifttheory_vi_official_kit_interpretation"
-  }
+    "name":"Annie",
+    "role": "mid",
+    "capabilities":["engage","pick"],
+    "source":"manually_curated"
+  },
+  {
+    "name":"Aphelios",
+    "role":"adc",
+    "capabilities":["disengage"],
+    "source":"manually_curated"
+  },
+  {
+    "name":"Ashe",
+    "role":["adc","support"],
+    "capabilities":["pick","engage"],
+    "source":"manually_curated"
+  },
+  {
+    "name":"Aurelion Sol",
+    "role":"mid",
+    "capabilities":["engage"],
+    "source":"manually_curated"
+  },
+  {
+    "name":"Azir",
+    "role":"mid",
+    "capabilities":["poke", "engage"],
+    "source":"manually_curated"
+  },
+  {
+    "name":"Bard",
+    "role":"support",
+    "capabilities":["engage","pick"],
+    "source":"manually_curated"
+  },
+  {
+    "name":"Blitzcrank",
+    "role":"support",
+    "capabilities":["pick","disengage"],
+    "source":"manually_curated"
+  },
+  {
+    "name":"Brand",
+    "role":["support","botlane","midlane","jungle","toplane"],
+    "capabilities":["poke","disengage"],
+    "source":"manually_curated"
+  },
+{
+    "name":"Braum",
+    "role":"support",
+    "capabilities":"disengage",
+    "source":"manually_curated"
+},
+{
+  "name":"Caitlyn",
+  "role":"adc",
+  "capabilities":["poke"],
+  "source":"manually_curated"
+},
+{
+"name":"Camille",
+"role":["top","support"],
+"capabilities":["engage","pick"],
+"source":"manually_curated"
+},
+{
+  "name":"Cassiopeia",
+  "role":["mid","toplane"],
+  "capabilities":["disengage"],
+  "source":"manually_curated"
+},
+{
+  "name":"Cho'Gath",
+  "role":["top","jungle"],
+  "capabilities":["disengage","pick"],
+  "source":"manually_curated"
+},
+{
+  "name":"Corki",
+  "role":["adc","mid"],
+  "capabilities":["disengage","poke"],
+  "source":"manually_curated"
+},
+{
+  "name":"Darius",
+  "role":["top","jungle"],
+  "capabilities":["disengage","engage"],
+  "source":"manually_curated"
+},
+{
+  "name":"Diana",
+  "role":["jungle","mid"],
+  "capabilities":["engage"],
+  "source":"manually_curated"
+},
+{
+  "name":"Dr Mundo",
+  "role":["top","jungle"],
+  "capabilities":["disengage","engage"],
+  "source":"manually_curated"
+},
+{
+  "name":"Draven",
+  "role":"adc",
+  "capabilities":["engage"],
+  "source":"manually_curated"
+},
+{
+  "name":"Ekko",
+  "role":["mid","jungle"],
+  "capabilities":["engage"],
+  "source":"manually_curated"
+},
+{
+  "name":"Elise",
+  "role":["jungle","support"],
+  "capabilities":["engage","pick"],
+  "source":"manually_curated"
+},
+{
+  "name":"Evelynn",
+  "role":"jungle",
+  "capabilities":["pick","engage"],
+  "source":"manually_curated"
+},
+{
+  "name":"Ezreal",
+  "role":"adc",
+  "capabilities":["poke","disengage"],
+  "source":"manually_curated"
+},
+{
+  "name":"Fiddlesticks",
+  "role":"Jungle",
+  "capabilities":["engage"],
+  "source":"manually_curated"
+},
+{
+  "name":"Fiora",
+  "role":"top",
+  "capabilities":["engage","disengage"],
+  "source":"manually_curated"
+},
+{
+  "name":"Fizz",
+  "role":"mid",
+  "capabilities":["engage","disengage","pick"],
+  "source":"manually_curated"
+},
+{
+  "name":"Galio",
+  "role":["mid","top"],
+  "capabilities":["disengage","engage","pick"],
+  "source":"manually_curated"
+},
+{
+  "name":"Gangplank",
+  "role":["top","mid"],
+  "capabilities":["poke","engage"],
+  "source":"manually_curated"
+},
+{
+  "name":"Garen",
+  "role":"top",
+  "capabilities":["engage","disengage"],
+  "source":"manually_curated"
+},
+{
+  "name":"Gnar",
+  "role":"top",
+  "capabilities":["engage"],
+  "source":"manually_curated"
+},
+{
+  "name":"Gragas",
+  "role":["top","jungle","mid"],
+  "capabilities":["disengage","engage","pick"],
+  "source":"manually_curated"
+},
+{
+  "name":"Graves",
+  "Role":"jungle",
+  "capabilities":["disengage"],
+  "source":"manually_curated"
+},
+{
+  "name":"Hecarim",
+  "role":"jungle",
+  "capabilities":["engage"],
+  "source":"manually_curated"
+},
+{
+  "name":"Heimerdinger",
+  "role":["top","mid","support"],
+  "capabilities":["disengage","poke"],
+  "source":"manually_curated"
+},
+{
+  "name":"Illaoi",
+  "role":["top","mid"],
+  "capabilities":["disengage"],
+  "source":"manually_curated"
+},
+{
+  "name":"irelia",
+  "Role":["top","mid"],
+  "capabilities":["engage","disengage"],
+  "source":"manually_curated"
+},
+{
+  "name":"ivern",
+  "role":["jungle"],
+  "capabilities":["disengage","engage"],
+  "source":"manually_curated"
+},
+{
+  "name":"Janna",
+  "role":"support",
+  "capabilities":["disengage"],
+  "source":"manually_curated"
+},
+{
+  "name":"Jarvan IV",
+  "role":"jungle",
+  "capabilities":["engage"],
+  "source":"manually_curated"
+},
+{
+  "name":"jax",
+  "role":["top","jungle","support"],
+  "capabilities":["engage","disengage"],
+  "source":"manually_curated"
+},
+{
+  "name":"Jayce",
+  "Role":["top","mid","jungle"],
+  "capabilities":["poke"],
+  "source":"manually_curated"
+},
+{
+  "name":"Jhin",
+  "role":"adc",
+  "capabilities":["pick","disengage"],
+  "source":"manually_curated"
+},
+{
+  "name":"Jinx",
+  "role":"adc",
+  "capabilities":["poke","disengage"],
+  "source":"manually_curated"
+},
+{
+  "name":"kai'sa",
+  "role":"adc",
+  "capabilities":["engage","poke"],
+  "source":"manually_curated"
+},
+{
+  "name":"Kalista",
+  "role":"adc",
+  "capabilities":["disengage","engage"],
+  "source":"manually_curated"
+},
+{
+  "name":"Karma",
+  "role":["support","mid","top"],
+  "capabilities":["disengage","poke","engage"],
+  "source":"manually_curated"
+},
+{
+  "name":"karthus",
+  "role":["jungle","adc"],
+  "capabilities":["poke","disengage"],
+  "source":"manually_curated"
+},
+{
+  "name":"Kassadin",
+  "role":"mid",
+  "capabilities":["engage","disengage"],
+  "source":"manually_curated"
+},
+{
+  "name":"Katarina",
+  "role":"mid",
+  "capabilities":["pick","engage"],
+  "source":"manually_curated"
+},
+{
+  "name":"Kayle",
+  "role":["top","mid"],
+  "capabilities":["disengage","poke"],
+  "source":"manually_curated"
+},
+{
+  "name":"kayn",
+  "role":"jungle",
+  "capabilities":["engage","pick","disengage"],
+  "source":"manually_curated"
+},
+{
+  "name":"Kennen",
+  "role":"top",
+  "capabilities":["engage"],
+  "source":"manually_curated"
+},
+{
+  "name":"Kha'zix",
+  "role":"jungle",
+  "capabilities":["poke","engage","pick","disengage"],
+  "source":"manually_curated"
+},
+{
+  "name":"Kindred",
+  "Role":"jungle",
+  "capabilities":["poke","disengage"],
+  "source":"manually_curated"
+},
+{
+  "name":"Kled",
+  "role":"top",
+  "capabilities":["engage","pick"],
+  "source":"manually_curated"
+},
+{
+  "name":"Kog'Maw",
+  "role":["adc","mid"],
+  "capabilities":["poke"],
+  "source":"manually_curated"
+},
+{
+  "name":"LeBlanc",
+  "role":"mid",
+  "capabilities":["engage"],
+  "source":"manually_curated"
+},
+{
+  "name":"Lee Sin",
+  "role":"jungle",
+  "capabilities":["engage"],
+  "source":"manually_curated"
+},
+{
+  "name":"Leona",
+  "role":"support",
+  "capabilities":["engage"],
+  "source":"manually_curated"
+},
+{
+  "name":"Lissandra",
+  "role":"mid",
+  "capabilities":["disengage","pick"],
+  "source":"manually_curated"
+},
+{
+  "name":"Lucian",
+  "Role":"adc",
+  "capabilities":["poke"],
+  "source":"manually_curated"
+},
+{
+  "name":"lulu",
+  "role":"support",
+  "capabilities":["disengage"],
+  "source":"manually_curated"
+},
+{
+  "name":"Lux",
+  "role":["mid","support"],
+  "capabilities":["poke"],
+  "source":"manually_curated"
+},
+{
+  "name":"Malphite",
+  "role":["toplane","jungle"],
+  "capabilities":["engage","pick"],
+  "source":"manually_curated"
+},
+{
+  "name":"Malzahar",
+  "role":"midlane",
+  "capabilities":["engage","pick"],
+  "source":"manually_curated"
+},
+{
+  "name":"Maokai",
+  "role":["jungle","support"],
+  "capabilities":["disengage","engage"],
+  "source":"manually_curated"
+},
+{
+  "name":"Master Yi",
+  "role":"jungle",
+  "capabilities":["engage"],
+  "source":"manually_curated"
+},
+{
+  "name":"Miss Fortune",
+  "role":"adc",
+  "capabilities":["engage"],
+  "source":"manually_curated"
+},
+{
+  "name":"Mordekaiser",
+  "role":["toplane","jungle"],
+  "capabilities":["pick","disengage"],
+  "source":"manually_curated"
+},
+{
+  "name":"Morgana",
+  "role":["support","jungle","midlane"],
+  "capabilities":["disengage","pick"],
+  "source":"manually_curated"
+},
+{
+  "name":"Nami",
+  "role":"support",
+  "capabilities":["disengage"],
+  "source":"manually_curated"
+},
+{
+  "name":"Nasus",
+  "role":["top","jungle","mid"],
+  "capabilities":["disengage"],
+  "source":"manually_curated"
+},
+{
+  "name":"Nautilus",
+  "role":"support",
+  "capabilities":["engage","pick"],
+  "source":"manually_curated"
+},
+{
+  "name":"Neeko",
+  "role":["support","mid"],
+  "capabilities":["engage","pick","engage"],
+  "source":"manually_curated"
+},
+{
+  "name":"Nidalee",
+  "role":"jungle",
+  "capabilities":["engage","poke"],
+  "source":"manually_curated"
+},
+{
+  "name":"Nocturne",
+  "role":"jungle",
+  "capabilities":["engage","pick"],
+  "source":"manually_curated"
+},
+{
+  "name":"Nunu",
+  "role":"jungle",
+  "capabilities":["engage","pick"],
+  "source":"manually_curated"
+},
+{
+  "name":"Olaf",
+  "role":["top","jungle"],
+  "capabilities":["engage"],
+  "source":"manually_curated"
+},
+{
+  "name":"Orianna",
+  "role":"mid",
+  "capabilities":["engage"],
+  "source":"manually_curated"
+},
+{
+  "name":"Ornn",
+  "role":"top",
+  "capabilities":["engage","disengage"],
+  "source":"manually_curated"
+},
+{
+  "name":"Pantheon",
+  "role":["jungle","top","support"],
+  "capabilities":["disengage","pick"],
+  "source":"manually_curated"
+},
+{
+  "name":"Poppy",
+  "role":["jungle","top","support"],
+  "capabilities":["disengage"],
+  "source":"manually_curated"
+},
+{
+  "name":"Pyke",
+  "role":"support",
+  "capabilities":["engage","pick"],
+  "source":"manually_curated"
+},
+{
+  "name":"Qiyana",
+  "role":["jungle","mid"],
+  "capabilities":["engage"],
+  "source":"manually_curated"
+},
+{
+  "name":"Quinn",
+  "role":"Top",
+  "capabilities":["engage"],
+  "source":"manually_curated"
+},
+{
+  "name":"Rakan",
+  "role":"support",
+  "capabilities":["engage"],
+  "source":"manually_curated"
+},
+{
+  "name":"Rammus",
+  "role":"jungle",
+  "capabilities":["engage"],
+  "source":"manually_curated"
+},
+{
+  "name":"Rek'sai",
+  "role":["jungle","top"],
+  "capabilities":["engage"],
+  "source":"manually_curated"
+},
+{
+  "name":"Renekton",
+  "role":"Top",
+  "capabilities":["engage"],
+  "source":"manually_curated"
+},
+{
+  "name":"Rengar",
+  "role":"jungle",
+  "capabilities":["engage"],
+  "source":"manually_curated"
+},
+{
+  "name":"Riven",
+  "role":"top",
+  "capabilities":["engage"],
+  "source":"manually_curated"
+},
+{
+  "name":"Rumble",
+  "role":"top",
+  "capabilities":["disengage"],
+  "source":"manually_curated"
+},
+{
+  "name":"Ryze",
+  "role":["mid","top"],
+  "capabilities":["disengage"],
+  "source":"manually_curated"
+},
+{
+  "name":"Sejuani",
+  "role":"jungle",
+  "capabilities":["engage","pick"]
+},
+{
+  "name":"Senna",
+  "role":["support","adc"],
+  "capabilities":["poke","engage"],
+  "source":"manually_curated"
+},
+{
+  "name":"Sett",
+  "role":"top",
+  "capabilities":["engage","disengage"],
+  "source":"manually_curated"
+},
+{
+  "name":"Shaco",
+  "role":["jungle","support"],
+  "capabilities":["engage","pick"],
+  "source":"manually_curated"
+},
+{
+  "name":"Shen",
+  "role":["top","support","jungle"],
+  "capabilities":["disengage"],
+  "source":"manually_curated"
+},
+{
+  "name":"Sylas",
+  "role":["mid","top","jungle"],
+  "capabilities":["engage"],
+  "source":"manually_curated"
+}
+
+
+
+
+
+
 ]
