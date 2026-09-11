@@ -158,6 +158,20 @@ export default function TierListView() {
         });
     };
 
+    const setChampionDragData = (event: DragEvent, championKey: string) => {
+        if (!event.dataTransfer) return;
+        event.dataTransfer.effectAllowed = "copyMove";
+        event.dataTransfer.setData(
+            "application/x-rifttheory-champion",
+            championKey,
+        );
+        event.dataTransfer.setData("text/plain", championKey);
+    };
+
+    const readChampionDragData = (event: DragEvent) =>
+        event.dataTransfer?.getData("application/x-rifttheory-champion") ||
+        event.dataTransfer?.getData("text/plain");
+
     const updateTierLabel = (tierId: string, label: string) =>
         setDocument((current) => ({
             ...current,
@@ -383,14 +397,16 @@ export default function TierListView() {
                             {(tier) => (
                                 <div
                                     class="grid min-h-24 grid-cols-[72px_minmax(0,1fr)] border-b border-neutral-700 last:border-b-0"
-                                    onDragOver={(event) =>
-                                        event.preventDefault()
-                                    }
+                                    onDragOver={(event) => {
+                                        event.preventDefault();
+                                        if (event.dataTransfer)
+                                            event.dataTransfer.dropEffect =
+                                                "move";
+                                    }}
                                     onDrop={(event) => {
                                         event.preventDefault();
-                                        const key = event.dataTransfer?.getData(
-                                            "application/x-rifttheory-champion",
-                                        );
+                                        const key =
+                                            readChampionDragData(event);
                                         if (key) moveChampion(key, tier.id);
                                     }}
                                 >
@@ -430,8 +446,8 @@ export default function TierListView() {
                                                     }
                                                     class="group relative h-14 w-14 overflow-hidden rounded-lg border border-neutral-600 bg-canvas"
                                                     onDragStart={(event) =>
-                                                        event.dataTransfer?.setData(
-                                                            "application/x-rifttheory-champion",
+                                                        setChampionDragData(
+                                                            event,
                                                             key,
                                                         )
                                                     }
@@ -514,8 +530,8 @@ export default function TierListView() {
                                         title={champion.name}
                                         class="group relative aspect-square overflow-hidden rounded-lg border border-neutral-700 bg-canvas hover:border-accent"
                                         onDragStart={(event) =>
-                                            event.dataTransfer?.setData(
-                                                "application/x-rifttheory-champion",
+                                            setChampionDragData(
+                                                event,
                                                 champion.key,
                                             )
                                         }

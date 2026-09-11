@@ -93,10 +93,7 @@ fn get_league_lcu_data() -> Result<LcuData, String> {
     })
 }
 
-async fn get_lcu_response(
-    state: &tauri::State<'_, AppState>,
-    path: &str,
-) -> Result<Value, String> {
+async fn get_lcu_response(state: &tauri::State<'_, AppState>, path: &str) -> Result<Value, String> {
     let mut lcu_data_mutex = state.lcu_data.lock().await;
 
     if lcu_data_mutex.is_none() {
@@ -155,9 +152,7 @@ async fn get_lcu_response(
 }
 
 #[tauri::command]
-async fn get_champ_select_session(
-    state: tauri::State<'_, AppState>,
-) -> Result<Value, String> {
+async fn get_champ_select_session(state: tauri::State<'_, AppState>) -> Result<Value, String> {
     let session = get_lcu_response(&state, "lol-champ-select/v1/session").await?;
     if !session.is_null() {
         return Ok(session);
@@ -172,30 +167,22 @@ async fn get_gameflow_phase(state: tauri::State<'_, AppState>) -> Result<Value, 
 }
 
 #[tauri::command]
-async fn get_current_summoner(
-    state: tauri::State<'_, AppState>,
-) -> Result<Value, String> {
+async fn get_current_summoner(state: tauri::State<'_, AppState>) -> Result<Value, String> {
     get_lcu_response(&state, "lol-summoner/v1/current-summoner").await
 }
 
 #[tauri::command]
-async fn get_grid_champions(
-    state: tauri::State<'_, AppState>,
-) -> Result<Value, String> {
+async fn get_grid_champions(state: tauri::State<'_, AppState>) -> Result<Value, String> {
     get_lcu_response(&state, "lol-champ-select/v1/all-grid-champions").await
 }
 
 #[tauri::command]
-async fn get_pickable_champion_ids(
-    state: tauri::State<'_, AppState>,
-) -> Result<Value, String> {
+async fn get_pickable_champion_ids(state: tauri::State<'_, AppState>) -> Result<Value, String> {
     get_lcu_response(&state, "lol-champ-select/v1/pickable-champion-ids").await
 }
 
 #[tauri::command]
-async fn get_league_connection_status(
-    state: tauri::State<'_, AppState>,
-) -> Result<bool, String> {
+async fn get_league_connection_status(state: tauri::State<'_, AppState>) -> Result<bool, String> {
     match get_lcu_response(&state, "lol-summoner/v1/current-summoner").await {
         Ok(_) => Ok(true),
         Err(_) => Ok(false),
@@ -226,8 +213,8 @@ fn main() {
             get_current_summoner,
             get_grid_champions,
             get_pickable_champion_ids,
-            get_league_connection_status
-            ,get_gameflow_phase
+            get_league_connection_status,
+            get_gameflow_phase
         ])
         .run(tauri::generate_context!())
         .expect("error while running Tauri application");
