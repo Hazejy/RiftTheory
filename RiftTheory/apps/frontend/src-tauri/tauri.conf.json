@@ -1,8 +1,8 @@
 {
     "$schema": "../node_modules/@tauri-apps/cli/schema.json",
     "build": {
-        "beforeBuildCommand": "..\\..\\..\\.upstream-cache\\tools\\node_modules\\bun\\bin\\bun.exe x --bun vite build",
-        "beforeDevCommand": "..\\..\\..\\.upstream-cache\\tools\\node_modules\\bun\\bin\\bun.exe x --bun vite --host 127.0.0.1 --port 3000",
+        "beforeBuildCommand": "node node_modules/vite/bin/vite.js build",
+        "beforeDevCommand": "node node_modules/vite/bin/vite.js --host 127.0.0.1 --port 3000",
         "frontendDist": "../dist",
         "devUrl": "http://127.0.0.1:3000"
     },
