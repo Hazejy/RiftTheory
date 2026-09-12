@@ -228,12 +228,18 @@ export function createDraftContext() {
 
     const resetTeam = (team: "ally" | "opponent") => {
         batch(() => {
+            const setTeam = team === "ally" ? setAllyTeam : setOpponentTeam;
             for (let i = 0; i < 5; i++) {
-                resetChampion(team, i);
+                setTeam(i, {
+                    championKey: undefined,
+                    role: undefined,
+                    hoverKey: undefined,
+                });
             }
 
             const next = nextDraftPick();
-            select(next?.team, next?.index);
+            select(next?.team, next?.index, false, false);
+            resetDraftFilters();
         });
     };
 

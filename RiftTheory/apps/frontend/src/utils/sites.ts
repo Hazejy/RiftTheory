@@ -29,6 +29,27 @@ export const linkByStatsSite = (
     }
 };
 
+export const matchupLinkByStatsSite = (
+    statsSite: StatsSite,
+    champion: string,
+    opponent: string,
+    role: Role,
+) => {
+    champion = champion.toLowerCase();
+    opponent = opponent.toLowerCase();
+    if (champion === "monkeyking") champion = "wukong";
+    if (opponent === "monkeyking") opponent = "wukong";
+
+    switch (statsSite) {
+        case "lolalytics":
+            return `https://lolalytics.com/lol/${champion}/vs/${opponent}/build/?lane=${LOLALYTICS_ROLES[role]}&vslane=${LOLALYTICS_ROLES[role]}`;
+        case "u.gg":
+            return `https://u.gg/lol/champions/${champion}/counter?role=${UGG_ROLES[role]}&opp=${opponent}`;
+        case "op.gg":
+            return `https://op.gg/lol/champions/${champion}/counters/${OP_GG_ROLES[role]}?region=global&tier=emerald_plus&target_champion=${opponent}`;
+    }
+};
+
 export const displayNameByStatsSite = (statsSite: StatsSite) => {
     switch (statsSite) {
         case "lolalytics":

@@ -8,7 +8,11 @@ import {
 import { useDraft } from "../../contexts/DraftContext";
 import { Team } from "@draftgap/core/src/models/Team";
 import { ROLES, Role } from "@draftgap/core/src/models/Role";
-import { linkByStatsSite } from "../../utils/sites";
+import {
+    displayNameByStatsSite,
+    linkByStatsSite,
+    matchupLinkByStatsSite,
+} from "../../utils/sites";
 import { useUser } from "../../contexts/UserContext";
 import { useDraftAnalysis } from "../../contexts/DraftAnalysisContext";
 import { useDataset } from "../../contexts/DatasetContext";
@@ -24,7 +28,7 @@ import {
 } from "../common/DropdownMenu";
 import { cn } from "../../utils/style";
 import { buttonVariants } from "../common/Button";
-import { For, Show } from "solid-js";
+import { createMemo, For, Show } from "solid-js";
 import { RoleIcon } from "../icons/roles/RoleIcon";
 import { championName, useI18n } from "../../utils/i18n";
 import { pickLabel } from "../../utils/draftOrder";
@@ -41,6 +45,8 @@ export function PickOptions(props: { team: Team; index: number }) {
     const teamPicks = () => (props.team === "ally" ? allyTeam : opponentTeam);
     const teamComp = () =>
         props.team === "ally" ? allyTeamComp() : opponentTeamComp();
+    const opposingComp = () =>
+        props.team === "ally" ? opponentTeamComp() : allyTeamComp();
 
     const champion = () => {
         const pick = teamPicks()[props.index];
@@ -54,6 +60,39 @@ export function PickOptions(props: { team: Team; index: number }) {
 
         return undefined;
     };
+
+    const matchup = createMemo(() => {
+        const selected = champion();
+        const selectedKey = teamPicks()[props.index].championKey;
+        if (!selected || !selectedKey) return undefined;
+
+        const role = [...teamComp().entries()].find(
+            ([, championKey]) => championKey === selectedKey,
+        )?.[0] as Role | undefined;
+        if (role === undefined) return undefined;
+
+        const opponentKey = opposingComp().get(role);
+        if (!opponentKey) return undefined;
+        const opponent = dataset()?.championData[opponentKey];
+        if (!opponent) return undefined;
+
+        return {
+            role,
+            opponent,
+            url: matchupLinkByStatsSite(
+                config.defaultStatsSite,
+                selected.id,
+                opponent.id,
+                role,
+            ),
+        };
+    });
+
+    const selectedRole = () =>
+        [...teamComp().entries()].find(
+            ([, championKey]) =>
+                championKey === teamPicks()[props.index].championKey,
+        )?.[0] as Role | undefined;
 
     return (
         <div class="absolute right-10 top-1">
@@ -100,18 +139,38 @@ export function PickOptions(props: { team: Team; index: number }) {
                                         ? linkByStatsSite(
                                               config.defaultStatsSite,
                                               champion()!.id,
-                                              [...teamComp().entries()].find(
-                                                  ([, value]) =>
-                                                      value ===
-                                                      teamPicks()[props.index]
-                                                          .championKey,
-                                              )![0] as Role,
+                                              selectedRole() ??
+                                                  teamPicks()[props.index]
+                                                      .role ??
+                                                  0,
                                           )
                                         : "#"
                                 }
                             >
                                 <DropdownMenuIcon path={user} />
-                                <span>{config.defaultStatsSite}</span>
+                                <span>
+                                    {displayNameByStatsSite(
+                                        config.defaultStatsSite,
+                                    )}{" "}
+                                    build
+                                </span>
+                            </a>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem disabled={!matchup()} asChild>
+                            <a
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="flex items-center w-full"
+                                href={matchup()?.url ?? "#"}
+                            >
+                                <DropdownMenuIcon
+                                    path={presentationChartLine}
+                                />
+                                <span>
+                                    {matchup()
+                                        ? `${roleName(matchup()!.role)} matchup vs ${championName(matchup()!.opponent, config)}`
+                                        : "Assign both champions to the same role"}
+                                </span>
                             </a>
                         </DropdownMenuItem>
                         <DropdownMenuItem

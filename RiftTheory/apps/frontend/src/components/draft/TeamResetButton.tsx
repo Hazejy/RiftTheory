@@ -22,9 +22,14 @@ export function TeamResetButton(props: { team: Team }) {
             disabled={empty()}
             class={cn(
                 buttonVariants({ variant: "transparent" }),
-                "absolute right-1 top-1 p-2 text-neutral-400 hover:text-red-300 disabled:opacity-30 focus-visible:outline-2 focus-visible:outline-accent",
+                "absolute right-1 top-1 z-20 pointer-events-auto p-2 text-neutral-400 hover:text-red-300 disabled:opacity-30 focus-visible:outline-2 focus-visible:outline-accent",
             )}
-            onClick={() => resetTeam(props.team)}
+            onPointerDown={(event) => event.stopPropagation()}
+            onClick={(event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                resetTeam(props.team);
+            }}
         >
             <Icon path={trash} class="h-5 w-5" aria-hidden="true" />
         </button>
