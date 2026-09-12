@@ -5,7 +5,7 @@ import {
     PutObjectCommand,
     type PutObjectCommandInput,
 } from "@aws-sdk/client-s3";
-import { client } from "./client";
+import { getStorageClient } from "./client";
 import {
     DATASET_VERSION,
     type Dataset,
@@ -14,6 +14,7 @@ import { bytesToHumanReadable } from "../utils";
 import { mkdir } from "node:fs/promises";
 
 export async function getDataset({ name }: { name: string }) {
+    const client = getStorageClient();
     const params = {
         Bucket: process.env.S3_BUCKET || "draftgap",
         Key: `datasets/v${DATASET_VERSION}/${name}.json`,
@@ -39,6 +40,8 @@ export async function storeDataset(
         );
         return;
     }
+
+    const client = getStorageClient();
 
     const params = {
         Bucket: process.env.S3_BUCKET || "draftgap",
