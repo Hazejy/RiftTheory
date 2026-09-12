@@ -23,8 +23,21 @@ import {
     type RiotSummonerSpell,
 } from "./riot";
 import type { SummonerSpellData } from "@draftgap/core/src/models/dataset/SummonerSpellData";
+import {
+    RankBracket,
+    RankBrackets,
+} from "@draftgap/core/src/models/user/Config";
 
 const BATCH_SIZE = 10;
+const requestedRank = process.env.DATASET_RANK_BRACKET ?? "emerald_plus";
+if (!RankBrackets.includes(requestedRank as RankBracket)) {
+    throw new Error(
+        `Unsupported DATASET_RANK_BRACKET ${requestedRank}. Expected ${RankBrackets.join(", ")}`,
+    );
+}
+const rankBracket = requestedRank as RankBracket;
+const datasetName = (name: "current-patch" | "30-days") =>
+    rankBracket === "emerald_plus" ? name : `${name}-${rankBracket}`;
 
 // TODO: Move to Riot API if exists?
 const STAT_SHARD_DATA = {
@@ -81,6 +94,7 @@ const STAT_SHARD_DATA = {
 async function main() {
     const currentVersion = (await getVersions())[0];
     console.log("Patch:", currentVersion);
+    console.log("Rank bracket:", rankBracket);
 
     const [championsData, runes, items, summonerSpells, championsDataCn] =
         await Promise.all([
@@ -106,6 +120,7 @@ async function main() {
         runes,
         items,
         summonerSpells,
+        rankBracket,
     );
     const dataset30days = await getDataset(
         "30",
@@ -113,12 +128,15 @@ async function main() {
         runes,
         items,
         summonerSpells,
+        rankBracket,
     );
 
     deleteDatasetMatchupSynergyData(datasetCurrentPatch);
 
-    await storeDataset(datasetCurrentPatch, { name: "current-patch" });
-    await storeDataset(dataset30days, { name: "30-days" });
+    await storeDataset(datasetCurrentPatch, {
+        name: datasetName("current-patch"),
+    });
+    await storeDataset(dataset30days, { name: datasetName("30-days") });
 }
 
 function riotRunesToRuneData(runes: RiotRunePath[]) {
@@ -209,6 +227,7 @@ async function getDataset(
     runes: RiotRunePath[],
     items: Record<string, RiotItem>,
     summonerSpells: Record<string, RiotSummonerSpell>,
+    rankBracket: RankBracket,
 ) {
     console.log("Getting dataset for version", version);
     const dataset: Dataset = {
@@ -233,7 +252,11 @@ async function getDataset(
                 async (champion) =>
                     [
                         champion,
-                        await getChampionDataFromLolalytics(version, champion),
+                        await getChampionDataFromLolalytics(
+                            version,
+                            champion,
+                            rankBracket,
+                        ),
                     ] as const,
             ),
         );

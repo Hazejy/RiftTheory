@@ -1,5 +1,5 @@
 import { Role } from "@draftgap/core/src/models/Role";
-import { StatsSite } from "@draftgap/core/src/models/user/Config";
+import { RankBracket, StatsSite } from "@draftgap/core/src/models/user/Config";
 
 const UGG_ROLES = ["top", "jungle", "mid", "adc", "support"] as const;
 const OP_GG_ROLES = ["top", "jungle", "mid", "adc", "support"] as const;
@@ -15,13 +15,14 @@ export const linkByStatsSite = (
     statsSite: StatsSite,
     champion: string,
     role: Role,
+    rankBracket: RankBracket = "emerald_plus",
 ) => {
     champion = champion.toLowerCase();
     if (champion === "monkeyking") champion = "wukong";
 
     switch (statsSite) {
         case "lolalytics":
-            return `https://lolalytics.com/lol/${champion}/build/?lane=${LOLALYTICS_ROLES[role]}`;
+            return `https://lolalytics.com/lol/${champion}/build/?lane=${LOLALYTICS_ROLES[role]}&tier=${rankBracket}`;
         case "u.gg":
             return `https://u.gg/lol/champions/${champion}/build/${UGG_ROLES[role]}`;
         case "op.gg":
@@ -34,6 +35,7 @@ export const matchupLinkByStatsSite = (
     champion: string,
     opponent: string,
     role: Role,
+    rankBracket: RankBracket = "emerald_plus",
 ) => {
     champion = champion.toLowerCase();
     opponent = opponent.toLowerCase();
@@ -42,11 +44,11 @@ export const matchupLinkByStatsSite = (
 
     switch (statsSite) {
         case "lolalytics":
-            return `https://lolalytics.com/lol/${champion}/vs/${opponent}/build/?lane=${LOLALYTICS_ROLES[role]}&vslane=${LOLALYTICS_ROLES[role]}`;
+            return `https://lolalytics.com/lol/${champion}/vs/${opponent}/build/?lane=${LOLALYTICS_ROLES[role]}&vslane=${LOLALYTICS_ROLES[role]}&tier=${rankBracket}`;
         case "u.gg":
-            return `https://u.gg/lol/champions/${champion}/counter?role=${UGG_ROLES[role]}&opp=${opponent}`;
+            return `https://u.gg/lol/champions/${champion}/counter?role=${UGG_ROLES[role]}&rank=${rankBracket}&opp=${opponent}`;
         case "op.gg":
-            return `https://op.gg/lol/champions/${champion}/counters/${OP_GG_ROLES[role]}?region=global&tier=emerald_plus&target_champion=${opponent}`;
+            return `https://op.gg/lol/champions/${champion}/counters/${OP_GG_ROLES[role]}?region=global&tier=${rankBracket}&target_champion=${opponent}`;
     }
 };
 

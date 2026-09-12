@@ -1,6 +1,12 @@
 import { RiskLevel } from "../../risk/risk-level";
 
 export type StatsSite = "op.gg" | "u.gg" | "lolalytics";
+export const RankBrackets = [
+    "emerald_plus",
+    "diamond_plus",
+    "master_plus",
+] as const;
+export type RankBracket = (typeof RankBrackets)[number];
 
 export const DraftTablePlacement = {
     Bottom: "bottom",
@@ -15,6 +21,8 @@ export type DraftGapConfig = {
     ignoreChampionWinrates: boolean;
     riskLevel: RiskLevel;
     minGames: number;
+    rankBracket: RankBracket;
+    allowRankFallback: boolean;
 
     // DRAFT SUGGESTIONS
     showFavouritesAtTop: boolean;

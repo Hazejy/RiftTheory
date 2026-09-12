@@ -6,16 +6,30 @@ import { useUser } from "../../contexts/UserContext";
 import { useMedia } from "../../hooks/useMedia";
 import {
     DraftTablePlacement,
+    RankBracket,
+    RankBrackets,
     StatsSite,
 } from "@draftgap/core/src/models/user/Config";
 import { DialogContent, DialogHeader, DialogTitle } from "../common/Dialog";
 import { AppearanceSettings } from "../AppearanceSettings";
 import { useI18n } from "../../utils/i18n";
+import { useDataset } from "../../contexts/DatasetContext";
 
 export default function SettingsDialog() {
     const { t } = useI18n();
     const { isDesktop } = useMedia();
     const { config, setConfig } = useUser();
+    const { rankStatus } = useDataset();
+
+    const rankBracketOptions: ButtonGroupOption<RankBracket>[] =
+        RankBrackets.map((rank) => ({
+            value: rank,
+            label: {
+                emerald_plus: "Emerald+",
+                diamond_plus: "Diamond+",
+                master_plus: "Master+",
+            }[rank],
+        }));
 
     const riskLevelOptions = (): ButtonGroupOption<RiskLevel>[] =>
         RiskLevel.map((level) => ({
@@ -103,6 +117,54 @@ export default function SettingsDialog() {
                         })
                     }
                 />
+                <h4 class="text-lg uppercase mt-4 mb-1">Statistics rank</h4>
+                <p class="font-body text-xs leading-relaxed text-neutral-400 mb-3">
+                    Changes winrates, matchup and duo samples, role shares, and
+                    flex evidence. Smaller high-Elo samples are shown as lower
+                    confidence rather than treated as equally certain.
+                </p>
+                <ButtonGroup
+                    options={rankBracketOptions}
+                    selected={config.rankBracket}
+                    size="sm"
+                    onChange={(rankBracket: RankBracket) =>
+                        setConfig({ rankBracket })
+                    }
+                />
+                <div
+                    class="mt-3 rounded-md border px-3 py-2 text-sm"
+                    classList={{
+                        "border-emerald-700/70 bg-emerald-950/20 text-emerald-200":
+                            rankStatus().available,
+                        "border-amber-700/70 bg-amber-950/20 text-amber-200":
+                            !rankStatus().available,
+                    }}
+                >
+                    {rankStatus().loading
+                        ? "Loading selected rank data…"
+                        : rankStatus().available
+                          ? `Active dataset: ${rankBracketOptions.find((option) => option.value === rankStatus().active)?.label ?? rankStatus().active}`
+                          : config.allowRankFallback && rankStatus().active
+                            ? `Selected dataset is unavailable. Clearly marked fallback active: ${rankBracketOptions.find((option) => option.value === rankStatus().active)?.label ?? rankStatus().active}`
+                            : "Selected dataset is not published yet. The previous dataset remains active and is not relabeled."}
+                </div>
+                <div class="mt-3 flex items-center justify-between gap-6">
+                    <div>
+                        <p class="text-sm uppercase">Allow rank fallback</p>
+                        <p class="mt-1 max-w-xl text-xs text-neutral-500">
+                            If selected data is unavailable, use Emerald+ and
+                            identify it explicitly as fallback.
+                        </p>
+                    </div>
+                    <Switch
+                        checked={config.allowRankFallback}
+                        onChange={() =>
+                            setConfig({
+                                allowRankFallback: !config.allowRankFallback,
+                            })
+                        }
+                    />
+                </div>
             </div>
             <div>
                 <h3 class="text-3xl uppercase">UI</h3>

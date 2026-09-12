@@ -1,4 +1,5 @@
 import { retry } from "../utils";
+import type { RankBracket } from "@draftgap/core/src/models/user/Config";
 import { type LolalyticsRole } from "./roles";
 
 export type QwikLolalyticsData = {
@@ -287,6 +288,7 @@ export async function getLolalyticsQwikChampion(
     role?: LolalyticsRole,
     matchupId?: string,
     matchupRole?: LolalyticsRole,
+    rankBracket: RankBracket = "emerald_plus",
 ) {
     championId = championId.toLowerCase();
     if (championId === "monkeyking") {
@@ -303,7 +305,7 @@ export async function getLolalyticsQwikChampion(
     patch = patch.split(".").slice(0, 2).join(".");
 
     const queryParams = new URLSearchParams();
-    queryParams.append("tier", "emerald_plus");
+    queryParams.append("tier", rankBracket);
     queryParams.append("region", "all");
     queryParams.append("patch", patch);
     if (role) {

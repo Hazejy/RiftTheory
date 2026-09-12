@@ -84,6 +84,7 @@ export function PickOptions(props: { team: Team; index: number }) {
                 selected.id,
                 opponent.id,
                 role,
+                config.rankBracket,
             ),
         };
     });
@@ -143,6 +144,7 @@ export function PickOptions(props: { team: Team; index: number }) {
                                                   teamPicks()[props.index]
                                                       .role ??
                                                   0,
+                                              config.rankBracket,
                                           )
                                         : "#"
                                 }

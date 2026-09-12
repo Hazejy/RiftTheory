@@ -1,0 +1,53 @@
+name: Publish rank datasets
+
+on:
+  workflow_dispatch:
+    inputs:
+      rank_bracket:
+        description: Rank dataset to generate
+        required: true
+        default: master_plus
+        type: choice
+        options:
+          - diamond_plus
+          - master_plus
+
+permissions:
+  contents: write
+
+concurrency:
+  group: rank-dataset-${{ inputs.rank_bracket }}
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: RiftTheory
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.6
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Generate rank datasets
+        run: bun run --filter @draftgap/dataset start
+        env:
+          DATASET_RANK_BRACKET: ${{ inputs.rank_bracket }}
+          DATASET_OUTPUT_DIR: ${{ github.workspace }}/rank-datasets
+
+      - name: Publish versioned dataset assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if ! gh release view datasets-v5 >/dev/null 2>&1; then
+            gh release create datasets-v5 --title "RiftTheory rank datasets v5" --notes "Versioned statistical datasets used by RiftTheory. Generated separately for each supported rank bracket."
+          fi
+          gh release upload datasets-v5 "${{ github.workspace }}/rank-datasets/current-patch-${{ inputs.rank_bracket }}.json" "${{ github.workspace }}/rank-datasets/30-days-${{ inputs.rank_bracket }}.json" --clobber

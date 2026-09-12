@@ -11,6 +11,7 @@ import {
     type Dataset,
 } from "@draftgap/core/src/models/dataset/Dataset";
 import { bytesToHumanReadable } from "../utils";
+import { mkdir } from "node:fs/promises";
 
 export async function getDataset({ name }: { name: string }) {
     const params = {
@@ -27,10 +28,22 @@ export async function storeDataset(
     dataset: Dataset,
     { name }: { name: string },
 ) {
+    const body = JSON.stringify(dataset);
+    const outputDirectory = process.env.DATASET_OUTPUT_DIR;
+    if (outputDirectory) {
+        await mkdir(outputDirectory, { recursive: true });
+        const path = `${outputDirectory}/${name}.json`;
+        await Bun.write(path, body);
+        console.log(
+            `Stored local dataset ${path} of size ${bytesToHumanReadable(body.length)}`,
+        );
+        return;
+    }
+
     const params = {
         Bucket: process.env.S3_BUCKET || "draftgap",
         Key: `datasets/v${DATASET_VERSION}/${name}.json`,
-        Body: JSON.stringify(dataset),
+        Body: body,
         ContentType: "application/json",
     } satisfies PutObjectCommandInput;
     const command = new PutObjectCommand(params);

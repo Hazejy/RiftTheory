@@ -23,6 +23,8 @@ const DEFAULT_CONFIG: RiftTheoryConfig = {
     ignoreChampionWinrates: false,
     riskLevel: "medium",
     minGames: 1000,
+    rankBracket: "emerald_plus",
+    allowRankFallback: false,
 
     // UI
     showFavouritesAtTop: false,

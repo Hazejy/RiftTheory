@@ -66,7 +66,7 @@ const App: Component = () => {
     const { t } = useI18n();
     const { config } = useUser();
     const { currentDraftView, setCurrentDraftView } = useDraftView();
-    const { dataset, dataset30Days, isLoaded } = useDataset();
+    const { dataset, dataset30Days, isLoaded, rankStatus } = useDataset();
     const { analysisPick, setAnalysisPick, showAnalysisPick } =
         useDraftAnalysis();
     const { startLolClientIntegration, stopLolClientIntegration } =
@@ -89,8 +89,8 @@ const App: Component = () => {
         const themeColors =
             config.theme === "custom"
                 ? config.customColors
-                : THEME_PRESETS.find((preset) => preset.id === config.theme)
-                      ?.colors ?? THEME_PRESETS[0].colors;
+                : (THEME_PRESETS.find((preset) => preset.id === config.theme)
+                      ?.colors ?? THEME_PRESETS[0].colors);
         for (const [key, value] of Object.entries(
             customThemeVariables(themeColors),
         ))
@@ -129,9 +129,8 @@ const App: Component = () => {
                 <Switch>
                     <Match
                         when={
-                            (dataset.state === "ready" &&
-                                dataset() === undefined) ||
-                            (dataset30Days.state === "ready" &&
+                            !rankStatus().loading &&
+                            (dataset() === undefined ||
                                 dataset30Days() === undefined)
                         }
                     >

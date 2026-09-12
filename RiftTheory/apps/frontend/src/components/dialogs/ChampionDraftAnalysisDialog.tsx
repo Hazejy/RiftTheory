@@ -71,6 +71,7 @@ export function ChampionDraftAnalysisDialog(props: Props) {
                         config.defaultStatsSite,
                         champion().id,
                         role()!,
+                        config.rankBracket,
                     )}
                     target="_blank"
                 >

@@ -10,14 +10,28 @@ import { LOLALYTICS_ROLES, type LolalyticsRole } from "./roles";
 import { getLolalyticsQwikChampion } from "./qwik";
 import { getLolalyticsQwikChampion2 } from "./qwik-champion2";
 import type { RiotChampion } from "../riot";
+import type { RankBracket } from "@draftgap/core/src/models/user/Config";
 
 export async function getChampionDataFromLolalytics(
     version: string,
     champion: RiotChampion,
+    rankBracket: RankBracket = "emerald_plus",
 ) {
     const [championData, champion2Data] = await Promise.all([
-        getLolalyticsQwikChampion(version, champion.id),
-        getLolalyticsQwikChampion2(version, champion.id),
+        getLolalyticsQwikChampion(
+            version,
+            champion.id,
+            undefined,
+            undefined,
+            undefined,
+            rankBracket,
+        ),
+        getLolalyticsQwikChampion2(
+            version,
+            champion.id,
+            undefined,
+            rankBracket,
+        ),
     ]);
 
     // If data is not available, throw
@@ -33,8 +47,15 @@ export async function getChampionDataFromLolalytics(
 
     const rolePromises = remainingRoles.map((role) =>
         Promise.all([
-            getLolalyticsQwikChampion(version, champion.id, role),
-            getLolalyticsQwikChampion2(version, champion.id, role),
+            getLolalyticsQwikChampion(
+                version,
+                champion.id,
+                role,
+                undefined,
+                undefined,
+                rankBracket,
+            ),
+            getLolalyticsQwikChampion2(version, champion.id, role, rankBracket),
         ]),
     );
     const roleDataResults = await Promise.allSettled(rolePromises);
