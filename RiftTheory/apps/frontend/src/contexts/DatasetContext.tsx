@@ -11,6 +11,7 @@ import {
 } from "@draftgap/core/src/models/dataset/Dataset";
 import { RankBracket } from "@draftgap/core/src/models/user/Config";
 import { useUser } from "./UserContext";
+import { fetchDatasetJson } from "../api/dataset-api";
 
 type DatasetName = "30-days" | "current-patch";
 type DatasetLoad = {
@@ -26,10 +27,11 @@ const datasetUrl = (name: DatasetName, rank: RankBracket) =>
         : `https://github.com/Hazejy/RiftTheory/releases/download/datasets-v${DATASET_VERSION}/${name}-${rank}.json`;
 
 const fetchRawDataset = async (name: DatasetName, rank: RankBracket) => {
-    const response = await fetch(datasetUrl(name, rank));
-    if (!response.ok)
-        throw new Error(`${rank} dataset request failed: ${response.status}`);
-    return (await response.json()) as Dataset;
+    try {
+        return await fetchDatasetJson<Dataset>(datasetUrl(name, rank));
+    } catch (error) {
+        throw new Error(`${rank} dataset request failed`, { cause: error });
+    }
 };
 
 const localizeDataset = async (json: Dataset, name: DatasetName) => {
