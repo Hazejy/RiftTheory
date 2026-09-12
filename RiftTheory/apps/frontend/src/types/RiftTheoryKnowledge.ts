@@ -112,6 +112,33 @@ export type KnowledgeRoleTrait = {
     source_key: string;
 };
 
+export type KnowledgeCoachingProfile = {
+    role: string;
+    damage_focus:
+        | "physical"
+        | "magic"
+        | "mixed"
+        | "utility"
+        | "build_dependent";
+    power_curve:
+        | "early"
+        | "early_mid"
+        | "mid"
+        | "mid_late"
+        | "late"
+        | "timing_dependent";
+    resource_demand: "low" | "medium" | "high";
+    execution_demand: number;
+    spike_notes: string[];
+    reasoning: string;
+    patch_version: string;
+    assessment_method: "manual" | "ai_assisted" | "observed" | "hybrid";
+    confidence: number | null;
+    review_status: string;
+    source_key: string;
+    source_url: string | null;
+};
+
 export type KnowledgeInteractionRule = {
     rule_key: string;
     subject_trait_key: InteractionTrait;
@@ -144,6 +171,7 @@ export type KnowledgeChampion = {
     colorBaseline: KnowledgeColorBaseline | null;
     roleObservations: KnowledgeRoleObservation[];
     roleTraits: KnowledgeRoleTrait[];
+    coachingProfiles?: KnowledgeCoachingProfile[];
 };
 
 export type RiftTheoryKnowledge = {

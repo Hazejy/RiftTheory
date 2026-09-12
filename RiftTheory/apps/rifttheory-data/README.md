@@ -64,9 +64,9 @@ Runtime database:
 
 `data/runtime/rifttheory.sqlite` (local and gitignored)
 
-Versioned web export:
+Versioned desktop/web export:
 
-`draftgap/apps/frontend/public/data/rifttheory-knowledge.json`
+`RiftTheory/apps/frontend/public/data/rifttheory-knowledge.json`
 
 Migration SQL and application code are the source of truth. Example JSON files
 are never imported. Re-running any importer is idempotent; import runs and

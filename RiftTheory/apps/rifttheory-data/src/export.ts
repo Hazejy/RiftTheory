@@ -38,6 +38,23 @@ type ColorBaselineRow = {
   source_version: string;
 };
 
+type CoachingProfileRow = {
+  champion_id: number;
+  role: string;
+  damage_focus: string;
+  power_curve: string;
+  resource_demand: string;
+  execution_demand: number;
+  spike_notes_json: string;
+  reasoning: string;
+  patch_version: string;
+  assessment_method: string;
+  confidence: number | null;
+  review_status: string;
+  source_key: string;
+  source_url: string | null;
+};
+
 export async function exportWebData(
   database: Database,
   path = WEB_EXPORT_PATH,
@@ -159,6 +176,23 @@ export async function exportWebData(
         conditions: JSON.parse(String(conditions_json)) as string[],
       };
     });
+  const coachingProfiles = database
+    .query<CoachingProfileRow, []>(
+      `SELECT
+            cp.champion_id, cp.role, cp.damage_focus, cp.power_curve,
+            cp.resource_demand, cp.execution_demand, cp.spike_notes_json,
+            cp.reasoning, cp.patch_version, cp.assessment_method,
+            cp.confidence, cp.review_status, s.source_key,
+            s.url AS source_url
+       FROM coaching_profiles cp
+       JOIN sources s ON s.id = cp.source_id
+       ORDER BY cp.champion_id, cp.role, cp.patch_version`,
+    )
+    .all()
+    .map(({ spike_notes_json, ...profile }) => ({
+      ...profile,
+      spike_notes: JSON.parse(spike_notes_json) as string[],
+    }));
   const interactionRules = database
     .query<Record<string, string | number | null>, []>(
       `SELECT
@@ -245,6 +279,9 @@ export async function exportWebData(
       roleTraits: roleTraits
         .filter((row) => row.champion_id === champion.id)
         .map(({ champion_id: _championId, ...trait }) => trait),
+      coachingProfiles: coachingProfiles
+        .filter((row) => row.champion_id === champion.id)
+        .map(({ champion_id: _championId, ...profile }) => profile),
     })),
   };
   mkdirSync(dirname(path), { recursive: true });

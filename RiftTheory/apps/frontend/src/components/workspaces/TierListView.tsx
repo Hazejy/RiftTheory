@@ -107,11 +107,13 @@ export default function TierListView() {
                             (candidate) =>
                                 candidate.role === EVIDENCE_ROLE_NAMES[role],
                         );
-                        if (!(
-                            observedRole !== undefined &&
-                            (observedRole.tier === "primary" ||
-                                observedRole.tier === "established")
-                        ))
+                        if (
+                            !(
+                                observedRole !== undefined &&
+                                (observedRole.tier === "primary" ||
+                                    observedRole.tier === "established")
+                            )
+                        )
                             return false;
                     } else {
                         const roleGames =
@@ -405,8 +407,7 @@ export default function TierListView() {
                                     }}
                                     onDrop={(event) => {
                                         event.preventDefault();
-                                        const key =
-                                            readChampionDragData(event);
+                                        const key = readChampionDragData(event);
                                         if (key) moveChampion(key, tier.id);
                                     }}
                                 >

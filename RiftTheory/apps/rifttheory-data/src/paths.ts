@@ -20,6 +20,6 @@ export const PROVISIONAL_COLOR_BASELINES_PATH = resolve(
 );
 export const WEB_EXPORT_PATH = resolve(
   WORKSPACE_ROOT,
-  "draftgap/apps/frontend/public/data/rifttheory-knowledge.json",
+  "RiftTheory/apps/frontend/public/data/rifttheory-knowledge.json",
 );
 export const MIGRATIONS_DIR = resolve(import.meta.dir, "../migrations");
