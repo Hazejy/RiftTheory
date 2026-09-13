@@ -13,6 +13,15 @@ class CompositionCapability(Enum):
     POKE = "poke"
     FRONTLINE = "frontline"
     WAVE_CLEAR = "wave_clear"
+    PEEL = "peel"
+    DIVE = "dive"
+    ANTI_DIVE = "anti_dive"
+    ZONE_CONTROL = "zone_control"
+    SIEGE = "siege"
+    SIDE_LANE_PRESSURE = "side_lane_pressure"
+    GLOBAL_PRESSURE = "global_pressure"
+    OBJECTIVE_CONTROL = "objective_control"
+    SUSTAIN = "sustain"
 
 
 BASELINE_CAPABILITIES = frozenset({

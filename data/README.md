@@ -1,8 +1,36 @@
 # Champion profile data
 
-The profiles in this directory are small, manually curated prototype data.
+The profiles in this directory are manually curated prototype data.
 Capability assignments are coaching judgments, not official Riot Games data,
 performance statistics, or claims about champion strength on a specific patch.
+
+## Composition capability vocabulary
+
+`champion_profiles.json` records role-aware draft tools. A capability means that
+the champion can materially provide that tool in a composition; it does not mean
+the champion is always good, that the tool is equally strong in every build, or
+that merely owning the ability guarantees access to it in game.
+
+- `engage`: reliably starts or forces a fight;
+- `disengage`: stops, delays, or breaks an enemy initiation;
+- `pick`: isolates or locks down one target before a full fight;
+- `poke`: creates meaningful damage pressure before commitment;
+- `frontline`: can occupy contested space for the team;
+- `wave_clear`: removes waves quickly enough to control map tempo;
+- `peel`: repeatedly protects a priority teammate from access;
+- `dive`: reaches and threatens protected back-line targets;
+- `anti_dive`: specifically punishes champions committing into the team;
+- `zone_control`: denies or reshapes an area for a meaningful duration;
+- `siege`: pressures structures or defenders from a controlled setup;
+- `side_lane_pressure`: creates a credible independent side-lane assignment;
+- `global_pressure`: changes distant plays through global or near-global access;
+- `objective_control`: materially improves setup, secure, or objective damage;
+- `sustain`: restores enough health or shielding to extend a setup or attrition.
+
+Temporal properties such as early pressure, scaling curve, item spikes, reset
+dependency, and resource demand should become separate structured fields. They
+must not be mixed into `capabilities`, because they describe _when or under what
+conditions_ a champion functions rather than _which tool_ the champion brings.
 
 Files ending in `.example.json` contain fictional samples used to explain and
 test a data format. They must never be presented as real League statistics.
@@ -79,3 +107,17 @@ Interaction rules state the subject's impact explicitly so the same finding can
 be viewed correctly from either side of a suggestion. This avoids treating every
 matched rule as an advantage. The current suggestion UI presents these signals
 without combining them into an unsupported score.
+
+## Role-specific coaching profiles
+
+`coaching_profiles.json` contains the evidence contract used by the Strategy
+coach read. Each entry belongs to one champion and role and records damage
+focus, power-curve category, resource demand, execution demand, practical spike
+notes, reasoning, patch, confidence, review status and source. Unknown patches
+remain unknown, and provisional manual reviews must not be presented as measured
+win probabilities.
+
+The data build validates and imports these profiles into the versioned knowledge
+export. A missing profile stays unassessed; the frontend may show a clearly
+labeled color-based hypothesis but must not invent champion-specific scaling or
+damage information.
