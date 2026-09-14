@@ -47,6 +47,52 @@ class KnowledgeSource(Enum):
     MANUALLY_CURATED = "manually_curated"
 
 
+class DamageFocus(Enum):
+    """The primary damage or value profile for a champion role."""
+
+    PHYSICAL = "physical"
+    MAGIC = "magic"
+    MIXED = "mixed"
+    UTILITY = "utility"
+    BUILD_DEPENDENT = "build_dependent"
+
+
+class PowerCurve(Enum):
+    """When a champion role most naturally wants the game to matter."""
+
+    EARLY = "early"
+    EARLY_MID = "early_mid"
+    MID = "mid"
+    MID_LATE = "mid_late"
+    LATE = "late"
+    TIMING_DEPENDENT = "timing_dependent"
+
+
+class ResourceDemand(Enum):
+    """How much draft and economy support a champion role asks for."""
+
+    LOW = "low"
+    MEDIUM = "medium"
+    HIGH = "high"
+
+
+class AssessmentMethod(Enum):
+    """How a coaching profile was produced."""
+
+    MANUAL = "manual"
+    AI_ASSISTED = "ai_assisted"
+    OBSERVED = "observed"
+    HYBRID = "hybrid"
+
+
+class ReviewStatus(Enum):
+    """Review confidence state for coaching data."""
+
+    PROVISIONAL = "provisional"
+    REVIEWED = "reviewed"
+    DEPRECATED = "deprecated"
+
+
 @dataclass
 class ChampionProfile:
     """A champion and the composition capabilities they provide."""
@@ -55,6 +101,25 @@ class ChampionProfile:
     role: ChampionRole
     capabilities: set[CompositionCapability]
     source: KnowledgeSource
+
+
+@dataclass
+class CoachingProfile:
+    """Role-specific draft coaching context for one champion."""
+
+    champion_name: str
+    role: ChampionRole
+    damage_focus: DamageFocus
+    power_curve: PowerCurve
+    resource_demand: ResourceDemand
+    execution_demand: int
+    spike_notes: list[str]
+    reasoning: str
+    patch: str
+    assessment_method: AssessmentMethod
+    confidence: float
+    review_status: ReviewStatus
+    source_name: str
 
 
 @dataclass

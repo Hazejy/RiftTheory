@@ -8,14 +8,24 @@ from contextlib import redirect_stdout
 from pathlib import Path
 from unittest.mock import patch
 
-from fastapi.testclient import TestClient
+try:
+    from fastapi.testclient import TestClient
+except ModuleNotFoundError:
+    TestClient = None
 
 from src.draftos.__main__ import main
-from src.draftos.web import create_app
+
+if TestClient is not None:
+    from src.draftos.web import create_app
+else:
+    create_app = None
 
 
+@unittest.skipIf(TestClient is None, "fastapi is not installed")
 class WebTests(unittest.TestCase):
     def setUp(self) -> None:
+        assert TestClient is not None
+        assert create_app is not None
         self.client = TestClient(create_app())
         self.addCleanup(self.client.close)
 
@@ -24,10 +34,10 @@ class WebTests(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         body = response.json()
         self.assertFalse(body["is_complete_catalog"])
-        self.assertEqual(
-            [(item["champion_name"], item["role"]) for item in body["profiles"]],
-            [("Anivia", "mid"), ("Malphite", "top")],
-        )
+        catalog = {(item["champion_name"], item["role"]) for item in body["profiles"]}
+        self.assertGreaterEqual(len(catalog), 170)
+        self.assertIn(("Anivia", "mid"), catalog)
+        self.assertIn(("Malphite", "top"), catalog)
 
     def test_http_report_matches_cli_report(self) -> None:
         output = io.StringIO()

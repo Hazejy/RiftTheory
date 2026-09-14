@@ -9,6 +9,7 @@ from pydantic import BaseModel, ConfigDict, Field, StrictStr
 
 from .champion_analysis import analyze_champions
 from .champion_data import load_champion_profiles
+from .coaching_data import load_coaching_profiles
 from .composition import BASELINE_CAPABILITIES, analyze_composition
 from .report import build_report
 from .selection import select_champions
@@ -53,8 +54,15 @@ def create_app(data_directory: Path | None = None, static_directory: Path | None
             assessments = analyze_champions(selected, strategies)
         except (OSError, ValueError, KeyError, TypeError):
             raise HTTPException(503, "Local strategic data is unavailable or invalid.") from None
+        try:
+            coaching_profiles = load_coaching_profiles(data / "coaching_profiles.json")
+        except (OSError, ValueError, KeyError, TypeError):
+            raise HTTPException(503, "Local coaching data is unavailable or invalid.") from None
         return build_report(
-            assessments, analyze_composition(selected, set(BASELINE_CAPABILITIES)), is_demo=False,
+            assessments,
+            analyze_composition(selected, set(BASELINE_CAPABILITIES)),
+            is_demo=False,
+            coaching_profiles=coaching_profiles,
         )
 
     if static.is_dir():

@@ -117,7 +117,17 @@ notes, reasoning, patch, confidence, review status and source. Unknown patches
 remain unknown, and provisional manual reviews must not be presented as measured
 win probabilities.
 
+`coaching_profiles.schema.json` documents the same contract for editors and
+tooling. The Python loader is `load_coaching_profiles` in
+`src.draftos.coaching_data`; it rejects invalid enum values, duplicate
+champion-role entries, empty spike notes, confidence outside 0-1, and execution
+demand outside 1-5.
+
 The data build validates and imports these profiles into the versioned knowledge
 export. A missing profile stays unassessed; the frontend may show a clearly
 labeled color-based hypothesis but must not invent champion-specific scaling or
 damage information.
+
+Coverage is intentionally built in role batches. Bot lane has the first complete
+role pass so draft reads can reason about carry curve, damage mix, economy needs
+and teamfight access before every other role has the same level of review.
