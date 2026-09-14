@@ -17,20 +17,35 @@ class ChampionAnalysisTests(unittest.TestCase):
         self.strategies = load_strategic_profiles(data / "strategic_profiles.json")
 
     def test_matching_preserves_order_and_source_objects(self) -> None:
-        results = analyze_champions(self.champions, self.strategies)
+        malphite = next(
+            champion for champion in self.champions
+            if champion.name == "Malphite" and champion.role is ChampionRole.TOP
+        )
+        anivia = next(
+            champion for champion in self.champions
+            if champion.name == "Anivia" and champion.role is ChampionRole.MID
+        )
+        anivia_strategy = next(
+            strategy for strategy in self.strategies
+            if strategy.champion_name == "Anivia" and strategy.role is ChampionRole.MID
+        )
+        results = analyze_champions([malphite, anivia], self.strategies)
 
         self.assertEqual(len(results), 2)
-        self.assertIs(results[0].champion, self.champions[0])
+        self.assertIs(results[0].champion, malphite)
         self.assertIsNone(results[0].strategy)
-        self.assertIs(results[1].champion, self.champions[1])
-        self.assertIs(results[1].strategy, self.strategies[0])
+        self.assertIs(results[1].champion, anivia)
+        self.assertIs(results[1].strategy, anivia_strategy)
         lines = explain_champion_assessment(results[1])
-        self.assertIn("  Capabilities: wave clear", lines)
+        self.assertIn("  Capabilities: disengage, wave clear, zone control", lines)
         self.assertIn("  Main colors: blue", lines)
         self.assertIn("  Review status: provisional", lines)
 
     def test_same_champion_in_another_role_does_not_match(self) -> None:
-        anivia = self.champions[1]
+        anivia = next(
+            champion for champion in self.champions
+            if champion.name == "Anivia" and champion.role is ChampionRole.MID
+        )
         support = ChampionProfile(
             name=anivia.name,
             role=ChampionRole.SUPPORT,
@@ -47,11 +62,15 @@ class ChampionAnalysisTests(unittest.TestCase):
         )
 
     def test_missing_strategy_does_not_generate_color_labels(self) -> None:
-        result = analyze_champions(self.champions[:1], self.strategies)[0]
+        malphite = next(
+            champion for champion in self.champions
+            if champion.name == "Malphite" and champion.role is ChampionRole.TOP
+        )
+        result = analyze_champions([malphite], self.strategies)[0]
 
         self.assertEqual(explain_champion_assessment(result), [
             "Malphite (top):",
-            "  Capabilities: engage, frontline",
+            "  Capabilities: engage, pick",
             "  Capability source: manually_curated",
             "  Strategic identity: not yet assessed",
         ])

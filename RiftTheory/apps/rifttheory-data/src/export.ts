@@ -227,6 +227,43 @@ export async function exportWebData(
       >("SELECT MAX(version) AS version FROM schema_migrations")
       .get()?.version ?? 0;
 
+  // Older curated imports used human-readable slugs while Riot uses compact
+  // identifiers (for example "lee-sin" versus "leesin"). Merge historical
+  // duplicates at export time so every consumer sees one complete champion.
+  const championGroups = [
+    ...champions
+      .reduce((groups, champion) => {
+        const key = champion.default_name.trim().toLocaleLowerCase("en-US");
+        groups.set(key, [...(groups.get(key) ?? []), champion]);
+        return groups;
+      }, new Map<string, ChampionRow[]>())
+      .values(),
+  ];
+  const uniqueBy = <T>(rows: T[], key: (row: T) => string) => [
+    ...new Map(rows.map((row) => [key(row), row])).values(),
+  ];
+  const preservedObservations = new Map<
+    string,
+    Record<string, string | number | null>[]
+  >();
+  if (!observations.length && (await Bun.file(path).exists())) {
+    const previous = (await Bun.file(path).json()) as {
+      champions?: {
+        name?: string;
+        roleObservations?: Record<string, string | number | null>[];
+      }[];
+    };
+    for (const previousChampion of previous.champions ?? []) {
+      if (!previousChampion.name || !previousChampion.roleObservations?.length)
+        continue;
+      const key = previousChampion.name.trim().toLocaleLowerCase("en-US");
+      preservedObservations.set(key, [
+        ...(preservedObservations.get(key) ?? []),
+        ...previousChampion.roleObservations,
+      ]);
+    }
+  }
+
   const result = {
     metadata: {
       schemaVersion,
@@ -237,52 +274,71 @@ export async function exportWebData(
     sources,
     traitDefinitions,
     interactionRules,
-    champions: champions.map((champion) => ({
-      riotKey: champion.riot_key,
-      slug: champion.slug,
-      name: champion.default_name,
-      active: Boolean(champion.active),
-      firstSeenPatch: champion.first_seen_patch,
-      lastSeenPatch: champion.last_seen_patch,
-      localizations: Object.fromEntries(
-        localizations
-          .filter((row) => row.champion_id === champion.id)
-          .map((row) => [
-            row.locale,
-            { name: row.name, patch: row.patch_version },
-          ]),
-      ),
-      capabilities: capabilities.filter(
-        (row) => row.champion_id === champion.id,
-      ),
-      strategicProfiles: strategies
-        .filter((row) => row.champion_id === champion.id)
-        .map((profile) => ({
+    champions: championGroups.map((group) => {
+      const champion =
+        group.find((candidate) => candidate.riot_key !== null) ?? group[0]!;
+      const championIds = new Set(group.map((candidate) => candidate.id));
+      return {
+        riotKey: champion.riot_key,
+        slug: champion.slug,
+        name: champion.default_name,
+        active: Boolean(champion.active),
+        firstSeenPatch: champion.first_seen_patch,
+        lastSeenPatch: champion.last_seen_patch,
+        localizations: Object.fromEntries(
+          localizations
+            .filter((row) => championIds.has(row.champion_id))
+            .map((row) => [
+              row.locale,
+              { name: row.name, patch: row.patch_version },
+            ]),
+        ),
+        capabilities: uniqueBy(
+          capabilities.filter((row) =>
+            championIds.has(Number(row.champion_id)),
+          ),
+          (row) => `${row.role}:${row.capability}:${row.patch_version}`,
+        ),
+        strategicProfiles: uniqueBy(
+          strategies.filter((row) => championIds.has(Number(row.champion_id))),
+          (row) => `${row.role}:${row.patch_version}`,
+        ).map((profile) => ({
           ...profile,
           colors: colors.filter(
             (color) => color.strategic_profile_id === profile.id,
           ),
         })),
-      colorBaseline:
-        colorBaselines
-          .filter((baseline) => baseline.champion_id === champion.id)
-          .map((baseline) => ({
-            ...baseline,
-            scope: "champion",
-            colors: baselineColors
-              .filter((color) => color.baseline_id === baseline.id)
-              .map((color) => ({ ...color, weight: 1 })),
-          }))[0] ?? null,
-      roleObservations: observations.filter(
-        (row) => row.champion_id === champion.id,
-      ),
-      roleTraits: roleTraits
-        .filter((row) => row.champion_id === champion.id)
-        .map(({ champion_id: _championId, ...trait }) => trait),
-      coachingProfiles: coachingProfiles
-        .filter((row) => row.champion_id === champion.id)
-        .map(({ champion_id: _championId, ...profile }) => profile),
-    })),
+        colorBaseline:
+          colorBaselines
+            .filter((baseline) => championIds.has(baseline.champion_id))
+            .map((baseline) => ({
+              ...baseline,
+              scope: "champion",
+              colors: baselineColors
+                .filter((color) => color.baseline_id === baseline.id)
+                .map((color) => ({ ...color, weight: 1 })),
+            }))[0] ?? null,
+        roleObservations: uniqueBy(
+          observations.length
+            ? observations.filter((row) =>
+                championIds.has(Number(row.champion_id)),
+              )
+            : (preservedObservations.get(
+                champion.default_name.trim().toLocaleLowerCase("en-US"),
+              ) ?? []),
+          (row) =>
+            `${row.role}:${row.patch_version}:${row.region}:${row.rank_bracket}:${row.queue}:${row.source_key}`,
+        ),
+        roleTraits: uniqueBy(
+          roleTraits.filter((row) => championIds.has(row.champion_id)),
+          (row) => `${row.role}:${row.trait}:${row.patch_version}`,
+        ).map(({ champion_id: _championId, ...trait }) => trait),
+        coachingProfiles: uniqueBy(
+          coachingProfiles.filter((row) => championIds.has(row.champion_id)),
+          (row) => `${row.role}:${row.patch_version}`,
+        ).map(({ champion_id: _championId, ...profile }) => profile),
+      };
+    }),
   };
   mkdirSync(dirname(path), { recursive: true });
   const temporaryPath = `${path}.tmp`;

@@ -23,6 +23,7 @@ export type DraftGapConfig = {
     minGames: number;
     rankBracket: RankBracket;
     allowRankFallback: boolean;
+    usePickOrder: boolean;
 
     // DRAFT SUGGESTIONS
     showFavouritesAtTop: boolean;

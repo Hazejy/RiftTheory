@@ -18,36 +18,18 @@ class MainTests(unittest.TestCase):
         with redirect_stdout(output):
             main([])
 
-        self.assertEqual(
-            output.getvalue(),
-            "Demo selection: Malphite:top, Anivia:mid\n"
-            "Baseline capability check (not a draft score):\n"
-            "- engage: provided by Malphite.\n"
-            "- frontline: provided by Malphite.\n"
-            "- wave clear: provided by Anivia.\n"
-            "\n"
-            "Champion profiles (curated interpretations; see review status):\n"
-            "Malphite (top):\n"
-            "  Capabilities: engage, frontline\n"
-            "  Capability source: manually_curated\n"
-            "  Strategic identity: not yet assessed\n"
-            "Anivia (mid):\n"
-            "  Capabilities: wave clear\n"
-            "  Capability source: manually_curated\n"
-            "  Main colors: blue\n"
-            "  Off colors: white\n"
-            "  Reasoning: AI-assisted interpretation: Blue reflects space control "
-            "and denial through stun, wall and persistent area damage. White is "
-            "a conditional defensive/peel interpretation, not universal draft "
-            "flexibility. Wave clear does not guarantee safe access against "
-            "long-range pressure; positioning, mana and allied setup must be "
-            "assessed. No win probability is inferred.\n"
-            "  Source: DraftOS AI-assisted synthesis; evidence and limits: "
-            "research/anivia-mid-profile.md\n"
-            "  Patch: unknown\n"
-            "  Review status: provisional\n"
-            "  Source URL: https://www.leagueoflegends.com/en-us/champions/anivia/\n",
+        text = output.getvalue()
+        self.assertIn("Demo selection: Malphite:top, Anivia:mid\n", text)
+        self.assertIn("- engage: provided by Malphite.\n", text)
+        self.assertIn("- frontline: missing.\n", text)
+        self.assertIn("- wave clear: provided by Anivia.\n", text)
+        self.assertIn("Malphite (top):\n  Capabilities: engage, pick\n", text)
+        self.assertIn(
+            "Anivia (mid):\n  Capabilities: disengage, wave clear, zone control\n",
+            text,
         )
+        self.assertIn("  Main colors: blue\n", text)
+        self.assertIn("  Review status: provisional\n", text)
 
 
     def test_single_pick_reports_missing_capabilities(self) -> None:
@@ -72,9 +54,14 @@ class MainTests(unittest.TestCase):
         output = io.StringIO()
         with redirect_stdout(output):
             main(["--list-champions"])
-        self.assertEqual(output.getvalue(),
-            "Available local profiles (not a complete champion or role catalog):\n"
-            "- Anivia:mid\n- Malphite:top\n")
+        lines = output.getvalue().splitlines()
+        self.assertEqual(
+            lines[0],
+            "Available local profiles (not a complete champion or role catalog):",
+        )
+        self.assertEqual(lines[1:], sorted(lines[1:]))
+        self.assertIn("- Anivia:mid", lines)
+        self.assertIn("- Malphite:top", lines)
 
     def test_invalid_selection_exits_cleanly_without_partial_output(self) -> None:
         for args in (

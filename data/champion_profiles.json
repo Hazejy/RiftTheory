@@ -390,6 +390,12 @@
     "source": "manually_curated"
   },
   {
+    "name": "Locke",
+    "role": "mid",
+    "capabilities": ["dive", "pick", "sustain"],
+    "source": "manually_curated"
+  },
+  {
     "name": "Lucian",
     "role": "bot",
     "capabilities": ["poke"],
@@ -464,7 +470,7 @@
   {
     "name": "Nautilus",
     "role": "support",
-    "capabilities": ["engage", "pick"],
+    "capabilities": ["engage", "pick", "frontline", "peel"],
     "source": "manually_curated"
   },
   {
@@ -482,7 +488,7 @@
   {
     "name": "Nocturne",
     "role": "jungle",
-    "capabilities": ["engage", "pick"],
+    "capabilities": ["engage", "pick", "dive", "global_pressure"],
     "source": "manually_curated"
   },
   {
@@ -559,8 +565,16 @@
   },
   {
     "name": "Renekton",
-    "role": "Top",
-    "capabilities": ["engage"],
+    "role": "top",
+    "capabilities": [
+      "engage",
+      "pick",
+      "dive",
+      "frontline",
+      "wave_clear",
+      "side_lane_pressure",
+      "sustain"
+    ],
     "source": "manually_curated"
   },
   {
@@ -824,7 +838,13 @@
   {
     "name": "Tristana",
     "role": ["bot", "mid"],
-    "capabilities": ["engage", "disengage", "siege"],
+    "capabilities": [
+      "disengage",
+      "dive",
+      "siege",
+      "side_lane_pressure",
+      "wave_clear"
+    ],
     "source": "manually_curated"
   },
   {

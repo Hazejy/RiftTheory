@@ -124,6 +124,14 @@ export async function importCuratedData(database: Database) {
       join(CURATED_DATA_DIR, "coaching_profiles.json"),
     )) as CoachingInput[];
     database.transaction(() => {
+      // The curated JSON is a snapshot, not an append-only feed. Clear its
+      // previous capability rows so removed or renamed capabilities cannot
+      // survive in the generated export after a later import.
+      database
+        .query("DELETE FROM capability_profiles WHERE review_status = 'curated'")
+        .run();
+      database.query("DELETE FROM coaching_profiles").run();
+
       for (const profile of capabilities) {
         const name = requireString(profile.name, "capability.name");
         const roles = normalizedRoles(profile.role ?? profile.Role ?? [], name);

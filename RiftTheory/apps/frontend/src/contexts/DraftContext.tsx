@@ -12,6 +12,7 @@ import { useDraftView } from "./DraftViewContext";
 import { DRAFT_PICK_ORDER } from "../utils/draftOrder";
 import { useDataset } from "./DatasetContext";
 import { useDraftFilters } from "./DraftFiltersContext";
+import { useUser } from "./UserContext";
 
 type TeamPick = {
     championKey: string | undefined;
@@ -30,6 +31,7 @@ export function createDraftContext() {
     const { dataset } = useDataset();
     const { setCurrentDraftView, currentDraftView } = useDraftView();
     const { resetDraftFilters } = useDraftFilters();
+    const { config } = useUser();
 
     const [allyTeam, setAllyTeam] = createStore<TeamPicks>([
         { championKey: undefined, role: undefined, hoverKey: undefined },
@@ -157,8 +159,29 @@ export function createDraftContext() {
             }
 
             if (updateSelection) {
-                const next = nextDraftPick();
-                select(next?.team, next?.index, false, updateView);
+                if (config.usePickOrder) {
+                    const next = nextDraftPick();
+                    select(next?.team, next?.index, false, updateView);
+                } else {
+                    const nextOnSameSide = getNextPick(team);
+                    const otherTeam: Team =
+                        team === "ally" ? "opponent" : "ally";
+                    const nextOnOtherSide = getNextPick(otherTeam);
+                    if (nextOnSameSide !== -1)
+                        select(
+                            team,
+                            nextOnSameSide,
+                            false,
+                            updateView,
+                        );
+                    else if (nextOnOtherSide !== -1)
+                        select(
+                            otherTeam,
+                            nextOnOtherSide,
+                            false,
+                            updateView,
+                        );
+                }
             }
 
             if (

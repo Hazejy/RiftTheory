@@ -25,6 +25,7 @@ const DEFAULT_CONFIG: RiftTheoryConfig = {
     minGames: 1000,
     rankBracket: "emerald_plus",
     allowRankFallback: false,
+    usePickOrder: true,
 
     // UI
     showFavouritesAtTop: false,

@@ -5,7 +5,7 @@ import unittest
 
 from src.draftos.champion_analysis import analyze_champions
 from src.draftos.composition import (
-    ChampionProfile, ChampionRole, CompositionCapability, KnowledgeSource,
+    BASELINE_CAPABILITIES, ChampionProfile, ChampionRole, CompositionCapability, KnowledgeSource,
     analyze_composition,
 )
 from src.draftos.report import build_report
@@ -28,7 +28,7 @@ class ReportTests(unittest.TestCase):
         )
         report = build_report(
             analyze_champions([champion], [strategy]),
-            analyze_composition([champion], set(CompositionCapability)),
+            analyze_composition([champion], set(BASELINE_CAPABILITIES)),
             is_demo=False,
         )
         self.assertEqual(json.loads(json.dumps(report)), report)

@@ -99,17 +99,21 @@ export function upsertChampion(
 ) {
   const existing = input.riotKey
     ? database
-        .query<
-          { id: number },
-          [string, string]
-        >("SELECT id FROM champions WHERE riot_key = ? OR slug = ? LIMIT 1")
-        .get(input.riotKey, input.slug)
+        .query<{ id: number }, [string, string, string]>(
+          `SELECT id FROM champions
+           WHERE riot_key = ? OR slug = ? OR lower(default_name) = lower(?)
+           ORDER BY riot_key IS NOT NULL DESC
+           LIMIT 1`,
+        )
+        .get(input.riotKey, input.slug, input.name)
     : database
-        .query<
-          { id: number },
-          [string]
-        >("SELECT id FROM champions WHERE slug = ?")
-        .get(input.slug);
+        .query<{ id: number }, [string, string]>(
+          `SELECT id FROM champions
+           WHERE slug = ? OR lower(default_name) = lower(?)
+           ORDER BY riot_key IS NOT NULL DESC
+           LIMIT 1`,
+        )
+        .get(input.slug, input.name);
   const now = new Date().toISOString();
   if (existing) {
     database
