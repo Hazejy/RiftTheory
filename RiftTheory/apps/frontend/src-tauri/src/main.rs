@@ -195,13 +195,17 @@ async fn fetch_rank_dataset(
     state: tauri::State<'_, AppState>,
     url: String,
 ) -> Result<String, String> {
-    const ALLOWED_PREFIX: &str =
+    const RELEASE_PREFIX: &str =
         "https://github.com/Hazejy/RiftTheory/releases/download/datasets-v5/";
+    const BUCKET_PREFIX: &str = "https://bucket.draftgap.com/datasets/v5/";
     let file_name = url
-        .strip_prefix(ALLOWED_PREFIX)
+        .strip_prefix(RELEASE_PREFIX)
+        .or_else(|| url.strip_prefix(BUCKET_PREFIX))
         .ok_or_else(|| "Rank dataset URL is not allowed".to_owned())?;
     let valid_file =
-        regex::Regex::new(r"^(current-patch|30-days)-(diamond_plus|master_plus)\.json$")
+        regex::Regex::new(
+            r"^(current-patch|30-days)(-(diamond_plus|master_plus))?\.json$",
+        )
             .map_err(|e| format!("Could not validate rank dataset URL: {e}"))?;
     if !valid_file.is_match(file_name) {
         return Err("Rank dataset file is not allowed".to_owned());
@@ -238,8 +242,8 @@ fn main() {
         lcu_data: Mutex::new(None),
         client,
         data_client: Client::builder()
-            .connect_timeout(std::time::Duration::from_secs(10))
-            .timeout(std::time::Duration::from_secs(180))
+            .connect_timeout(std::time::Duration::from_secs(5))
+            .timeout(std::time::Duration::from_secs(20))
             .build()
             .expect("Could not build rank dataset client"),
     };
