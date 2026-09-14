@@ -18,7 +18,7 @@
           "key": { "type": "string", "pattern": "^[a-z][a-z0-9_]{2,79}$" },
           "label": { "type": "string", "minLength": 1 },
           "kind": {
-            "enum": ["official", "manual", "ai_assisted", "historical"]
+            "enum": ["official", "manual", "editorial", "historical"]
           },
           "url": { "type": ["string", "null"], "format": "uri" },
           "accessNote": { "type": "string", "minLength": 1 }
@@ -55,7 +55,7 @@
             "pattern": "^\\d+\\.\\d+(?:\\.\\d+)?$"
           },
           "assessmentMethod": {
-            "enum": ["manual", "ai_assisted", "observed", "hybrid"]
+            "enum": ["manual", "editorial", "observed", "hybrid"]
           },
           "reviewStatus": {
             "enum": ["unreviewed", "provisional", "reviewed", "outdated"]

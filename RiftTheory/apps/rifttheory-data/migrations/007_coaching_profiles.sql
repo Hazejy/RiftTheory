@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS coaching_profiles (
     spike_notes_json TEXT NOT NULL DEFAULT '[]' CHECK (json_valid(spike_notes_json)),
     reasoning TEXT NOT NULL,
     patch_version TEXT NOT NULL DEFAULT 'unknown',
-    assessment_method TEXT NOT NULL CHECK (assessment_method IN ('manual', 'ai_assisted', 'observed', 'hybrid')),
+    assessment_method TEXT NOT NULL CHECK (assessment_method IN ('manual', 'editorial', 'observed', 'hybrid')),
     confidence REAL CHECK (confidence IS NULL OR (confidence >= 0 AND confidence <= 1)),
     review_status TEXT NOT NULL DEFAULT 'unreviewed',
     source_id INTEGER NOT NULL REFERENCES sources(id),

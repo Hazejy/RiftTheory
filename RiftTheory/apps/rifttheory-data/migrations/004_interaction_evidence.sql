@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS champion_role_traits (
     level INTEGER NOT NULL CHECK (level BETWEEN 1 AND 5),
     patch_version TEXT NOT NULL DEFAULT 'unknown',
     assessment_method TEXT NOT NULL CHECK (
-        assessment_method IN ('manual', 'ai_assisted', 'observed', 'hybrid')
+        assessment_method IN ('manual', 'editorial', 'observed', 'hybrid')
     ),
     confidence REAL CHECK (confidence IS NULL OR (confidence >= 0 AND confidence <= 1)),
     review_status TEXT NOT NULL CHECK (

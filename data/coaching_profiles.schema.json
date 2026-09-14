@@ -65,7 +65,7 @@
       },
       "assessment_method": {
         "type": "string",
-        "enum": ["manual", "ai_assisted", "observed", "hybrid"]
+        "enum": ["manual", "editorial", "observed", "hybrid"]
       },
       "confidence": {
         "type": "number",

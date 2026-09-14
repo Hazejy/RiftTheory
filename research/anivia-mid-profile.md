@@ -2,7 +2,7 @@
 
 Research date: 2026-09-03. Status: provisional; no human review recorded.
 The profile describes a real champion, not fictional test data. The color
-classification is an AI-assisted coaching interpretation, not a Riot label.
+classification is an Editorial coaching interpretation, not a Riot label.
 
 ## Evidence and provenance
 

@@ -4,12 +4,11 @@ import { upsertSource } from "./database";
 import { finishImportRun, startImportRun } from "./importRuns";
 
 const ROLES = new Set(["top", "jungle", "mid", "bot", "support"]);
-const METHODS = new Set(["manual", "ai_assisted", "observed", "hybrid"]);
+const METHODS = new Set(["manual", "observed", "hybrid"]);
 const REVIEWS = new Set(["unreviewed", "provisional", "reviewed", "outdated"]);
 const SOURCE_KINDS = new Set([
   "official",
   "manual",
-  "ai_assisted",
   "historical",
 ]);
 const COMPARISONS = new Set(["subject_greater", "both_at_least"]);
@@ -18,7 +17,7 @@ const IMPACTS = new Set(["favorable", "unfavorable", "informational"]);
 const PATCH_PATTERN = /^\d+\.\d+(?:\.\d+)?$/;
 const KEY_PATTERN = /^[a-z][a-z0-9_]{2,79}$/;
 
-type SourceKind = "official" | "manual" | "ai_assisted" | "historical";
+type SourceKind = "official" | "manual" | "historical";
 
 type InteractionSourceInput = {
   key: string;

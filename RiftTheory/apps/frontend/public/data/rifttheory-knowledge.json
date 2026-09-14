@@ -1,12 +1,12 @@
 {
   "metadata": {
     "schemaVersion": 7,
-    "generatedAt": "2026-09-14T17:16:35.040Z",
+    "generatedAt": "2026-09-14T17:32:11.088Z",
     "latestPatch": {
       "version": "16.17.1",
       "discovered_at": "2026-09-04T18:41:58.403Z"
     },
-    "sourceCount": 11
+    "sourceCount": 12
   },
   "sources": [
     {
@@ -31,18 +31,25 @@
       "access_note": null
     },
     {
-      "source_key": "rifttheory_ai_assisted_synthesis_evidence_and_limits_research_anivia_mid_profile",
-      "label": "RiftTheory AI-assisted synthesis; evidence and limits: research/anivia-mid-profile.md",
-      "kind": "ai_assisted",
+      "source_key": "rifttheory_anivia_official_kit_interpretation",
+      "label": "RiftTheory provisional interpretation of the official Anivia kit",
+      "kind": "manual",
+      "url": "https://www.leagueoflegends.com/en-us/champions/anivia/",
+      "access_note": "Riot documents the ability kit. Trait levels and contextual conclusions are provisional RiftTheory interpretations, not Riot ratings."
+    },
+    {
+      "source_key": "rifttheory_editorial_synthesis_evidence_and_limits_research_anivia_mid_profile",
+      "label": "RiftTheory Editorial synthesis; evidence and limits: research/anivia-mid-profile.md",
+      "kind": "manual",
       "url": "https://www.leagueoflegends.com/en-us/champions/anivia/",
       "access_note": null
     },
     {
-      "source_key": "rifttheory_anivia_official_kit_interpretation",
-      "label": "RiftTheory provisional interpretation of the official Anivia kit",
-      "kind": "ai_assisted",
+      "source_key": "rifttheory_editorial_synthesis_evidence_and_limits_research_anivia_mid_profile_m",
+      "label": "RiftTheory Editorial synthesis; evidence and limits: research/anivia-mid-profile.md",
+      "kind": "manual",
       "url": "https://www.leagueoflegends.com/en-us/champions/anivia/",
-      "access_note": "Riot documents the ability kit. Trait levels and contextual conclusions are provisional RiftTheory interpretations, not Riot ratings."
+      "access_note": null
     },
     {
       "source_key": "rifttheory_interaction_model_v1",
@@ -61,14 +68,14 @@
     {
       "source_key": "rifttheory_vi_official_kit_interpretation",
       "label": "RiftTheory provisional interpretation of the official Vi kit",
-      "kind": "ai_assisted",
+      "kind": "manual",
       "url": "https://www.leagueoflegends.com/en-us/champions/vi/",
       "access_note": "Riot documents Vi as a Fighter/Assassin and documents Vault Breaker and Cease and Desist. Trait levels and draft conclusions are provisional RiftTheory interpretations, not Riot ratings or counter statistics."
     },
     {
       "source_key": "rifttheory_xerath_official_kit_interpretation",
       "label": "RiftTheory provisional interpretation of the official Xerath kit",
-      "kind": "ai_assisted",
+      "kind": "manual",
       "url": "https://www.leagueoflegends.com/en-us/champions/xerath/",
       "access_note": "Riot documents the ability kit. Trait levels and contextual conclusions are provisional RiftTheory interpretations, not Riot ratings."
     },
@@ -82,7 +89,7 @@
     {
       "source_key": "riot_kit_rifttheory_provisional_colors",
       "label": "Riot Data Dragon kit data with RiftTheory provisional interpretation",
-      "kind": "ai_assisted",
+      "kind": "manual",
       "url": "https://ddragon.leagueoflegends.com/cdn/16.17.1/data/en_US/championFull.json",
       "access_note": "Champion-wide working classification from official kit text. Current builds, role context, matchups, and numeric tuning still require review."
     }
@@ -1551,10 +1558,10 @@
           "champion_id": 2,
           "role": "mid",
           "patch_version": "unknown",
-          "reasoning": "AI-assisted interpretation: Blue reflects space control and denial through stun, wall and persistent area damage. White is a conditional defensive/peel interpretation, not universal draft flexibility. Wave clear does not guarantee safe access against long-range pressure; positioning, mana and allied setup must be assessed. No win probability is inferred.",
+          "reasoning": "Editorial interpretation: Blue reflects space control and denial through stun, wall and persistent area damage. White is a conditional defensive/peel interpretation, not universal draft flexibility. Wave clear does not guarantee safe access against long-range pressure; positioning, mana and allied setup must be assessed. No win probability is inferred.",
           "review_status": "provisional",
           "confidence": null,
-          "source_key": "rifttheory_ai_assisted_synthesis_evidence_and_limits_research_anivia_mid_profile",
+          "source_key": "rifttheory_editorial_synthesis_evidence_and_limits_research_anivia_mid_profile_m",
           "source_url": "https://www.leagueoflegends.com/en-us/champions/anivia/",
           "colors": [
             {
@@ -1680,7 +1687,7 @@
           "trait": "terrain_control",
           "level": 4,
           "patch_version": "unknown",
-          "assessment_method": "ai_assisted",
+          "assessment_method": "manual",
           "confidence": 0.75,
           "review_status": "provisional",
           "reasoning": "Crystallize blocks movement and Glacial Storm controls a persistent area.",
@@ -1694,7 +1701,7 @@
           "trait": "wave_access_safety",
           "level": 2,
           "patch_version": "unknown",
-          "assessment_method": "ai_assisted",
+          "assessment_method": "manual",
           "confidence": 0.55,
           "review_status": "provisional",
           "reasoning": "Her wave tool is area-based, but using it safely still depends on positioning, enemy reach and allied setup.",
@@ -1708,7 +1715,7 @@
           "trait": "wave_clear",
           "level": 4,
           "patch_version": "unknown",
-          "assessment_method": "ai_assisted",
+          "assessment_method": "manual",
           "confidence": 0.7,
           "review_status": "provisional",
           "reasoning": "Glacial Storm supplies persistent area damage and slowing around a wave.",
@@ -28758,7 +28765,7 @@
           "champion_id": 152,
           "role": "jungle",
           "patch_version": "unknown",
-          "reasoning": "AI-assisted provisional interpretation: Red represents Vi's direct, proactive and commitment-heavy access pattern through Vault Breaker and Cease and Desist. Black is conditional: committing onto a chosen target can create power at the cost of position and requires the draft to supply follow-up or a survivable exit. This profile does not mean every Vi draft must snowball, and it does not establish automatic counters or a win probability.",
+          "reasoning": "Editorial provisional interpretation: Red represents Vi's direct, proactive and commitment-heavy access pattern through Vault Breaker and Cease and Desist. Black is conditional: committing onto a chosen target can create power at the cost of position and requires the draft to supply follow-up or a survivable exit. This profile does not mean every Vi draft must snowball, and it does not establish automatic counters or a win probability.",
           "review_status": "provisional",
           "confidence": null,
           "source_key": "rifttheory_vi_official_kit_interpretation",
@@ -28887,7 +28894,7 @@
           "trait": "engage",
           "level": 5,
           "patch_version": "unknown",
-          "assessment_method": "ai_assisted",
+          "assessment_method": "manual",
           "confidence": 0.75,
           "review_status": "provisional",
           "reasoning": "Vault Breaker can begin contact and Cease and Desist supplies committed targeted initiation.",
@@ -28901,7 +28908,7 @@
           "trait": "mobility",
           "level": 3,
           "patch_version": "unknown",
-          "assessment_method": "ai_assisted",
+          "assessment_method": "manual",
           "confidence": 0.65,
           "review_status": "provisional",
           "reasoning": "Vault Breaker provides directional movement, while Cease and Desist provides target-bound access.",
@@ -28915,7 +28922,7 @@
           "trait": "target_access",
           "level": 5,
           "patch_version": "unknown",
-          "assessment_method": "ai_assisted",
+          "assessment_method": "manual",
           "confidence": 0.8,
           "review_status": "provisional",
           "reasoning": "Cease and Desist selects an enemy champion, carries Vi toward that target, knocks intervening enemies aside and knocks the target up.",
@@ -30478,7 +30485,7 @@
           "trait": "poke",
           "level": 5,
           "patch_version": "unknown",
-          "assessment_method": "ai_assisted",
+          "assessment_method": "manual",
           "confidence": 0.75,
           "review_status": "provisional",
           "reasoning": "Multiple ranged spells can damage or slow opponents before a committed fight.",
@@ -30492,7 +30499,7 @@
           "trait": "threat_range",
           "level": 5,
           "patch_version": "unknown",
-          "assessment_method": "ai_assisted",
+          "assessment_method": "manual",
           "confidence": 0.75,
           "review_status": "provisional",
           "reasoning": "His spell pattern applies repeated pressure from long range, including a long-range ultimate.",
@@ -30506,7 +30513,7 @@
           "trait": "wave_clear",
           "level": 3,
           "patch_version": "unknown",
-          "assessment_method": "ai_assisted",
+          "assessment_method": "manual",
           "confidence": 0.6,
           "review_status": "provisional",
           "reasoning": "Area spells can affect multiple minions while maintaining distance.",

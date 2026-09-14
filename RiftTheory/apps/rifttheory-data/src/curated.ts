@@ -24,7 +24,6 @@ const POWER_CURVES = new Set([
 const RESOURCE_DEMANDS = new Set(["low", "medium", "high"]);
 const ASSESSMENT_METHODS = new Set([
   "manual",
-  "ai_assisted",
   "observed",
   "hybrid",
 ]);
@@ -144,7 +143,7 @@ export async function importCuratedData(database: Database) {
         const sourceId = upsertSource(database, {
           key: sourceKey(sourceName),
           label: sourceName,
-          kind: sourceName.includes("ai") ? "ai_assisted" : "manual",
+          kind: "manual",
         });
         const championId = upsertChampion(database, {
           slug: slugify(name),
@@ -171,7 +170,7 @@ export async function importCuratedData(database: Database) {
                 championId,
                 role,
                 capability,
-                sourceName.includes("ai") ? "ai_assisted" : "manual",
+                "manual",
                 sourceId,
                 new Date().toISOString(),
               );
@@ -203,9 +202,7 @@ export async function importCuratedData(database: Database) {
         const sourceId = upsertSource(database, {
           key: sourceKey(sourceName),
           label: sourceName,
-          kind: sourceName.toLowerCase().includes("ai")
-            ? "ai_assisted"
-            : "manual",
+          kind: "manual",
           url: profile.source_url,
         });
         const championId = upsertChampion(database, {
@@ -325,7 +322,7 @@ export async function importCuratedData(database: Database) {
         const sourceId = upsertSource(database, {
           key: sourceKey(sourceName),
           label: sourceName,
-          kind: assessmentMethod === "ai_assisted" ? "ai_assisted" : "manual",
+          kind: "manual",
           url: profile.source_url,
         });
         const championId = upsertChampion(database, {

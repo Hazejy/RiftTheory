@@ -47,7 +47,7 @@ export function upsertSource(
   input: {
     key: string;
     label: string;
-    kind: "official" | "observed" | "manual" | "ai_assisted" | "historical";
+    kind: "official" | "observed" | "manual" | "editorial" | "historical";
     url?: string | null;
     accessNote?: string | null;
   },

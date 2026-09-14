@@ -4,21 +4,21 @@
     {
       "key": "rifttheory_anivia_official_kit_interpretation",
       "label": "RiftTheory provisional interpretation of the official Anivia kit",
-      "kind": "ai_assisted",
+      "kind": "manual",
       "url": "https://www.leagueoflegends.com/en-us/champions/anivia/",
       "accessNote": "Riot documents the ability kit. Trait levels and contextual conclusions are provisional RiftTheory interpretations, not Riot ratings."
     },
     {
       "key": "rifttheory_xerath_official_kit_interpretation",
       "label": "RiftTheory provisional interpretation of the official Xerath kit",
-      "kind": "ai_assisted",
+      "kind": "manual",
       "url": "https://www.leagueoflegends.com/en-us/champions/xerath/",
       "accessNote": "Riot documents the ability kit. Trait levels and contextual conclusions are provisional RiftTheory interpretations, not Riot ratings."
     },
     {
       "key": "rifttheory_vi_official_kit_interpretation",
       "label": "RiftTheory provisional interpretation of the official Vi kit",
-      "kind": "ai_assisted",
+      "kind": "manual",
       "url": "https://www.leagueoflegends.com/en-us/champions/vi/",
       "accessNote": "Riot documents Vi as a Fighter/Assassin and documents Vault Breaker and Cease and Desist. Trait levels and draft conclusions are provisional RiftTheory interpretations, not Riot ratings or counter statistics."
     },
@@ -35,7 +35,7 @@
       "champion": { "name": "Anivia" },
       "role": "mid",
       "patch": null,
-      "assessmentMethod": "ai_assisted",
+      "assessmentMethod": "manual",
       "reviewStatus": "provisional",
       "sourceKey": "rifttheory_anivia_official_kit_interpretation",
       "traits": [
@@ -70,7 +70,7 @@
       "champion": { "name": "Xerath" },
       "role": "mid",
       "patch": null,
-      "assessmentMethod": "ai_assisted",
+      "assessmentMethod": "manual",
       "reviewStatus": "provisional",
       "sourceKey": "rifttheory_xerath_official_kit_interpretation",
       "traits": [
@@ -105,7 +105,7 @@
       "champion": { "name": "Vi" },
       "role": "jungle",
       "patch": null,
-      "assessmentMethod": "ai_assisted",
+      "assessmentMethod": "manual",
       "reviewStatus": "provisional",
       "sourceKey": "rifttheory_vi_official_kit_interpretation",
       "traits": [

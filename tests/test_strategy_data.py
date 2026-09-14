@@ -33,7 +33,7 @@ class StrategicDataTests(unittest.TestCase):
             anivia.source_url,
             "https://www.leagueoflegends.com/en-us/champions/anivia/",
         )
-        self.assertIn("AI-assisted", anivia.identity.reasoning)
+        self.assertIn("Editorial", anivia.identity.reasoning)
         self.assertIn("research/anivia-mid-profile.md", anivia.identity.source_name)
         self.assertIs(vi.role, ChampionRole.JUNGLE)
         self.assertEqual(vi.identity.main_colors, {StrategicColor.RED})

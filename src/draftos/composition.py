@@ -80,7 +80,7 @@ class AssessmentMethod(Enum):
     """How a coaching profile was produced."""
 
     MANUAL = "manual"
-    AI_ASSISTED = "ai_assisted"
+    EDITORIAL = "editorial"
     OBSERVED = "observed"
     HYBRID = "hybrid"
 

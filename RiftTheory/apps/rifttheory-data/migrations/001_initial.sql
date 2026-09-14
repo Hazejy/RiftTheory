@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS sources (
     id INTEGER PRIMARY KEY,
     source_key TEXT NOT NULL UNIQUE,
     label TEXT NOT NULL,
-    kind TEXT NOT NULL CHECK (kind IN ('official', 'observed', 'manual', 'ai_assisted', 'historical')),
+    kind TEXT NOT NULL CHECK (kind IN ('official', 'observed', 'manual', 'editorial', 'historical')),
     url TEXT,
     access_note TEXT,
     created_at TEXT NOT NULL
@@ -74,7 +74,7 @@ CREATE TABLE IF NOT EXISTS capability_profiles (
     capability TEXT NOT NULL,
     strength REAL NOT NULL DEFAULT 1 CHECK (strength >= 0 AND strength <= 1),
     patch_version TEXT NOT NULL DEFAULT 'unknown',
-    assessment_method TEXT NOT NULL CHECK (assessment_method IN ('manual', 'ai_assisted', 'observed', 'hybrid')),
+    assessment_method TEXT NOT NULL CHECK (assessment_method IN ('manual', 'editorial', 'observed', 'hybrid')),
     confidence REAL CHECK (confidence IS NULL OR (confidence >= 0 AND confidence <= 1)),
     review_status TEXT NOT NULL DEFAULT 'unreviewed',
     reasoning TEXT,

@@ -21,7 +21,7 @@ export type ColorAssignment = "main" | "off";
 export type KnowledgeSource = {
     source_key: string;
     label: string;
-    kind: "official" | "observed" | "manual" | "ai_assisted" | "historical";
+    kind: "official" | "observed" | "manual" | "editorial" | "historical";
     url: string | null;
     access_note: string | null;
 };
@@ -31,7 +31,7 @@ export type KnowledgeCapability = {
     capability: string;
     strength: number;
     patch_version: string;
-    assessment_method: "manual" | "ai_assisted" | "observed" | "hybrid";
+    assessment_method: "manual" | "editorial" | "observed" | "hybrid";
     confidence: number | null;
     review_status: string;
     reasoning: string | null;
@@ -104,7 +104,7 @@ export type KnowledgeRoleTrait = {
     trait: InteractionTrait;
     level: TraitLevel;
     patch_version: string;
-    assessment_method: "manual" | "ai_assisted" | "observed" | "hybrid";
+    assessment_method: "manual" | "editorial" | "observed" | "hybrid";
     confidence: number | null;
     review_status: string;
     reasoning: string;
@@ -132,7 +132,7 @@ export type KnowledgeCoachingProfile = {
     spike_notes: string[];
     reasoning: string;
     patch_version: string;
-    assessment_method: "manual" | "ai_assisted" | "observed" | "hybrid";
+    assessment_method: "manual" | "editorial" | "observed" | "hybrid";
     confidence: number | null;
     review_status: string;
     source_key: string;

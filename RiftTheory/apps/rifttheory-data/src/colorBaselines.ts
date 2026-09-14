@@ -123,7 +123,7 @@ export async function importColorBaselines(
       key: "riot_kit_rifttheory_provisional_colors",
       label:
         "Riot Data Dragon kit data with RiftTheory provisional interpretation",
-      kind: "ai_assisted",
+      kind: "manual",
       url: "https://ddragon.leagueoflegends.com/cdn/16.17.1/data/en_US/championFull.json",
       accessNote:
         "Champion-wide working classification from official kit text. Current builds, role context, matchups, and numeric tuning still require review.",
