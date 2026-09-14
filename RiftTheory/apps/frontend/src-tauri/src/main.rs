@@ -243,7 +243,10 @@ fn main() {
         client,
         data_client: Client::builder()
             .connect_timeout(std::time::Duration::from_secs(5))
-            .timeout(std::time::Duration::from_secs(20))
+            // High-Elo 30-day exports can be close to 50 MB. The former
+            // 20-second limit incorrectly reported these published files as
+            // unavailable on slower connections.
+            .timeout(std::time::Duration::from_secs(180))
             .build()
             .expect("Could not build rank dataset client"),
     };

@@ -146,7 +146,7 @@ export default function SettingsDialog() {
                           ? `Active dataset: ${rankBracketOptions.find((option) => option.value === rankStatus().active)?.label ?? rankStatus().active}`
                           : config.allowRankFallback && rankStatus().active
                             ? `Selected dataset is unavailable. Clearly marked fallback active: ${rankBracketOptions.find((option) => option.value === rankStatus().active)?.label ?? rankStatus().active}`
-                            : "Selected dataset is not published yet. The previous dataset remains active and is not relabeled."}
+                            : "The selected dataset could not be downloaded. The previous dataset remains active and is not relabeled."}
                 </div>
                 <div class="mt-3 flex items-center justify-between gap-6">
                     <div>

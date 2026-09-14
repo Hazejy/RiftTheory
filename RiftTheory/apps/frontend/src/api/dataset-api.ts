@@ -11,7 +11,10 @@ export async function fetchDatasetJson<T>(url: string): Promise<T> {
             new Promise<never>((_, reject) =>
                 setTimeout(
                     () => reject(new Error("Dataset request timed out")),
-                    20_000,
+                    // The 30-day high-Elo exports are up to ~50 MB. Allow slow
+                    // connections enough time while still guaranteeing that
+                    // the UI eventually leaves its loading state.
+                    190_000,
                 ),
             ),
         ]);
