@@ -43,7 +43,7 @@
     },
     "productName": "RiftTheory",
     "mainBinaryName": "RiftTheory",
-    "version": "3.2.8",
+    "version": "3.2.9",
     "identifier": "local.rifttheory.workspace",
     "plugins": {},
     "app": {

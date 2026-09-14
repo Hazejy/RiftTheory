@@ -117,16 +117,6 @@ export default function SuggestionEvidenceBadges(props: {
                             </Show>
                         </div>
                         <div class="flex min-h-8 flex-wrap items-center justify-end gap-1">
-                            <For each={evidence().coveredCapabilities}>
-                                {(capability) => (
-                                    <span
-                                        class="rounded border border-emerald-800 bg-emerald-950/30 px-1.5 py-0.5 text-emerald-200"
-                                        title={`${t("fillsFoundationGap")}: ${term(capability)}`}
-                                    >
-                                        + {term(capability)}
-                                    </span>
-                                )}
-                            </For>
                             <Show
                                 when={evidence().favorableInteractions.length}
                             >
