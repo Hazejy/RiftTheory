@@ -20,16 +20,9 @@ class StrategicDataTests(unittest.TestCase):
     def test_real_champion_data_is_separate_and_provisional(self) -> None:
         profiles = load_strategic_profiles(EXAMPLE_FILE.with_name("strategic_profiles.json"))
 
-<<<<<<< Updated upstream
-        anivia = next(
-            profile for profile in profiles
-            if profile.champion_name == "Anivia" and profile.role is ChampionRole.MID
-        )
-=======
         self.assertGreaterEqual(len(profiles), 2)
         anivia = next(profile for profile in profiles if profile.champion_name == "Anivia")
         vi = next(profile for profile in profiles if profile.champion_name == "Vi")
->>>>>>> Stashed changes
         self.assertEqual(anivia.champion_name, "Anivia")
         self.assertIs(anivia.role, ChampionRole.MID)
         self.assertEqual(anivia.identity.main_colors, {StrategicColor.BLUE})

@@ -1,27 +1,41 @@
 name: Publish rank datasets
 
 on:
+  schedule:
+    - cron: "43 7 * * *"
   workflow_dispatch:
     inputs:
       rank_bracket:
         description: Rank dataset to generate
         required: true
-        default: master_plus
+        default: all
         type: choice
         options:
+          - all
           - diamond_plus
           - master_plus
+      force:
+        description: Rebuild even when the published patch is current
+        required: true
+        default: false
+        type: boolean
 
 permissions:
   contents: write
 
 concurrency:
-  group: rank-dataset-${{ inputs.rank_bracket }}
+  group: rank-datasets-v5
   cancel-in-progress: false
 
 jobs:
   publish:
     runs-on: ubuntu-latest
+    timeout-minutes: 300
+    strategy:
+      fail-fast: false
+      max-parallel: 1
+      matrix:
+        rank_bracket: ${{ fromJSON(github.event_name == 'schedule' && '["diamond_plus","master_plus"]' || inputs.rank_bracket == 'all' && '["diamond_plus","master_plus"]' || format('["{0}"]', inputs.rank_bracket)) }}
     defaults:
       run:
         working-directory: RiftTheory
@@ -34,20 +48,87 @@ jobs:
         with:
           bun-version: 1.3.6
 
+      - name: Check published patch
+        id: freshness
+        shell: bash
+        env:
+          FORCE_REBUILD: ${{ inputs.force || 'false' }}
+          RANK_BRACKET: ${{ matrix.rank_bracket }}
+        run: |
+          set -euo pipefail
+          latest_patch="$(curl --fail --location --silent --show-error https://ddragon.leagueoflegends.com/api/versions.json | bun -e 'const versions = JSON.parse(await Bun.stdin.text()); if (!Array.isArray(versions) || typeof versions[0] !== "string") throw new Error("Invalid Riot versions response"); console.log(versions[0]);')"
+          asset_url="https://github.com/${GITHUB_REPOSITORY}/releases/download/datasets-v5/current-patch-${RANK_BRACKET}.json"
+          history_url="https://github.com/${GITHUB_REPOSITORY}/releases/download/datasets-v5/30-days-${RANK_BRACKET}.json"
+          published_patch="$(curl --fail --location --silent --show-error "$asset_url" | bun -e 'const dataset = JSON.parse(await Bun.stdin.text()); if (typeof dataset.version !== "string") throw new Error("Invalid published dataset"); console.log(dataset.version);' 2>/dev/null || true)"
+          if ! curl --fail --location --silent --show-error --head "$history_url" >/dev/null; then
+            published_patch=""
+          fi
+
+          refresh=false
+          if [[ "$FORCE_REBUILD" == "true" || "$published_patch" != "$latest_patch" ]]; then
+            refresh=true
+          fi
+
+          echo "latest_patch=$latest_patch" >> "$GITHUB_OUTPUT"
+          echo "published_patch=$published_patch" >> "$GITHUB_OUTPUT"
+          echo "refresh=$refresh" >> "$GITHUB_OUTPUT"
+          echo "${RANK_BRACKET}: published=${published_patch:-missing}, latest=${latest_patch}, refresh=${refresh}"
+
       - name: Install dependencies
+        if: steps.freshness.outputs.refresh == 'true'
         run: bun install --frozen-lockfile
 
       - name: Generate rank datasets
+        if: steps.freshness.outputs.refresh == 'true'
         run: bun run --filter @draftgap/dataset start
         env:
-          DATASET_RANK_BRACKET: ${{ inputs.rank_bracket }}
+          DATASET_RANK_BRACKET: ${{ matrix.rank_bracket }}
           DATASET_OUTPUT_DIR: ${{ github.workspace }}/rank-datasets
 
+      - name: Validate generated datasets
+        if: steps.freshness.outputs.refresh == 'true'
+        shell: bash
+        env:
+          EXPECTED_PATCH: ${{ steps.freshness.outputs.latest_patch }}
+          RANK_BRACKET: ${{ matrix.rank_bracket }}
+        run: |
+          bun -e '
+            const directory = process.env.GITHUB_WORKSPACE + "/rank-datasets";
+            const rank = process.env.RANK_BRACKET;
+            const expectedPatch = process.env.EXPECTED_PATCH;
+            for (const name of ["current-patch", "30-days"]) {
+              const path = `${directory}/${name}-${rank}.json`;
+              const dataset = await Bun.file(path).json();
+              const champions = Object.values(dataset.championData ?? {});
+              if (name === "current-patch" && dataset.version !== expectedPatch) {
+                throw new Error(`${path} uses patch ${dataset.version}, expected ${expectedPatch}`);
+              }
+              if (champions.length < 160) {
+                throw new Error(`${path} has only ${champions.length} champions; Lolalytics may not be ready for this patch`);
+              }
+              const games = champions.reduce((total, champion) =>
+                total + Object.values(champion.statsByRole ?? {}).reduce((roleTotal, role) => roleTotal + Number(role.games ?? 0), 0), 0);
+              if (!Number.isFinite(games) || games <= 0) {
+                throw new Error(`${path} contains no usable game samples`);
+              }
+              console.log(`${name}-${rank}: patch=${dataset.version}, champions=${champions.length}, role games=${games}`);
+            }
+          '
+
       - name: Publish versioned dataset assets
+        if: steps.freshness.outputs.refresh == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
+          RANK_BRACKET: ${{ matrix.rank_bracket }}
         run: |
           if ! gh release view datasets-v5 >/dev/null 2>&1; then
             gh release create datasets-v5 --title "RiftTheory rank datasets v5" --notes "Versioned statistical datasets used by RiftTheory. Generated separately for each supported rank bracket."
           fi
-          gh release upload datasets-v5 "${{ github.workspace }}/rank-datasets/current-patch-${{ inputs.rank_bracket }}.json" "${{ github.workspace }}/rank-datasets/30-days-${{ inputs.rank_bracket }}.json" --clobber
+          gh release upload datasets-v5 "${{ github.workspace }}/rank-datasets/current-patch-${RANK_BRACKET}.json" "${{ github.workspace }}/rank-datasets/30-days-${RANK_BRACKET}.json" --clobber
+
+      - name: Report current dataset
+        if: steps.freshness.outputs.refresh != 'true'
+        env:
+          RANK_BRACKET: ${{ matrix.rank_bracket }}
+          PUBLISHED_PATCH: ${{ steps.freshness.outputs.published_patch }}
+        run: echo "${RANK_BRACKET} is already current at ${PUBLISHED_PATCH}."

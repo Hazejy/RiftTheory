@@ -6,7 +6,10 @@
     "power_curve": "mid",
     "resource_demand": "high",
     "execution_demand": 4,
-    "spike_notes": ["First completed item", "Rank-two ultimate and coordinated mid-game fights"],
+    "spike_notes": [
+      "First completed item",
+      "Rank-two ultimate and coordinated mid-game fights"
+    ],
     "reasoning": "Aatrox converts levels, ability haste and sustained access into a strong mid-game fight. His output depends on landing chained abilities and receiving enough resources to survive through healing windows.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -36,7 +39,10 @@
     "power_curve": "late",
     "resource_demand": "high",
     "execution_demand": 5,
-    "spike_notes": ["Multiple completed carry items", "Prepared weapon cycle before an objective"],
+    "spike_notes": [
+      "Multiple completed carry items",
+      "Prepared weapon cycle before an objective"
+    ],
     "reasoning": "Aphelios is a resource-intensive carry whose fight output rises with items and deliberate weapon preparation. The composition must create safe space and arrive with the correct setup.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -51,7 +57,11 @@
     "power_curve": "timing_dependent",
     "resource_demand": "low",
     "execution_demand": 3,
-    "spike_notes": ["Level 6", "Defensive item completion", "Enemy commitment into protected carries"],
+    "spike_notes": [
+      "Level 6",
+      "Defensive item completion",
+      "Enemy commitment into protected carries"
+    ],
     "reasoning": "Braum contributes primarily through protection, counter-engage and passive coordination. His value depends more on enemy access patterns and allied follow-up than personal gold.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -66,7 +76,11 @@
     "power_curve": "timing_dependent",
     "resource_demand": "high",
     "execution_demand": 4,
-    "spike_notes": ["Early lane range advantage", "First completed item", "Multi-item critical-strike scaling"],
+    "spike_notes": [
+      "Early lane range advantage",
+      "First completed item",
+      "Multi-item critical-strike scaling"
+    ],
     "reasoning": "Caitlyn can create early lane and structure pressure, but the draft must convert that control and bridge item-dependent troughs. Trap setup and protected range determine later fight access.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -96,7 +110,11 @@
     "power_curve": "early_mid",
     "resource_demand": "medium",
     "execution_demand": 5,
-    "spike_notes": ["Early levels with access to all basic abilities", "Level 6", "First completed item"],
+    "spike_notes": [
+      "Early levels with access to all basic abilities",
+      "Level 6",
+      "First completed item"
+    ],
     "reasoning": "Lee Sin creates early access, skirmish and displacement windows. The value of the pick depends on converting tempo and executing the correct role as raw damage becomes less central later.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -111,7 +129,11 @@
     "power_curve": "early_mid",
     "resource_demand": "medium",
     "execution_demand": 3,
-    "spike_notes": ["Level 6", "First completed item", "Ultimate available against an exposed carry"],
+    "spike_notes": [
+      "Level 6",
+      "First completed item",
+      "Ultimate available against an exposed carry"
+    ],
     "reasoning": "Vi provides reliable single-target access and a direct engage signal. She is strongest when the composition can immediately follow her commitment and convert the isolated target.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -126,7 +148,11 @@
     "power_curve": "mid_late",
     "resource_demand": "high",
     "execution_demand": 4,
-    "spike_notes": ["First mana item", "Two-item poke window", "Objective setup before enemy arrival"],
+    "spike_notes": [
+      "First mana item",
+      "Two-item poke window",
+      "Objective setup before enemy arrival"
+    ],
     "reasoning": "Xerath converts items and prepared space into long-range health advantages. His output is execution-sensitive and drops when opponents bypass the setup phase.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -141,7 +167,11 @@
     "power_curve": "early_mid",
     "resource_demand": "medium",
     "execution_demand": 4,
-    "spike_notes": ["Early lane range window", "Level 6", "First support damage-item completion"],
+    "spike_notes": [
+      "Early lane range window",
+      "Level 6",
+      "First support damage-item completion"
+    ],
     "reasoning": "Support Xerath trades lower guaranteed income for early range pressure. The pick must create lane or setup value while avoiding direct engage and flank access.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -156,7 +186,11 @@
     "power_curve": "early_mid",
     "resource_demand": "medium",
     "execution_demand": 3,
-    "spike_notes": ["Level 6", "First damage-item completion", "Prepared seeds around an objective"],
+    "spike_notes": [
+      "Level 6",
+      "First damage-item completion",
+      "Prepared seeds around an objective"
+    ],
     "reasoning": "Zyra creates lane pressure and prepared zone control without requiring carry-level income. Her strongest fights begin in controlled terrain before opponents gain clean access.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -165,70 +199,18 @@
     "source_name": "RiftTheory manual coaching review"
   },
   {
-<<<<<<< Updated upstream
-    "champion_name": "Alistar",
-    "role": "support",
-    "damage_focus": "utility",
-    "power_curve": "early_mid",
-    "resource_demand": "low",
-    "execution_demand": 3,
-    "spike_notes": ["Level 2 or 3 engage access", "Level 6 durability window", "Early movement-speed completion"],
-    "reasoning": "Alistar supplies reliable short-range engage or counter-engage without requiring income. His draft value depends on choosing between starting the fight and holding cooldowns to protect allied damage dealers.",
-    "patch": "unknown",
-    "assessment_method": "manual",
-    "confidence": 0.7,
-    "review_status": "provisional",
-    "source_name": "RiftTheory manual coaching review"
-  },
-  {
-    "champion_name": "Camille",
-    "role": "top",
-    "damage_focus": "physical",
-    "power_curve": "mid_late",
-    "resource_demand": "high",
-    "execution_demand": 4,
-    "spike_notes": ["Level 6 isolation access", "First spellblade completion", "Two-item side-lane and dive window"],
-    "reasoning": "Camille converts solo-lane income into side-lane pressure and reliable target isolation. In team fights she needs a synchronized entry or follow-up because committing beyond the frontline can separate her from allied damage.",
-    "patch": "unknown",
-    "assessment_method": "manual",
-    "confidence": 0.7,
-    "review_status": "provisional",
-    "source_name": "RiftTheory manual coaching review"
-  },
-  {
-    "champion_name": "Jhin",
-    "role": "bot",
-    "damage_focus": "physical",
-    "power_curve": "mid_late",
-    "resource_demand": "high",
-    "execution_demand": 4,
-    "spike_notes": ["Level 6 long-range follow-up", "First completed carry item", "Two- to three-item pick and objective setup"],
-    "reasoning": "Jhin supports picks and engages from range before converting control into burst damage. He needs prepared spacing and struggles to provide continuous damage into several durable targets without allied setup.",
-    "patch": "unknown",
-    "assessment_method": "manual",
-    "confidence": 0.7,
-    "review_status": "provisional",
-    "source_name": "RiftTheory manual coaching review"
-  },
-  {
-    "champion_name": "Locke",
-    "role": "mid",
-    "damage_focus": "magic",
-    "power_curve": "early_mid",
-    "resource_demand": "high",
-    "execution_demand": 4,
-    "spike_notes": ["Level 6 execute access", "First burst-item completion", "A marked target separated from protection"],
-    "reasoning": "Locke is a setup-dependent assassin whose teleporting pursuit and missing-health damage reward decisive target selection. He needs income and a prepared entry, while failed commitment spends health and position without guaranteeing an exit.",
-=======
     "champion_name": "Ashe",
     "role": "bot",
     "damage_focus": "physical",
     "power_curve": "early_mid",
     "resource_demand": "medium",
     "execution_demand": 3,
-    "spike_notes": ["Level 6", "First completed utility damage item", "Vision-controlled arrow angle before an objective"],
+    "spike_notes": [
+      "Level 6",
+      "First completed utility damage item",
+      "Vision-controlled arrow angle before an objective"
+    ],
     "reasoning": "Ashe gives bot lane reliable initiation, chase control and pick access without needing the highest economy share. Her draft value rises when the team can convert Hawkshot information and Enchanted Crystal Arrow into coordinated first moves.",
->>>>>>> Stashed changes
     "patch": "unknown",
     "assessment_method": "manual",
     "confidence": 0.65,
@@ -236,56 +218,40 @@
     "source_name": "RiftTheory manual coaching review"
   },
   {
-<<<<<<< Updated upstream
-    "champion_name": "Nautilus",
-    "role": "support",
-    "damage_focus": "utility",
-    "power_curve": "early_mid",
-    "resource_demand": "low",
-    "execution_demand": 3,
-    "spike_notes": ["Level 2 or 3 pick access", "Level 6 reliable target access", "Early durability completion"],
-    "reasoning": "Nautilus provides layered single-target control and can either force a carry or peel a diver. He does not need much income, but missed or poorly chosen engage angles can leave him isolated from allied follow-up.",
-    "patch": "unknown",
-    "assessment_method": "manual",
-    "confidence": 0.7,
-=======
     "champion_name": "Draven",
     "role": "bot",
     "damage_focus": "physical",
     "power_curve": "early",
     "resource_demand": "high",
     "execution_demand": 5,
-    "spike_notes": ["Level 2 lane threat", "First completed damage item", "Adoration cash-in window"],
+    "spike_notes": [
+      "Level 2 lane threat",
+      "First completed damage item",
+      "Adoration cash-in window"
+    ],
     "reasoning": "Draven is a lane-pressure and snowball carry whose draft asks for early support, wave access and protection against forced resets. If the team cannot convert his first windows, his resource demand becomes a structural cost.",
     "patch": "unknown",
     "assessment_method": "manual",
     "confidence": 0.65,
->>>>>>> Stashed changes
     "review_status": "provisional",
     "source_name": "RiftTheory manual coaching review"
   },
   {
-<<<<<<< Updated upstream
-    "champion_name": "Nocturne",
-    "role": "jungle",
-    "damage_focus": "physical",
-    "power_curve": "early_mid",
-    "resource_demand": "medium",
-    "execution_demand": 3,
-    "spike_notes": ["Level 6 global-pressure window", "First completed item", "Ultimate available against an isolated carry"],
-    "reasoning": "Nocturne turns darkness and long-range access into a clear single-target commitment. He needs lanes or allied control to finish the target and becomes vulnerable when entering the full enemy protection layer alone.",
-=======
     "champion_name": "Jhin",
     "role": "bot",
     "damage_focus": "physical",
-    "power_curve": "mid",
-    "resource_demand": "medium",
-    "execution_demand": 3,
-    "spike_notes": ["Level 6", "First completed damage item", "Long-range follow-up after allied crowd control"],
-    "reasoning": "Jhin turns allied setup into long-range pick and siege pressure. He is less about sustained front-to-back damage than controlling tempo through fourth shot, traps and Curtain Call follow-up.",
+    "power_curve": "mid_late",
+    "resource_demand": "high",
+    "execution_demand": 4,
+    "spike_notes": [
+      "Level 6 long-range follow-up",
+      "First completed carry item",
+      "Two- to three-item pick and objective setup"
+    ],
+    "reasoning": "Jhin supports picks and engages from range before converting control into burst damage. He needs prepared spacing and struggles to provide continuous damage into several durable targets without allied setup.",
     "patch": "unknown",
     "assessment_method": "manual",
-    "confidence": 0.65,
+    "confidence": 0.7,
     "review_status": "provisional",
     "source_name": "RiftTheory manual coaching review"
   },
@@ -296,9 +262,12 @@
     "power_curve": "late",
     "resource_demand": "high",
     "execution_demand": 3,
-    "spike_notes": ["Two-item sustained damage window", "Reset chain after first takedown", "Protected late-game objective fight"],
+    "spike_notes": [
+      "Two-item sustained damage window",
+      "Reset chain after first takedown",
+      "Protected late-game objective fight"
+    ],
     "reasoning": "Jinx is a high-resource scaling carry who wants peel, frontline and enough fight duration to trigger resets. Drafts around her should identify how the first takedown is created and how she survives enemy access.",
->>>>>>> Stashed changes
     "patch": "unknown",
     "assessment_method": "manual",
     "confidence": 0.7,
@@ -306,26 +275,17 @@
     "source_name": "RiftTheory manual coaching review"
   },
   {
-<<<<<<< Updated upstream
-    "champion_name": "Renekton",
-    "role": "top",
-    "damage_focus": "physical",
-    "power_curve": "early_mid",
-    "resource_demand": "high",
-    "execution_demand": 3,
-    "spike_notes": ["Level 3 empowered trade", "Level 6 dive and skirmish window", "First completed fighter item"],
-    "reasoning": "Renekton converts early lane resources, fury and flank access into durable mid-game pressure. His threat drops when opponents deny early conversion or force him to enter without fury and allied follow-up.",
-    "patch": "unknown",
-    "assessment_method": "manual",
-    "confidence": 0.7,
-=======
     "champion_name": "Kalista",
     "role": "bot",
     "damage_focus": "physical",
     "power_curve": "early_mid",
     "resource_demand": "high",
     "execution_demand": 5,
-    "spike_notes": ["Early lane all-in", "First completed attack-speed item", "Objective secure with Rend"],
+    "spike_notes": [
+      "Early lane all-in",
+      "First completed attack-speed item",
+      "Objective secure with Rend"
+    ],
     "reasoning": "Kalista wants lane agency, support coordination and early objective conversion. Her draft value is strongest when the team can fight on tempo around Rend and Fate's Call rather than waiting for pure late scaling.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -340,7 +300,11 @@
     "power_curve": "early_mid",
     "resource_demand": "high",
     "execution_demand": 4,
-    "spike_notes": ["Early lane trade window", "First completed item", "Two-item mid-game skirmish"],
+    "spike_notes": [
+      "Early lane trade window",
+      "First completed item",
+      "Two-item mid-game skirmish"
+    ],
     "reasoning": "Lucian offers short-range burst tempo and lane pressure, especially when paired with enablers that let him enter trades safely. The draft must convert his early-mid pressure before range and scaling disadvantages become expensive.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -355,7 +319,11 @@
     "power_curve": "mid",
     "resource_demand": "medium",
     "execution_demand": 2,
-    "spike_notes": ["Level 6", "First completed damage item", "Layered crowd control into Bullet Time"],
+    "spike_notes": [
+      "Level 6",
+      "First completed damage item",
+      "Layered crowd control into Bullet Time"
+    ],
     "reasoning": "Miss Fortune supplies straightforward area fight damage and punishes locked targets. She is most valuable when the draft can hold opponents in a cone and force fights in corridors or objective setups.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -370,7 +338,11 @@
     "power_curve": "mid_late",
     "resource_demand": "medium",
     "execution_demand": 3,
-    "spike_notes": ["Soul range breakpoints", "First supportive damage item", "Global ultimate swing in a cross-map fight"],
+    "spike_notes": [
+      "Soul range breakpoints",
+      "First supportive damage item",
+      "Global ultimate swing in a cross-map fight"
+    ],
     "reasoning": "Bot Senna trades conventional carry tempo for range growth, utility and global influence. She asks the draft to clarify who farms, who fronts the lane, and how the team survives until her range and utility matter.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -385,7 +357,11 @@
     "power_curve": "mid_late",
     "resource_demand": "high",
     "execution_demand": 4,
-    "spike_notes": ["Level 6 all-in", "Two-item melee carry window", "Grouped fight with allied shielding or engage"],
+    "spike_notes": [
+      "Level 6 all-in",
+      "Two-item melee carry window",
+      "Grouped fight with allied shielding or engage"
+    ],
     "reasoning": "Nilah is a short-range melee bot carry who needs entry support and durable fight structure. Her payoff is strongest when allied engage, shielding or sustain lets her stay in range long enough to convert clustered fights.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -400,7 +376,11 @@
     "power_curve": "mid",
     "resource_demand": "high",
     "execution_demand": 5,
-    "spike_notes": ["Level 6", "First completed damage item", "Allied knock-up or hard engage available"],
+    "spike_notes": [
+      "Level 6",
+      "First completed damage item",
+      "Allied knock-up or hard engage available"
+    ],
     "reasoning": "Samira is a reset-oriented dive carry who needs reliable entry cues and protection while stacking style. She should be drafted with clear engage partners and against comps that cannot easily deny her first commitment.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -415,7 +395,11 @@
     "power_curve": "mid_late",
     "resource_demand": "medium",
     "execution_demand": 3,
-    "spike_notes": ["First mana item", "Grouped two-item fight", "Encore angle through front line"],
+    "spike_notes": [
+      "First mana item",
+      "Grouped two-item fight",
+      "Encore angle through front line"
+    ],
     "reasoning": "Bot Seraphine turns wave control, sustain and layered crowd control into grouped fight value. She is strongest when the draft wants five-on-five structure and has another source of reliable sustained damage.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -430,7 +414,11 @@
     "power_curve": "mid_late",
     "resource_demand": "high",
     "execution_demand": 3,
-    "spike_notes": ["First wave-clear item", "Two-item ricochet fight", "On The Hunt engage or disengage timing"],
+    "spike_notes": [
+      "First wave-clear item",
+      "Two-item ricochet fight",
+      "On The Hunt engage or disengage timing"
+    ],
     "reasoning": "Sivir gives wave control, team speed and durable front-to-back damage if she reaches item windows. Drafts around her can neutralize lanes and then force grouped tempo, but she still needs protection and time.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -445,7 +433,11 @@
     "power_curve": "late",
     "resource_demand": "high",
     "execution_demand": 3,
-    "spike_notes": ["Stacking breakpoints", "Two-item scaling window", "Late grouped fight with safe front line"],
+    "spike_notes": [
+      "Stacking breakpoints",
+      "Two-item scaling window",
+      "Late grouped fight with safe front line"
+    ],
     "reasoning": "Smolder is a scaling carry whose draft must buy time and protect stacking access. His value rises sharply when the team can avoid forced early collapses and arrive at fights with enough front line to let him cast repeatedly.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -460,12 +452,15 @@
     "power_curve": "mid",
     "resource_demand": "medium",
     "execution_demand": 3,
-    "spike_notes": ["Level 6", "First health-and-AP item", "Extended fight where enemies cannot disengage"],
+    "spike_notes": [
+      "Level 6",
+      "First health-and-AP item",
+      "Extended fight where enemies cannot disengage"
+    ],
     "reasoning": "Bot Swain changes the lane into a durable magic-damage fight pattern. He wants opponents pulled into extended ranges and benefits from allies who can start fights or keep enemies inside his drain window.",
     "patch": "unknown",
     "assessment_method": "manual",
     "confidence": 0.6,
->>>>>>> Stashed changes
     "review_status": "provisional",
     "source_name": "RiftTheory manual coaching review"
   },
@@ -473,11 +468,14 @@
     "champion_name": "Tristana",
     "role": "bot",
     "damage_focus": "physical",
-<<<<<<< Updated upstream
     "power_curve": "late",
     "resource_demand": "high",
     "execution_demand": 3,
-    "spike_notes": ["First completed carry item", "Two-item structure pressure", "Multi-item range and critical-strike scaling"],
+    "spike_notes": [
+      "First completed carry item",
+      "Two-item structure pressure",
+      "Multi-item range and critical-strike scaling"
+    ],
     "reasoning": "Bot Tristana is an income-dependent carry who converts resets and explosive-charge windows into kills or structures. Her jump can follow a secured target, but using it as unsupported primary engage removes an important safety tool.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -486,42 +484,17 @@
     "source_name": "RiftTheory manual coaching review"
   },
   {
-    "champion_name": "Trundle",
-    "role": "jungle",
-    "damage_focus": "physical",
-    "power_curve": "early_mid",
-    "resource_demand": "medium",
-    "execution_demand": 2,
-    "spike_notes": ["Early river and jungle skirmishes", "Level 6 frontline reduction", "First completed fighter or tank item"],
-    "reasoning": "Trundle offers direct skirmish strength, objective damage and terrain disruption. He is most valuable into durable frontliners and short-range fights, while mobile or ranged opponents can deny sustained attack access.",
-    "patch": "unknown",
-    "assessment_method": "manual",
-    "confidence": 0.7,
-=======
-    "power_curve": "early_mid",
-    "resource_demand": "high",
-    "execution_demand": 4,
-    "spike_notes": ["Level 2 all-in threat", "First completed damage item", "Explosive Charge tower or reset window"],
-    "reasoning": "Tristana brings explosive lane and skirmish tempo with reset access and structure pressure. She is strongest when the draft can choose fights proactively and punish isolated targets before longer-range scaling takes over.",
-    "patch": "unknown",
-    "assessment_method": "manual",
-    "confidence": 0.65,
->>>>>>> Stashed changes
-    "review_status": "provisional",
-    "source_name": "RiftTheory manual coaching review"
-  },
-  {
-<<<<<<< Updated upstream
-    "champion_name": "Viktor",
-    "role": "mid",
-=======
     "champion_name": "Varus",
     "role": "bot",
     "damage_focus": "build_dependent",
     "power_curve": "timing_dependent",
     "resource_demand": "medium",
     "execution_demand": 4,
-    "spike_notes": ["Level 6", "Build-specific first item", "Objective setup with poke or Chain of Corruption"],
+    "spike_notes": [
+      "Level 6",
+      "Build-specific first item",
+      "Objective setup with poke or Chain of Corruption"
+    ],
     "reasoning": "Varus changes identity by build: poke and siege plans want early setup, while on-hit plans ask for protected sustained damage. The draft must state which Varus it is selecting so the rest of the composition answers the same timing.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -536,7 +509,11 @@
     "power_curve": "mid_late",
     "resource_demand": "high",
     "execution_demand": 4,
-    "spike_notes": ["Level 6 self-peel", "Two-item feather setup", "Enemy engage committed into Featherstorm"],
+    "spike_notes": [
+      "Level 6 self-peel",
+      "Two-item feather setup",
+      "Enemy engage committed into Featherstorm"
+    ],
     "reasoning": "Xayah is a scaling anti-dive carry who punishes enemies entering her feather field. She is strongest when the opponent must come forward and her team can buy the space needed for blade recall threat.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -551,7 +528,11 @@
     "power_curve": "mid",
     "resource_demand": "medium",
     "execution_demand": 3,
-    "spike_notes": ["Level 6", "First burn-item completion", "Clustered objective fight"],
+    "spike_notes": [
+      "Level 6",
+      "First burn-item completion",
+      "Clustered objective fight"
+    ],
     "reasoning": "Bot Brand provides magic damage, wave control and area punishment from the carry slot. He is strongest when enemies must group into choke points and weaker when the draft needs a traditional protected physical DPS threat.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -566,7 +547,11 @@
     "power_curve": "mid_late",
     "resource_demand": "high",
     "execution_demand": 4,
-    "spike_notes": ["First completed scaling item", "Package timing", "Two-item poke and objective setup"],
+    "spike_notes": [
+      "First completed scaling item",
+      "Package timing",
+      "Two-item poke and objective setup"
+    ],
     "reasoning": "Bot Corki brings mixed poke and scaling damage with strong objective setup around package windows. His draft needs time, wave access and a plan for surviving until his item and package timings can shape fights.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -581,7 +566,11 @@
     "power_curve": "mid_late",
     "resource_demand": "high",
     "execution_demand": 4,
-    "spike_notes": ["Ability evolution breakpoints", "Two-item dive window", "Plasma access from allied crowd control"],
+    "spike_notes": [
+      "Ability evolution breakpoints",
+      "Two-item dive window",
+      "Plasma access from allied crowd control"
+    ],
     "reasoning": "Kai'Sa is a scaling dive marksman whose best drafts give her plasma setup, isolated target access and enough economy to hit evolutions. The comp must decide whether she is playing front-to-back cleanup or back-line follow-up.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -592,16 +581,15 @@
   {
     "champion_name": "Karthus",
     "role": "bot",
->>>>>>> Stashed changes
     "damage_focus": "magic",
     "power_curve": "mid_late",
     "resource_demand": "high",
     "execution_demand": 4,
-<<<<<<< Updated upstream
-    "spike_notes": ["First ability upgrade and mana completion", "Two-item control window", "Prepared choke point around an objective"],
-    "reasoning": "Viktor converts lane income and completed upgrades into wave control and sustained area damage. He needs space and time for repeated spell rotations; direct multi-angle access can prevent him from establishing the fight zone.",
-=======
-    "spike_notes": ["First mana-and-AP item", "Level 6 global damage", "Grouped fight where passive value is unavoidable"],
+    "spike_notes": [
+      "First mana-and-AP item",
+      "Level 6 global damage",
+      "Grouped fight where passive value is unavoidable"
+    ],
     "reasoning": "Bot Karthus supplies heavy magic DPS and global execute pressure from a farming lane. He wants the team to accept lower conventional marksman utility in exchange for scaling damage and unavoidable fight cleanup.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -616,7 +604,11 @@
     "power_curve": "late",
     "resource_demand": "high",
     "execution_demand": 4,
-    "spike_notes": ["Two-item sustained damage window", "Protected front-to-back setup", "Late fight with peel cooldowns available"],
+    "spike_notes": [
+      "Two-item sustained damage window",
+      "Protected front-to-back setup",
+      "Late fight with peel cooldowns available"
+    ],
     "reasoning": "Kog'Maw is a high-resource hypercarry who pays off when the draft can protect a stationary damage source. His value depends less on starting fights and more on surviving long enough to melt frontline and objectives.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -631,7 +623,11 @@
     "power_curve": "late",
     "resource_demand": "high",
     "execution_demand": 4,
-    "spike_notes": ["First stealth roam timing", "Two-item ambush window", "Spray and Pray angle through multiple targets"],
+    "spike_notes": [
+      "First stealth roam timing",
+      "Two-item ambush window",
+      "Spray and Pray angle through multiple targets"
+    ],
     "reasoning": "Bot Twitch is an ambush scaling carry who converts unseen angles into fight starts or cleanup. Drafts around him need protection after reveal and enough map control to make stealth pressure credible.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -646,7 +642,11 @@
     "power_curve": "late",
     "resource_demand": "high",
     "execution_demand": 5,
-    "spike_notes": ["First dueling item", "Two-item tank-kill window", "Final Hour fight with space to tumble"],
+    "spike_notes": [
+      "First dueling item",
+      "Two-item tank-kill window",
+      "Final Hour fight with space to tumble"
+    ],
     "reasoning": "Bot Vayne is a short-range scaling duelist and tank killer. She needs draft protection, side-space or peel to survive early pressure and convert late fights where her single-target DPS can keep firing.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -661,7 +661,11 @@
     "power_curve": "mid_late",
     "resource_demand": "medium",
     "execution_demand": 3,
-    "spike_notes": ["Stacking and first AP item", "Level 6 burst threat", "Event Horizon controlling a choke point"],
+    "spike_notes": [
+      "Stacking and first AP item",
+      "Level 6 burst threat",
+      "Event Horizon controlling a choke point"
+    ],
     "reasoning": "Bot Veigar offers scaling magic burst and powerful zone denial from the carry slot. He is strongest when the draft can play around cage control and does not require immediate physical DPS from bot lane.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -676,7 +680,11 @@
     "power_curve": "late",
     "resource_demand": "high",
     "execution_demand": 5,
-    "spike_notes": ["First completed movement damage item", "Two-item kiting window", "Extended fight after ultimate activation"],
+    "spike_notes": [
+      "First completed movement damage item",
+      "Two-item kiting window",
+      "Extended fight after ultimate activation"
+    ],
     "reasoning": "Zeri is a high-execution scaling kite carry. She needs time, space and fight length; the draft should protect her early economy and avoid forcing short fights before she can stack movement and damage.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -691,7 +699,11 @@
     "power_curve": "mid",
     "resource_demand": "medium",
     "execution_demand": 3,
-    "spike_notes": ["First mana item", "Early turret execute pressure", "Objective setup with minefield and long-range poke"],
+    "spike_notes": [
+      "First mana item",
+      "Early turret execute pressure",
+      "Objective setup with minefield and long-range poke"
+    ],
     "reasoning": "Bot Ziggs shifts the lane toward wave control, siege and structure pressure. He helps drafts that want to avoid standard marksman trading and instead win through tempo, poke and tower conversion.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -706,7 +718,11 @@
     "power_curve": "mid",
     "resource_demand": "low",
     "execution_demand": 2,
-    "spike_notes": ["Level 6", "First tank item", "Grouped objective fight with Flash or Bandage Toss access"],
+    "spike_notes": [
+      "Level 6",
+      "First tank item",
+      "Grouped objective fight with Flash or Bandage Toss access"
+    ],
     "reasoning": "Amumu gives reliable engage, frontline and area lockdown without needing carry-level economy. His draft value rises when the team has follow-up damage for his first commitment and wants simple five-on-five fight structure.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -721,7 +737,11 @@
     "power_curve": "mid_late",
     "resource_demand": "high",
     "execution_demand": 4,
-    "spike_notes": ["First completed damage item", "Void coral after a takedown", "Herald or Baron conversion window"],
+    "spike_notes": [
+      "First completed damage item",
+      "Void coral after a takedown",
+      "Herald or Baron conversion window"
+    ],
     "reasoning": "Bel'Veth is a resource-hungry skirmish and objective snowball jungler. She needs lanes that can contest entrances and create first resets so her scaling and objective conversion become real pressure.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -736,7 +756,11 @@
     "power_curve": "mid",
     "resource_demand": "medium",
     "execution_demand": 3,
-    "spike_notes": ["First burn-item completion", "Level 6", "Enemy team grouped around a neutral objective"],
+    "spike_notes": [
+      "First burn-item completion",
+      "Level 6",
+      "Enemy team grouped around a neutral objective"
+    ],
     "reasoning": "Jungle Brand supplies high magic damage, fast area clear and punishing objective fights. His drafts need lanes or supports to provide reliable engage or protection because his own access and escape tools are limited.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -751,7 +775,11 @@
     "power_curve": "early_mid",
     "resource_demand": "medium",
     "execution_demand": 4,
-    "spike_notes": ["Early skirmish with lane priority", "Level 6", "First bruiser damage item"],
+    "spike_notes": [
+      "Early skirmish with lane priority",
+      "Level 6",
+      "First bruiser damage item"
+    ],
     "reasoning": "Briar is a commitment jungler whose power comes from forced access, dueling and chaotic skirmishes. The draft must control when she enters fights, because poor target selection or disengage-heavy opponents can punish her forced movement.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -766,7 +794,11 @@
     "power_curve": "mid_late",
     "resource_demand": "medium",
     "execution_demand": 3,
-    "spike_notes": ["Level 6 Feast secure", "First tank item", "Stacked neutral objective setup"],
+    "spike_notes": [
+      "Level 6 Feast secure",
+      "First tank item",
+      "Stacked neutral objective setup"
+    ],
     "reasoning": "Jungle Cho'Gath brings frontline, silence disruption and strong objective secure. He wants slower, structured games where his durability and Feast threat matter more than early tempo or repeated ganks.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -781,7 +813,11 @@
     "power_curve": "early_mid",
     "resource_demand": "medium",
     "execution_demand": 3,
-    "spike_notes": ["Early invade or river skirmish", "Level 6 reset threat", "First bruiser item"],
+    "spike_notes": [
+      "Early invade or river skirmish",
+      "Level 6 reset threat",
+      "First bruiser item"
+    ],
     "reasoning": "Jungle Darius is an off-pattern bruiser pick that wants close-range skirmishes and extended fights. He needs lane setup or enemy face-checks because he lacks reliable long-range engage compared with standard junglers.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -796,7 +832,11 @@
     "power_curve": "mid",
     "resource_demand": "medium",
     "execution_demand": 3,
-    "spike_notes": ["Level 6", "First AP item", "Multi-target Moonfall setup with allied follow-up"],
+    "spike_notes": [
+      "Level 6",
+      "First AP item",
+      "Multi-target Moonfall setup with allied follow-up"
+    ],
     "reasoning": "Jungle Diana provides AP dive and area engage from the jungle slot. She wants drafts that can layer damage into her ultimate and protect against disengage after her first commitment.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -811,7 +851,11 @@
     "power_curve": "mid_late",
     "resource_demand": "medium",
     "execution_demand": 2,
-    "spike_notes": ["Level 6", "First health tank item", "Extended fight where anti-heal is not fully layered"],
+    "spike_notes": [
+      "Level 6",
+      "First health tank item",
+      "Extended fight where anti-heal is not fully layered"
+    ],
     "reasoning": "Jungle Dr. Mundo gives durable frontline and attrition rather than precise engage. He fits drafts that need a low-execution meat shield, but he asks teammates to provide lockdown and reliable back-line damage.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -826,7 +870,11 @@
     "power_curve": "mid_late",
     "resource_demand": "high",
     "execution_demand": 5,
-    "spike_notes": ["Level 6 safety unlock", "First AP burst item", "Flank angle with Parallel Convergence"],
+    "spike_notes": [
+      "Level 6 safety unlock",
+      "First AP burst item",
+      "Flank angle with Parallel Convergence"
+    ],
     "reasoning": "Jungle Ekko is a scaling AP skirmisher and pick threat who needs setup time and flank access. He can punish isolated targets hard, but drafts should not rely on him as the only guaranteed engage.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -841,7 +889,11 @@
     "power_curve": "early",
     "resource_demand": "medium",
     "execution_demand": 5,
-    "spike_notes": ["Level 3 dive setup", "First AP damage component", "Lane crowd control into Cocoon"],
+    "spike_notes": [
+      "Level 3 dive setup",
+      "First AP damage component",
+      "Lane crowd control into Cocoon"
+    ],
     "reasoning": "Elise is an early-pressure jungler built around dives, picks and tempo conversion. She needs lanes that can move or set up Cocoon, because falling behind without early conversion leaves her draft with less scaling insurance.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -856,7 +908,11 @@
     "power_curve": "mid",
     "resource_demand": "high",
     "execution_demand": 5,
-    "spike_notes": ["Level 6 camouflage unlock", "First AP burst item", "Vision-denial pick before objective"],
+    "spike_notes": [
+      "Level 6 camouflage unlock",
+      "First AP burst item",
+      "Vision-denial pick before objective"
+    ],
     "reasoning": "Evelynn is a stealth pick jungler who warps enemy positioning after level 6. Her draft needs enough early stability to reach that point and enough objective control to turn picks into map gains.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -871,7 +927,11 @@
     "power_curve": "mid",
     "resource_demand": "medium",
     "execution_demand": 4,
-    "spike_notes": ["Level 6", "First AP or utility jungle item", "Fog-of-war Crowstorm angle"],
+    "spike_notes": [
+      "Level 6",
+      "First AP or utility jungle item",
+      "Fog-of-war Crowstorm angle"
+    ],
     "reasoning": "Fiddlesticks provides devastating zone engage from fog and strong objective-area threat. He is draft-dependent on vision denial and setup time; without flank darkness, his engage becomes much easier to manage.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -886,7 +946,11 @@
     "power_curve": "timing_dependent",
     "resource_demand": "medium",
     "execution_demand": 4,
-    "spike_notes": ["Level 6 displacement", "First durability or AP item", "Explosive Cask isolating a priority target"],
+    "spike_notes": [
+      "Level 6 displacement",
+      "First durability or AP item",
+      "Explosive Cask isolating a priority target"
+    ],
     "reasoning": "Jungle Gragas is a flexible engage, disengage and pick tool. His exact curve depends on build, but the draft value is his ability to start fights, split teams or deny enemy access with one high-impact displacement.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -901,7 +965,11 @@
     "power_curve": "mid",
     "resource_demand": "high",
     "execution_demand": 4,
-    "spike_notes": ["Early invade with lane priority", "First completed damage item", "Objective fight with smoke screen value"],
+    "spike_notes": [
+      "Early invade with lane priority",
+      "First completed damage item",
+      "Objective fight with smoke screen value"
+    ],
     "reasoning": "Graves is a farming and skirmish jungler who converts tempo, camps and lane priority into damage leads. He offers damage and objective pressure, but drafts still need other champions to supply reliable engage or peel.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -916,7 +984,11 @@
     "power_curve": "mid_late",
     "resource_demand": "high",
     "execution_demand": 4,
-    "spike_notes": ["First AP bruiser item", "Two-item sustained fight", "Frontline target access without being kited"],
+    "spike_notes": [
+      "First AP bruiser item",
+      "Two-item sustained fight",
+      "Frontline target access without being kited"
+    ],
     "reasoning": "Jungle Gwen is a scaling AP side and objective fighter who wants farm and extended fights. She needs drafts that can buy time and help her enter fights, because she is not a natural early gank or hard engage solution.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -931,7 +1003,11 @@
     "power_curve": "mid",
     "resource_demand": "high",
     "execution_demand": 4,
-    "spike_notes": ["First movement or bruiser item", "Level 6 fear engage", "Flank path into back line"],
+    "spike_notes": [
+      "First movement or bruiser item",
+      "Level 6 fear engage",
+      "Flank path into back line"
+    ],
     "reasoning": "Hecarim is a tempo and dive jungler who converts movement speed into back-line access. He needs resources and flank angles, and his best drafts can follow his first fear rather than leaving him isolated.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -946,7 +1022,11 @@
     "power_curve": "mid",
     "resource_demand": "low",
     "execution_demand": 4,
-    "spike_notes": ["First supportive item", "Daisy available", "Carry shield cycle around objective fight"],
+    "spike_notes": [
+      "First supportive item",
+      "Daisy available",
+      "Carry shield cycle around objective fight"
+    ],
     "reasoning": "Ivern is a supportive jungle enabler who trades personal damage for peel, shields and unusual pathing. He needs a clear carry target and teammates who benefit from extra protection or brush control.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -961,16 +1041,17 @@
     "power_curve": "early_mid",
     "resource_demand": "medium",
     "execution_demand": 3,
-    "spike_notes": ["Level 2 or 3 gank timing", "Level 6 Cataclysm", "First bruiser or tank item"],
+    "spike_notes": [
+      "Level 2 or 3 gank timing",
+      "Level 6 Cataclysm",
+      "First bruiser or tank item"
+    ],
     "reasoning": "Jarvan IV supplies early tempo, reliable engage and target containment. He is strongest when teammates can damage trapped targets and weakest when opponents can consistently disengage or punish his flag-and-drag commitment.",
->>>>>>> Stashed changes
     "patch": "unknown",
     "assessment_method": "manual",
     "confidence": 0.7,
     "review_status": "provisional",
     "source_name": "RiftTheory manual coaching review"
-<<<<<<< Updated upstream
-=======
   },
   {
     "champion_name": "Jax",
@@ -979,7 +1060,11 @@
     "power_curve": "mid_late",
     "resource_demand": "high",
     "execution_demand": 4,
-    "spike_notes": ["First dueling item", "Level 6 durability and damage", "Side-lane or skirmish window after jungle tempo"],
+    "spike_notes": [
+      "First dueling item",
+      "Level 6 durability and damage",
+      "Side-lane or skirmish window after jungle tempo"
+    ],
     "reasoning": "Jungle Jax is a scaling duelist and dive threat. He needs farm and skirmish access more than pure utility, so drafts should provide lanes that survive early and later let him pressure sides or back-line entries.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -994,7 +1079,11 @@
     "power_curve": "early_mid",
     "resource_demand": "high",
     "execution_demand": 5,
-    "spike_notes": ["Early invade with lane priority", "First lethality item", "Poke setup before neutral objective"],
+    "spike_notes": [
+      "Early invade with lane priority",
+      "First lethality item",
+      "Poke setup before neutral objective"
+    ],
     "reasoning": "Jungle Jayce is an off-pattern physical poke and tempo pick. He demands execution, lane priority and clear draft purpose because he does not naturally cover frontline, peel or reliable engage from the jungle slot.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -1009,7 +1098,11 @@
     "power_curve": "late",
     "resource_demand": "high",
     "execution_demand": 4,
-    "spike_notes": ["First mana-and-AP item", "Level 6 Requiem pressure", "Farm lead into objective fight"],
+    "spike_notes": [
+      "First mana-and-AP item",
+      "Level 6 Requiem pressure",
+      "Farm lead into objective fight"
+    ],
     "reasoning": "Jungle Karthus is a farming AP damage engine whose pressure comes from clear speed, global damage and late fight output. The draft must cover early map stability and provide engage or peel elsewhere.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -1024,7 +1117,11 @@
     "power_curve": "mid_late",
     "resource_demand": "high",
     "execution_demand": 4,
-    "spike_notes": ["Form completion", "First transformed fight", "Two-item side or flank pressure"],
+    "spike_notes": [
+      "Form completion",
+      "First transformed fight",
+      "Two-item side or flank pressure"
+    ],
     "reasoning": "Kayn's jungle identity depends on form: Shadow Assassin leans toward pick and back-line access, while Rhaast gives bruiser sustain and frontline fighting. Drafts should treat form timing as the real first spike.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -1039,7 +1136,11 @@
     "power_curve": "mid",
     "resource_demand": "high",
     "execution_demand": 4,
-    "spike_notes": ["Level 6 evolution", "First lethality item", "Isolated target before objective setup"],
+    "spike_notes": [
+      "Level 6 evolution",
+      "First lethality item",
+      "Isolated target before objective setup"
+    ],
     "reasoning": "Kha'Zix is a pick and isolation jungler who wants fog, side pressure and enemy spacing mistakes. The draft should avoid needing him as primary frontline or guaranteed engage.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -1054,7 +1155,11 @@
     "power_curve": "mid_late",
     "resource_demand": "high",
     "execution_demand": 5,
-    "spike_notes": ["First marks and item completion", "Lamb's Respite available", "Protected objective fight with range advantage"],
+    "spike_notes": [
+      "First marks and item completion",
+      "Lamb's Respite available",
+      "Protected objective fight with range advantage"
+    ],
     "reasoning": "Kindred is a marksman jungler who brings scaling damage and a fight-reset ultimate. She needs lanes that can contest marks and a draft that can protect or exploit Lamb's Respite instead of being trapped by it.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -1069,7 +1174,11 @@
     "power_curve": "mid",
     "resource_demand": "medium",
     "execution_demand": 4,
-    "spike_notes": ["Level 6 sleep threat", "First AP movement item", "Multi-target passive application before engage"],
+    "spike_notes": [
+      "Level 6 sleep threat",
+      "First AP movement item",
+      "Multi-target passive application before engage"
+    ],
     "reasoning": "Lillia is a speed-based AP skirmisher who wants extended spacing and multi-target setup. Her drafts should create room to kite and then collapse when sleep turns poke into engage.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -1084,7 +1193,11 @@
     "power_curve": "mid",
     "resource_demand": "low",
     "execution_demand": 2,
-    "spike_notes": ["Level 6", "First tank item", "Unstoppable Force onto grouped carries"],
+    "spike_notes": [
+      "Level 6",
+      "First tank item",
+      "Unstoppable Force onto grouped carries"
+    ],
     "reasoning": "Jungle Malphite is a simple engage and armor-scaling utility pick. His pre-6 agency is limited, so the draft must survive early tempo and be ready to convert his first ultimate window.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -1099,7 +1212,11 @@
     "power_curve": "mid",
     "resource_demand": "low",
     "execution_demand": 2,
-    "spike_notes": ["Level 6", "First tank item", "Objective setup with saplings and Nature's Grasp"],
+    "spike_notes": [
+      "Level 6",
+      "First tank item",
+      "Objective setup with saplings and Nature's Grasp"
+    ],
     "reasoning": "Jungle Maokai provides reliable engage, peel and vision-like objective control without demanding high economy. He fits drafts that need structure and follow-up more than personal carry damage.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -1114,7 +1231,11 @@
     "power_curve": "late",
     "resource_demand": "high",
     "execution_demand": 4,
-    "spike_notes": ["First on-hit item", "Highlander reset window", "Enemy crowd control unavailable"],
+    "spike_notes": [
+      "First on-hit item",
+      "Highlander reset window",
+      "Enemy crowd control unavailable"
+    ],
     "reasoning": "Master Yi is a reset hypercarry jungler who needs resources, cleanup timing and protection from targeted crowd control. Drafts around him should create the first low-health target and avoid forcing him to start fights.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -1129,7 +1250,11 @@
     "power_curve": "mid",
     "resource_demand": "medium",
     "execution_demand": 3,
-    "spike_notes": ["Level 6 Realm of Death", "First AP bruiser item", "Objective fight where one enemy must be removed"],
+    "spike_notes": [
+      "Level 6 Realm of Death",
+      "First AP bruiser item",
+      "Objective fight where one enemy must be removed"
+    ],
     "reasoning": "Jungle Mordekaiser offers AP bruiser damage and isolation through Realm of Death. He is strongest when removing one key enemy breaks the opponent's fight plan or objective contest.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -1144,7 +1269,11 @@
     "power_curve": "early_mid",
     "resource_demand": "medium",
     "execution_demand": 3,
-    "spike_notes": ["Fast first clear", "Level 6", "Black Shield denying enemy engage"],
+    "spike_notes": [
+      "Fast first clear",
+      "Level 6",
+      "Black Shield denying enemy engage"
+    ],
     "reasoning": "Jungle Morgana gives magic clear speed, binding pick threat and anti-CC utility. Her drafts benefit from teammates that can capitalize on Dark Binding and from opponents whose engage is softened by Black Shield.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -1159,7 +1288,11 @@
     "power_curve": "mid",
     "resource_demand": "medium",
     "execution_demand": 3,
-    "spike_notes": ["Level 6", "First lethality item", "Isolated carry access after poke or vision denial"],
+    "spike_notes": [
+      "Level 6",
+      "First lethality item",
+      "Isolated carry access after poke or vision denial"
+    ],
     "reasoning": "Jungle Naafiri is a direct physical pick and dive threat. She wants clear target access and allied damage to finish her commitment before peel and grouped formations shut down her angle.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -1174,7 +1307,11 @@
     "power_curve": "late",
     "resource_demand": "high",
     "execution_demand": 2,
-    "spike_notes": ["Stacking breakpoints", "Level 6", "First durability item with Wither target access"],
+    "spike_notes": [
+      "Stacking breakpoints",
+      "Level 6",
+      "First durability item with Wither target access"
+    ],
     "reasoning": "Jungle Nasus is a scaling utility bruiser with Wither and objective threat, but low early pressure. His draft must buy time and provide map agency elsewhere while he stacks toward a durable mid-late role.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -1189,7 +1326,11 @@
     "power_curve": "early_mid",
     "resource_demand": "high",
     "execution_demand": 5,
-    "spike_notes": ["Level 3 invade or gank", "First AP damage item", "Spear hit before objective setup"],
+    "spike_notes": [
+      "Level 3 invade or gank",
+      "First AP damage item",
+      "Spear hit before objective setup"
+    ],
     "reasoning": "Nidalee is an execution-heavy tempo jungler built around invade pressure, poke and fast conversion. She needs lane priority and accurate spear setup because she offers limited fallback engage or frontline.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -1201,14 +1342,18 @@
     "champion_name": "Nocturne",
     "role": "jungle",
     "damage_focus": "physical",
-    "power_curve": "mid",
+    "power_curve": "early_mid",
     "resource_demand": "medium",
     "execution_demand": 3,
-    "spike_notes": ["Level 6 Paranoia", "First bruiser or lethality item", "Side-lane target isolated from peel"],
-    "reasoning": "Nocturne gives global pick pressure and punishes isolated carries. His drafts should create side-lane or fog-of-war threats and avoid treating him as a durable front-to-back tank.",
+    "spike_notes": [
+      "Level 6 global-pressure window",
+      "First completed item",
+      "Ultimate available against an isolated carry"
+    ],
+    "reasoning": "Nocturne turns darkness and long-range access into a clear single-target commitment. He needs lanes or allied control to finish the target and becomes vulnerable when entering the full enemy protection layer alone.",
     "patch": "unknown",
     "assessment_method": "manual",
-    "confidence": 0.65,
+    "confidence": 0.7,
     "review_status": "provisional",
     "source_name": "RiftTheory manual coaching review"
   },
@@ -1219,7 +1364,11 @@
     "power_curve": "early_mid",
     "resource_demand": "low",
     "execution_demand": 3,
-    "spike_notes": ["Level 3 snowball gank", "First tank item", "Neutral objective secure with Consume"],
+    "spike_notes": [
+      "Level 3 snowball gank",
+      "First tank item",
+      "Neutral objective secure with Consume"
+    ],
     "reasoning": "Nunu & Willump is a tempo, gank and objective-control jungler. The pick wants lanes that can follow early snowballs and a draft that values secure and map tempo over personal carry damage.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -1234,7 +1383,11 @@
     "power_curve": "early_mid",
     "resource_demand": "medium",
     "execution_demand": 3,
-    "spike_notes": ["Early river fight", "Level 6 crowd-control immunity", "First bruiser item"],
+    "spike_notes": [
+      "Early river fight",
+      "Level 6 crowd-control immunity",
+      "First bruiser item"
+    ],
     "reasoning": "Jungle Olaf is an early skirmish and anti-CC run-down threat. He needs tempo and target access; if the enemy can kite without relying on crowd control, his engage pattern becomes easier to exhaust.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -1249,7 +1402,11 @@
     "power_curve": "early_mid",
     "resource_demand": "medium",
     "execution_demand": 3,
-    "spike_notes": ["Level 3 point-and-click stun", "Level 6 cross-map ultimate", "First lethality or bruiser item"],
+    "spike_notes": [
+      "Level 3 point-and-click stun",
+      "Level 6 cross-map ultimate",
+      "First lethality or bruiser item"
+    ],
     "reasoning": "Jungle Pantheon is an early pick and map-tempo tool. He wants lanes that can convert his stun and a draft that snowballs before his raw scaling becomes less central.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -1264,7 +1421,11 @@
     "power_curve": "early_mid",
     "resource_demand": "low",
     "execution_demand": 3,
-    "spike_notes": ["Early terrain gank", "First tank item", "Steadfast Presence denying enemy dash engage"],
+    "spike_notes": [
+      "Early terrain gank",
+      "First tank item",
+      "Steadfast Presence denying enemy dash engage"
+    ],
     "reasoning": "Jungle Poppy is an anti-dive and displacement tank who punishes dash-heavy opponents. She is strongest as a counter-structure pick when the enemy composition must enter through mobility.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -1279,7 +1440,11 @@
     "power_curve": "mid",
     "resource_demand": "high",
     "execution_demand": 5,
-    "spike_notes": ["Level 6 terrain ultimate", "First lethality item", "River or jungle corridor fight"],
+    "spike_notes": [
+      "Level 6 terrain ultimate",
+      "First lethality item",
+      "River or jungle corridor fight"
+    ],
     "reasoning": "Jungle Qiyana is a high-execution AD pick and terrain-fight champion. She needs flank access, terrain awareness and enough early tempo to avoid being outscaled before her burst windows matter.",
     "patch": "unknown",
     "assessment_method": "manual",
@@ -1294,13 +1459,149 @@
     "power_curve": "mid",
     "resource_demand": "low",
     "execution_demand": 2,
-    "spike_notes": ["First armor item", "Level 6", "Taunt onto physical damage carry"],
+    "spike_notes": [
+      "First armor item",
+      "Level 6",
+      "Taunt onto physical damage carry"
+    ],
     "reasoning": "Rammus is a counter-pick tank into physical attackers and auto-attack carries. He brings fast engage and lockdown, but his value drops when opponents are magic-heavy or can kite his first roll.",
     "patch": "unknown",
     "assessment_method": "manual",
     "confidence": 0.65,
     "review_status": "provisional",
     "source_name": "RiftTheory manual coaching review"
->>>>>>> Stashed changes
+  },
+  {
+    "champion_name": "Alistar",
+    "role": "support",
+    "damage_focus": "utility",
+    "power_curve": "early_mid",
+    "resource_demand": "low",
+    "execution_demand": 3,
+    "spike_notes": [
+      "Level 2 or 3 engage access",
+      "Level 6 durability window",
+      "Early movement-speed completion"
+    ],
+    "reasoning": "Alistar supplies reliable short-range engage or counter-engage without requiring income. His draft value depends on choosing between starting the fight and holding cooldowns to protect allied damage dealers.",
+    "patch": "unknown",
+    "assessment_method": "manual",
+    "confidence": 0.7,
+    "review_status": "provisional",
+    "source_name": "RiftTheory manual coaching review"
+  },
+  {
+    "champion_name": "Camille",
+    "role": "top",
+    "damage_focus": "physical",
+    "power_curve": "mid_late",
+    "resource_demand": "high",
+    "execution_demand": 4,
+    "spike_notes": [
+      "Level 6 isolation access",
+      "First spellblade completion",
+      "Two-item side-lane and dive window"
+    ],
+    "reasoning": "Camille converts solo-lane income into side-lane pressure and reliable target isolation. In team fights she needs a synchronized entry or follow-up because committing beyond the frontline can separate her from allied damage.",
+    "patch": "unknown",
+    "assessment_method": "manual",
+    "confidence": 0.7,
+    "review_status": "provisional",
+    "source_name": "RiftTheory manual coaching review"
+  },
+  {
+    "champion_name": "Locke",
+    "role": "mid",
+    "damage_focus": "magic",
+    "power_curve": "early_mid",
+    "resource_demand": "high",
+    "execution_demand": 4,
+    "spike_notes": [
+      "Level 6 execute access",
+      "First burst-item completion",
+      "A marked target separated from protection"
+    ],
+    "reasoning": "Locke is a setup-dependent assassin whose teleporting pursuit and missing-health damage reward decisive target selection. He needs income and a prepared entry, while failed commitment spends health and position without guaranteeing an exit.",
+    "patch": "unknown",
+    "assessment_method": "manual",
+    "confidence": 0.65,
+    "review_status": "provisional",
+    "source_name": "RiftTheory manual coaching review"
+  },
+  {
+    "champion_name": "Nautilus",
+    "role": "support",
+    "damage_focus": "utility",
+    "power_curve": "early_mid",
+    "resource_demand": "low",
+    "execution_demand": 3,
+    "spike_notes": [
+      "Level 2 or 3 pick access",
+      "Level 6 reliable target access",
+      "Early durability completion"
+    ],
+    "reasoning": "Nautilus provides layered single-target control and can either force a carry or peel a diver. He does not need much income, but missed or poorly chosen engage angles can leave him isolated from allied follow-up.",
+    "patch": "unknown",
+    "assessment_method": "manual",
+    "confidence": 0.7,
+    "review_status": "provisional",
+    "source_name": "RiftTheory manual coaching review"
+  },
+  {
+    "champion_name": "Renekton",
+    "role": "top",
+    "damage_focus": "physical",
+    "power_curve": "early_mid",
+    "resource_demand": "high",
+    "execution_demand": 3,
+    "spike_notes": [
+      "Level 3 empowered trade",
+      "Level 6 dive and skirmish window",
+      "First completed fighter item"
+    ],
+    "reasoning": "Renekton converts early lane resources, fury and flank access into durable mid-game pressure. His threat drops when opponents deny early conversion or force him to enter without fury and allied follow-up.",
+    "patch": "unknown",
+    "assessment_method": "manual",
+    "confidence": 0.7,
+    "review_status": "provisional",
+    "source_name": "RiftTheory manual coaching review"
+  },
+  {
+    "champion_name": "Trundle",
+    "role": "jungle",
+    "damage_focus": "physical",
+    "power_curve": "early_mid",
+    "resource_demand": "medium",
+    "execution_demand": 2,
+    "spike_notes": [
+      "Early river and jungle skirmishes",
+      "Level 6 frontline reduction",
+      "First completed fighter or tank item"
+    ],
+    "reasoning": "Trundle offers direct skirmish strength, objective damage and terrain disruption. He is most valuable into durable frontliners and short-range fights, while mobile or ranged opponents can deny sustained attack access.",
+    "patch": "unknown",
+    "assessment_method": "manual",
+    "confidence": 0.7,
+    "review_status": "provisional",
+    "source_name": "RiftTheory manual coaching review"
+  },
+  {
+    "champion_name": "Viktor",
+    "role": "mid",
+    "damage_focus": "magic",
+    "power_curve": "mid_late",
+    "resource_demand": "high",
+    "execution_demand": 4,
+    "spike_notes": [
+      "First ability upgrade and mana completion",
+      "Two-item control window",
+      "Prepared choke point around an objective"
+    ],
+    "reasoning": "Viktor converts lane income and completed upgrades into wave control and sustained area damage. He needs space and time for repeated spell rotations; direct multi-angle access can prevent him from establishing the fight zone.",
+    "patch": "unknown",
+    "assessment_method": "manual",
+    "confidence": 0.7,
+    "review_status": "provisional",
+    "source_name": "RiftTheory manual coaching review"
   }
 ]

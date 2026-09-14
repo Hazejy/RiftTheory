@@ -5,9 +5,6 @@ import unittest
 
 from src.draftos.champion_analysis import analyze_champions
 from src.draftos.composition import (
-<<<<<<< Updated upstream
-    BASELINE_CAPABILITIES, ChampionProfile, ChampionRole, CompositionCapability, KnowledgeSource,
-=======
     AssessmentMethod,
     ChampionProfile,
     ChampionRole,
@@ -18,7 +15,6 @@ from src.draftos.composition import (
     PowerCurve,
     ResourceDemand,
     ReviewStatus,
->>>>>>> Stashed changes
     analyze_composition,
 )
 from src.draftos.report import build_report
@@ -41,9 +37,6 @@ class ReportTests(unittest.TestCase):
         )
         report = build_report(
             analyze_champions([champion], [strategy]),
-<<<<<<< Updated upstream
-            analyze_composition([champion], set(BASELINE_CAPABILITIES)),
-=======
             analyze_composition(
                 [champion],
                 {
@@ -52,7 +45,6 @@ class ReportTests(unittest.TestCase):
                     CompositionCapability.WAVE_CLEAR,
                 },
             ),
->>>>>>> Stashed changes
             is_demo=False,
         )
         self.assertEqual(json.loads(json.dumps(report)), report)

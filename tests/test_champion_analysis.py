@@ -17,29 +17,6 @@ class ChampionAnalysisTests(unittest.TestCase):
         self.strategies = load_strategic_profiles(data / "strategic_profiles.json")
 
     def test_matching_preserves_order_and_source_objects(self) -> None:
-<<<<<<< Updated upstream
-        malphite = next(
-            champion for champion in self.champions
-            if champion.name == "Malphite" and champion.role is ChampionRole.TOP
-        )
-        anivia = next(
-            champion for champion in self.champions
-            if champion.name == "Anivia" and champion.role is ChampionRole.MID
-        )
-        anivia_strategy = next(
-            strategy for strategy in self.strategies
-            if strategy.champion_name == "Anivia" and strategy.role is ChampionRole.MID
-        )
-        results = analyze_champions([malphite, anivia], self.strategies)
-
-        self.assertEqual(len(results), 2)
-        self.assertIs(results[0].champion, malphite)
-        self.assertIsNone(results[0].strategy)
-        self.assertIs(results[1].champion, anivia)
-        self.assertIs(results[1].strategy, anivia_strategy)
-        lines = explain_champion_assessment(results[1])
-        self.assertIn("  Capabilities: disengage, wave clear, zone control", lines)
-=======
         selected_champions = [
             next(
                 champion
@@ -67,18 +44,13 @@ class ChampionAnalysisTests(unittest.TestCase):
         self.assertTrue(
             any(line.startswith("  Capabilities:") and "wave clear" in line for line in lines)
         )
->>>>>>> Stashed changes
         self.assertIn("  Main colors: blue", lines)
         self.assertIn("  Review status: provisional", lines)
 
     def test_same_champion_in_another_role_does_not_match(self) -> None:
         anivia = next(
-<<<<<<< Updated upstream
-            champion for champion in self.champions
-=======
             champion
             for champion in self.champions
->>>>>>> Stashed changes
             if champion.name == "Anivia" and champion.role is ChampionRole.MID
         )
         support = ChampionProfile(
@@ -98,30 +70,17 @@ class ChampionAnalysisTests(unittest.TestCase):
 
     def test_missing_strategy_does_not_generate_color_labels(self) -> None:
         malphite = next(
-<<<<<<< Updated upstream
-            champion for champion in self.champions
-=======
             champion
             for champion in self.champions
->>>>>>> Stashed changes
             if champion.name == "Malphite" and champion.role is ChampionRole.TOP
         )
         result = analyze_champions([malphite], self.strategies)[0]
 
-<<<<<<< Updated upstream
-        self.assertEqual(explain_champion_assessment(result), [
-            "Malphite (top):",
-            "  Capabilities: engage, pick",
-            "  Capability source: manually_curated",
-            "  Strategic identity: not yet assessed",
-        ])
-=======
         lines = explain_champion_assessment(result)
         self.assertEqual(lines[0], "Malphite (top):")
         self.assertIn("  Capability source: manually_curated", lines)
         self.assertIn("  Strategic identity: not yet assessed", lines)
         self.assertFalse(any("Main colors:" in line for line in lines))
->>>>>>> Stashed changes
 
     def test_different_patch_for_same_key_is_ambiguous(self) -> None:
         original = self.strategies[0]

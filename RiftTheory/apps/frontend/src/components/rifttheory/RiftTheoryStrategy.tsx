@@ -24,6 +24,7 @@ import {
     CapabilityRead,
     CompositionPlan,
     compositionPlans as buildCompositionPlans,
+    executionPenalty,
     strategicLean,
 } from "../../utils/compositionCoach";
 
@@ -223,8 +224,7 @@ const decidingFactors = (
     } else {
         factors.push({
             title: "The first synchronized item window matters more than raw scaling",
-            detail:
-                "Neither assessed curve dominates enough to decide the draft alone. Track completed items and ultimate availability before forcing the first major objective fight.",
+            detail: "Neither assessed curve dominates enough to decide the draft alone. Track completed items and ultimate availability before forcing the first major objective fight.",
         });
     }
 
@@ -234,8 +234,7 @@ const decidingFactors = (
     )
         factors.push({
             title: "Blue target access versus Red formation",
-            detail:
-                "Blue must isolate a carry before entering the full protection layer. Red wins the structural exchange by keeping its carry behind frontline and saving control for the second diver.",
+            detail: "Blue must isolate a carry before entering the full protection layer. Red wins the structural exchange by keeping its carry behind frontline and saving control for the second diver.",
         });
     else if (
         redPlans[0]?.key === "coordinated_dive" &&
@@ -243,14 +242,12 @@ const decidingFactors = (
     )
         factors.push({
             title: "Red target access versus Blue formation",
-            detail:
-                "Red must isolate a carry before entering the full protection layer. Blue wins the structural exchange by keeping its carry behind frontline and saving control for the second diver.",
+            detail: "Red must isolate a carry before entering the full protection layer. Blue wins the structural exchange by keeping its carry behind frontline and saving control for the second diver.",
         });
     else if (bluePlans[0] && redPlans[0])
         factors.push({
             title: `${bluePlans[0].title} versus ${redPlans[0].title}`,
-            detail:
-                "The side that establishes its required state first forces the opponent away from its preferred sequence. Vision and wave timing decide which plan begins on favorable terms.",
+            detail: "The side that establishes its required state first forces the opponent away from its preferred sequence. Vision and wave timing decide which plan begins on favorable terms.",
         });
 
     const blueResourceConflict = blue.highResourceChampions.length >= 3;
@@ -262,8 +259,7 @@ const decidingFactors = (
         ].join(" and ");
         factors.push({
             title: `${affected} must declare income priority`,
-            detail:
-                "Three or more assessed high-resource champions create competing item curves. Side waves and jungle camps should follow the chosen win condition rather than being divided evenly by default.",
+            detail: "Three or more assessed high-resource champions create competing item curves. Side waves and jungle camps should follow the chosen win condition rather than being divided evenly by default.",
         });
     }
 
@@ -275,8 +271,7 @@ const decidingFactors = (
                 : red;
         factors.push({
             title: `${harder.name} has less execution margin`,
-            detail:
-                "Its plan requires tighter sequencing or map synchronization. An even draft state does not imply an equally easy fight to execute.",
+            detail: "Its plan requires tighter sequencing or map synchronization. An even draft state does not imply an equally easy fight to execute.",
         });
     }
 
@@ -284,8 +279,7 @@ const decidingFactors = (
         const exposed = blueRisks.length > redRisks.length ? blue : red;
         factors.push({
             title: `${exposed.name} has more confirmed disruption to solve`,
-            detail:
-                "The opponent owns more assessed answers into its primary tools. Those answers should be tracked as cooldowns or positioning requirements before commitment.",
+            detail: "The opponent owns more assessed answers into its primary tools. Those answers should be tracked as cooldowns or positioning requirements before commitment.",
         });
     }
     return factors.slice(0, 4);
@@ -300,10 +294,7 @@ const planJobs = (
     }[],
     plan?: CompositionPlan,
 ) => {
-    const has = (
-        pick: (typeof picks)[number],
-        ...capabilities: string[]
-    ) =>
+    const has = (pick: (typeof picks)[number], ...capabilities: string[]) =>
         pick.capabilities.some((entry) =>
             capabilities.includes(entry.capability),
         );
@@ -318,22 +309,17 @@ const planJobs = (
                     before: has(pick, "global_pressure")
                         ? "Track the isolated carry and hide the access angle."
                         : "Prepare a flank or stand within immediate follow-up range.",
-                    during:
-                        "Enter on the called target with the other diver and layer control or burst.",
-                    avoid:
-                        "Do not switch targets or cross the full frontline alone.",
+                    during: "Enter on the called target with the other diver and layer control or burst.",
+                    avoid: "Do not switch targets or cross the full frontline alone.",
                 };
             if (has(pick, "peel", "disengage", "anti_dive"))
                 return {
                     champion: pick.name,
                     role: pick.role,
                     assignment: "Trade protector",
-                    before:
-                        "Stay connected to the allied damage source opposite the dive angle.",
-                    during:
-                        "Deny the enemy counter-dive while the dive unit finishes its target.",
-                    avoid:
-                        "Do not spend every defensive cooldown as extra engage.",
+                    before: "Stay connected to the allied damage source opposite the dive angle.",
+                    during: "Deny the enemy counter-dive while the dive unit finishes its target.",
+                    avoid: "Do not spend every defensive cooldown as extra engage.",
                 };
             return {
                 champion: pick.name,
@@ -342,10 +328,8 @@ const planJobs = (
                 before: has(pick, "wave_clear", "zone_control")
                     ? "Prepare the wave and control the target's escape route."
                     : "Hold a safe angle that can reach the called target.",
-                during:
-                    "Layer damage after access is secured; keep enough distance to survive the return engage.",
-                avoid:
-                    "Do not walk through enemy control to arrive one second earlier.",
+                during: "Layer damage after access is secured; keep enough distance to survive the return engage.",
+                avoid: "Do not walk through enemy control to arrive one second earlier.",
             };
         }
 
@@ -355,35 +339,26 @@ const planJobs = (
                     champion: pick.name,
                     role: pick.role,
                     assignment: "Formation anchor",
-                    before:
-                        "Own the first contested space without leaving protection range.",
-                    during:
-                        "Control the closest threat and keep the fight in front of the carry.",
-                    avoid:
-                        "Do not chase past the damage line and open a flank behind you.",
+                    before: "Own the first contested space without leaving protection range.",
+                    during: "Control the closest threat and keep the fight in front of the carry.",
+                    avoid: "Do not chase past the damage line and open a flank behind you.",
                 };
             if (has(pick, "peel", "disengage", "anti_dive"))
                 return {
                     champion: pick.name,
                     role: pick.role,
                     assignment: "Carry protection",
-                    before:
-                        "Identify the enemy access cooldown that must be answered.",
-                    during:
-                        "Hold control until the diver commits, then preserve the carry's firing space.",
-                    avoid:
-                        "Do not use the only peel tool on a low-value frontline target.",
+                    before: "Identify the enemy access cooldown that must be answered.",
+                    during: "Hold control until the diver commits, then preserve the carry's firing space.",
+                    avoid: "Do not use the only peel tool on a low-value frontline target.",
                 };
             return {
                 champion: pick.name,
                 role: pick.role,
                 assignment: highIncome ? "Primary damage" : "Follow-up damage",
-                before:
-                    "Enter with the frontline between you and every known access angle.",
-                during:
-                    "Damage the closest safe target and move with the protection layer.",
-                avoid:
-                    "Do not bypass the formation for a carry unless the kill is secured.",
+                before: "Enter with the frontline between you and every known access angle.",
+                during: "Damage the closest safe target and move with the protection layer.",
+                avoid: "Do not bypass the formation for a carry unless the kill is secured.",
             };
         }
 
@@ -393,20 +368,16 @@ const planJobs = (
                     champion: pick.name,
                     role: pick.role,
                     assignment: "Pick creator",
-                    before:
-                        "Control fog around the next forced route and wait outside vision.",
-                    during:
-                        "Start on the first isolated high-value target and layer control in sequence.",
-                    avoid:
-                        "Do not reveal early or force into a fully grouped opponent.",
+                    before: "Control fog around the next forced route and wait outside vision.",
+                    during: "Start on the first isolated high-value target and layer control in sequence.",
+                    avoid: "Do not reveal early or force into a fully grouped opponent.",
                 };
             return {
                 champion: pick.name,
                 role: pick.role,
                 assignment: "Pick conversion",
                 before: "Push the adjacent wave and stay close enough to collapse.",
-                during:
-                    "Finish the controlled target, then move immediately to the objective.",
+                during: "Finish the controlled target, then move immediately to the objective.",
                 avoid: "Do not split for farm after the pick window begins.",
             };
         }
@@ -417,12 +388,9 @@ const planJobs = (
                     champion: pick.name,
                     role: pick.role,
                     assignment: "Range pressure",
-                    before:
-                        "Take position before contact and preserve a safe exit angle.",
-                    during:
-                        "Chip health or structures without crossing into engage range.",
-                    avoid:
-                        "Do not trade positioning for low-value damage before the objective.",
+                    before: "Take position before contact and preserve a safe exit angle.",
+                    during: "Chip health or structures without crossing into engage range.",
+                    avoid: "Do not trade positioning for low-value damage before the objective.",
                 };
             return {
                 champion: pick.name,
@@ -431,8 +399,7 @@ const planJobs = (
                     ? "Siege protection"
                     : "Flank control",
                 before: "Secure the side entrance and track enemy engage angles.",
-                during:
-                    "Reject the first access attempt so ranged pressure can continue.",
+                during: "Reject the first access attempt so ranged pressure can continue.",
                 avoid: "Do not start an even fight before poke creates an advantage.",
             };
         }
@@ -444,19 +411,15 @@ const planJobs = (
                     role: pick.role,
                     assignment: "Side-wave pressure",
                     before: "Build the side wave on the shared objective timer.",
-                    during:
-                        "Force a defender to show, then move first or threaten the structure.",
-                    avoid:
-                        "Do not push beyond available information while the grouped unit is exposed.",
+                    during: "Force a defender to show, then move first or threaten the structure.",
+                    avoid: "Do not push beyond available information while the grouped unit is exposed.",
                 };
             return {
                 champion: pick.name,
                 role: pick.role,
                 assignment: "Four-player restraint",
-                before:
-                    "Hold vision and remain outside hard-engage range while the side wave advances.",
-                during:
-                    "Act only after an opponent answers the side lane or loses objective position.",
+                before: "Hold vision and remain outside hard-engage range while the side wave advances.",
+                during: "Act only after an opponent answers the side lane or loses objective position.",
                 avoid: "Do not begin a four-versus-five fight before the map creates value.",
             };
         }
@@ -830,7 +793,10 @@ const planRequirements = (
         requirements.push(
             "Protect the later-scaling carries' income and avoid conceding the game before their listed breakpoints.",
         );
-    if (profiles.filter((profile) => profile.resource_demand === "high").length >= 2)
+    if (
+        profiles.filter((profile) => profile.resource_demand === "high")
+            .length >= 2
+    )
         requirements.push(
             "Assign farm priority explicitly; the high-income champions cannot all receive the same waves and camps.",
         );
@@ -867,7 +833,8 @@ const matchupRisks = (
             "The opponent has assessed protection that can deny the first pick or dive target.",
         );
     if (
-        strongestOf(enemyTools, ["side_lane_pressure", "global_pressure"]) >= 0.6 &&
+        strongestOf(enemyTools, ["side_lane_pressure", "global_pressure"]) >=
+            0.6 &&
         strongestOf(tools, ["wave_clear", "global_pressure"]) < 0.6
     )
         risks.push(
@@ -1196,14 +1163,8 @@ export default function RiftTheoryStrategy() {
             blue.capabilities,
             blue.picks,
         );
-        const blueThemeCohesion = assessThemeCohesion(
-            blue.picks,
-            bluePlans[0],
-        );
-        const redThemeCohesion = assessThemeCohesion(
-            red.picks,
-            redPlans[0],
-        );
+        const blueThemeCohesion = assessThemeCohesion(blue.picks, bluePlans[0]);
+        const redThemeCohesion = assessThemeCohesion(red.picks, redPlans[0]);
         const blueJobs = planJobs(blue.picks, bluePlans[0]);
         const redJobs = planJobs(red.picks, redPlans[0]);
         const coverage = Math.min(
@@ -1235,8 +1196,6 @@ export default function RiftTheoryStrategy() {
         const strategySignal = strategicLean(
             blueReliability,
             redReliability,
-            blueThemeCohesion,
-            redThemeCohesion,
             coverage,
         );
         const calibrationVector = buildStrategyCalibrationVector(
@@ -1272,8 +1231,6 @@ export default function RiftTheoryStrategy() {
             red,
             bluePlans,
             redPlans,
-            blueJobs,
-            redJobs,
             blueRisks,
             redRisks,
         );
@@ -1291,16 +1248,16 @@ export default function RiftTheoryStrategy() {
             strategicDirection === "withheld"
                 ? "Strategic comparison is withheld until every selected role has capability evidence."
                 : statisticalLean === "unknown"
-                ? "Statistical comparison is not available for this draft."
-                : statisticalLean === "even" && strategicDirection === "even"
-                  ? "Both models see a close draft, but for different reasons."
-                  : statisticalLean === strategicDirection
-                    ? "The statistical estimate and strategic read lean in the same direction."
-                    : statisticalLean === "even"
-                      ? "Statistics are close, while plan reliability creates a strategic lean."
-                      : strategicDirection === "even"
-                        ? "Statistics lean to one side, while the strategic plans remain similarly conditional."
-                        : "The statistical estimate and strategic read disagree; treat this as a review flag, not a result to average blindly.";
+                  ? "Statistical comparison is not available for this draft."
+                  : statisticalLean === "even" && strategicDirection === "even"
+                    ? "Both models see a close draft, but for different reasons."
+                    : statisticalLean === strategicDirection
+                      ? "The statistical estimate and strategic read lean in the same direction."
+                      : statisticalLean === "even"
+                        ? "Statistics are close, while plan reliability creates a strategic lean."
+                        : strategicDirection === "even"
+                          ? "Statistics lean to one side, while the strategic plans remain similarly conditional."
+                          : "The statistical estimate and strategic read disagree; treat this as a review flag, not a result to average blindly.";
         return {
             blue,
             red,
@@ -1310,6 +1267,10 @@ export default function RiftTheoryStrategy() {
             redRisks,
             bluePlans,
             redPlans,
+            blueJobs,
+            redJobs,
+            blueThemeCohesion,
+            redThemeCohesion,
             blueReliability,
             redReliability,
             coverage,
@@ -1390,13 +1351,13 @@ export default function RiftTheoryStrategy() {
                                 <div class="grid gap-3 md:grid-cols-[auto_1fr] md:items-center">
                                     <div class="flex gap-2 text-xs">
                                         <span class="rounded border border-ally/40 bg-ally/10 px-2 py-1 text-ally">
-                                            Statistical Blue {" "}
+                                            Statistical Blue{" "}
                                             {percent().format(
                                                 read().statisticalWinrate!,
                                             )}
                                         </span>
                                         <span class="rounded border border-opponent/40 bg-opponent/10 px-2 py-1 text-opponent">
-                                            Statistical Red {" "}
+                                            Statistical Red{" "}
                                             {percent().format(
                                                 1 - read().statisticalWinrate!,
                                             )}
@@ -1410,17 +1371,23 @@ export default function RiftTheoryStrategy() {
                                             {read().modelRelationship}
                                         </p>
                                         <p class="mt-1 text-[11px] leading-relaxed text-neutral-400">
-                                            Strategy signal: {read().strategySignal.direction}
-                                            {read().strategySignal.strength !== "none"
+                                            Strategy signal:{" "}
+                                            {read().strategySignal.direction}
+                                            {read().strategySignal.strength !==
+                                            "none"
                                                 ? ` · ${read().strategySignal.strength}`
                                                 : ""}
-                                            {" · "}Winrate adjustment: not applied
+                                            {" · "}Winrate adjustment: not
+                                            applied
                                         </p>
                                         <p class="mt-1 text-[10px] leading-relaxed text-neutral-600">
-                                            Calibration vector: {read().calibrationVector.readyForOutcomeCalibration
+                                            Calibration vector:{" "}
+                                            {read().calibrationVector
+                                                .readyForOutcomeCalibration
                                                 ? "complete"
                                                 : `${Math.round(read().calibrationVector.coverage * 100)}% evidence coverage`}
-                                            . Awaiting validated 5v5 outcome weights.
+                                            . Awaiting validated 5v5 outcome
+                                            weights.
                                         </p>
                                     </div>
                                 </div>
@@ -1483,9 +1450,7 @@ export default function RiftTheoryStrategy() {
                                         </div>
                                         <ul class="mt-2 space-y-1 text-[11px] text-neutral-500">
                                             <For
-                                                each={
-                                                    entry.reliability.reasons
-                                                }
+                                                each={entry.reliability.reasons}
                                             >
                                                 {(reason) => (
                                                     <li>• {reason}</li>
@@ -1588,10 +1553,15 @@ export default function RiftTheoryStrategy() {
                                                         <div class="flex flex-wrap items-start justify-between gap-2">
                                                             <div>
                                                                 <p class="text-[10px] font-bold uppercase tracking-widest text-sky-300">
-                                                                    Primary execution plan
+                                                                    Primary
+                                                                    execution
+                                                                    plan
                                                                 </p>
                                                                 <h5 class="mt-1 text-base font-semibold text-neutral-100">
-                                                                    {plan().title}
+                                                                    {
+                                                                        plan()
+                                                                            .title
+                                                                    }
                                                                 </h5>
                                                             </div>
                                                             <Show
@@ -1600,7 +1570,11 @@ export default function RiftTheoryStrategy() {
                                                                 }
                                                             >
                                                                 <span class="rounded border border-neutral-700 px-2 py-1 text-[11px] text-neutral-400">
-                                                                    Alternative: {plans()[1].title}
+                                                                    Alternative:{" "}
+                                                                    {
+                                                                        plans()[1]
+                                                                            .title
+                                                                    }
                                                                 </span>
                                                             </Show>
                                                         </div>
@@ -1614,49 +1588,87 @@ export default function RiftTheoryStrategy() {
                                                                         .stages
                                                                 }
                                                             >
-                                                                {(stage, index) => (
+                                                                {(
+                                                                    stage,
+                                                                    index,
+                                                                ) => (
                                                                     <li class="flex gap-2 rounded-md border border-neutral-800 bg-canvas/60 p-2.5">
                                                                         <span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-sky-950 text-[10px] font-bold text-sky-300">
-                                                                            {index() + 1}
+                                                                            {index() +
+                                                                                1}
                                                                         </span>
                                                                         <span>
                                                                             <strong class="block text-xs text-neutral-200">
-                                                                                {stage.label}
+                                                                                {
+                                                                                    stage.label
+                                                                                }
                                                                             </strong>
                                                                             <span class="mt-0.5 block text-[11px] leading-relaxed text-neutral-500">
-                                                                                {stage.detail}
+                                                                                {
+                                                                                    stage.detail
+                                                                                }
                                                                             </span>
                                                                         </span>
                                                                     </li>
                                                                 )}
                                                             </For>
                                                         </ol>
-                                                        <div class="mt-3 grid gap-2 md:grid-cols-2">
+                                                        <div class="mt-3 grid gap-2 lg:grid-cols-3">
                                                             <p class="rounded-md bg-emerald-950/15 p-2.5 text-xs leading-relaxed text-neutral-400">
                                                                 <strong class="text-emerald-300">
-                                                                    Required state: {" "}
+                                                                    Required
+                                                                    state:{" "}
                                                                 </strong>
-                                                                {plan().condition}
+                                                                {
+                                                                    plan()
+                                                                        .condition
+                                                                }
                                                             </p>
                                                             <p class="rounded-md bg-amber-950/15 p-2.5 text-xs leading-relaxed text-neutral-400">
                                                                 <strong class="text-amber-300">
-                                                                    Failure state: {" "}
+                                                                    Failure
+                                                                    state:{" "}
                                                                 </strong>
                                                                 {plan().failure}
                                                             </p>
+                                                            <p class="rounded-md bg-rose-950/15 p-2.5 text-xs leading-relaxed text-neutral-400">
+                                                                <strong class="text-rose-300">
+                                                                    Opponent
+                                                                    best
+                                                                    response:{" "}
+                                                                </strong>
+                                                                {
+                                                                    plan()
+                                                                        .opponentResponse
+                                                                }
+                                                            </p>
                                                         </div>
                                                         <div class="mt-3 grid gap-2 lg:grid-cols-3">
-                                                            <For each={timeline()}>
-                                                                {(step, index) => (
+                                                            <For
+                                                                each={timeline()}
+                                                            >
+                                                                {(
+                                                                    step,
+                                                                    index,
+                                                                ) => (
                                                                     <div class="rounded-md border border-neutral-800 bg-primary/50 p-3">
                                                                         <p class="text-[10px] font-bold uppercase tracking-widest text-accent">
-                                                                            {index() + 1}. {step.phase}
+                                                                            {index() +
+                                                                                1}
+                                                                            .{" "}
+                                                                            {
+                                                                                step.phase
+                                                                            }
                                                                         </p>
                                                                         <p class="mt-1.5 text-xs leading-relaxed text-neutral-300">
-                                                                            {step.objective}
+                                                                            {
+                                                                                step.objective
+                                                                            }
                                                                         </p>
                                                                         <p class="mt-1 text-[11px] leading-relaxed text-neutral-500">
-                                                                            {step.checkpoint}
+                                                                            {
+                                                                                step.checkpoint
+                                                                            }
                                                                         </p>
                                                                     </div>
                                                                 )}
@@ -1665,81 +1677,139 @@ export default function RiftTheoryStrategy() {
                                                         <div class="mt-3 rounded-md border border-neutral-800 bg-primary/50 p-3">
                                                             <div class="flex flex-wrap items-center justify-between gap-2">
                                                                 <p class="text-[10px] font-bold uppercase tracking-widest text-neutral-500">
-                                                                    Theme cohesion
+                                                                    Theme
+                                                                    cohesion
                                                                 </p>
                                                                 <strong class="text-xs text-neutral-200">
-                                                                    {themeCohesion().label}
-                                                                    {themeCohesion().score !== null
+                                                                    {
+                                                                        themeCohesion()
+                                                                            .label
+                                                                    }
+                                                                    {themeCohesion()
+                                                                        .score !==
+                                                                    null
                                                                         ? ` · ${Math.round(themeCohesion().score! * 100)}%`
                                                                         : ""}
                                                                 </strong>
                                                             </div>
                                                             <div class="mt-2 flex flex-wrap gap-1.5">
-                                                                <For each={themeCohesion().members}>
-                                                                    {(member) => (
+                                                                <For
+                                                                    each={
+                                                                        themeCohesion()
+                                                                            .members
+                                                                    }
+                                                                >
+                                                                    {(
+                                                                        member,
+                                                                    ) => (
                                                                         <span
                                                                             class="rounded border px-2 py-1 text-[10px]"
                                                                             classList={{
-                                                                                "border-emerald-800 bg-emerald-950/20 text-emerald-300": member.fit === "core",
-                                                                                "border-sky-800 bg-sky-950/20 text-sky-300": member.fit === "enabler",
-                                                                                "border-amber-800 bg-amber-950/20 text-amber-300": member.fit === "unclear",
-                                                                                "border-neutral-700 text-neutral-500": member.fit === "unknown",
+                                                                                "border-emerald-800 bg-emerald-950/20 text-emerald-300":
+                                                                                    member.fit ===
+                                                                                    "core",
+                                                                                "border-sky-800 bg-sky-950/20 text-sky-300":
+                                                                                    member.fit ===
+                                                                                    "enabler",
+                                                                                "border-amber-800 bg-amber-950/20 text-amber-300":
+                                                                                    member.fit ===
+                                                                                    "unclear",
+                                                                                "border-neutral-700 text-neutral-500":
+                                                                                    member.fit ===
+                                                                                    "unknown",
                                                                             }}
-                                                                            title={member.reason}
+                                                                            title={
+                                                                                member.reason
+                                                                            }
                                                                         >
-                                                                            {member.champion} · {member.fit}
+                                                                            {
+                                                                                member.champion
+                                                                            }{" "}
+                                                                            ·{" "}
+                                                                            {
+                                                                                member.fit
+                                                                            }
                                                                         </span>
                                                                     )}
                                                                 </For>
                                                             </div>
                                                             <p class="mt-2 text-[11px] leading-relaxed text-neutral-500">
-                                                                Core picks execute the primary plan; enablers create access, control or protection. Unclear fit is a review flag, not an automatic champion penalty. Winrate weight remains uncalibrated.
+                                                                Core picks
+                                                                execute the
+                                                                primary plan;
+                                                                enablers create
+                                                                access, control
+                                                                or protection.
+                                                                Unclear fit is a
+                                                                review flag, not
+                                                                an automatic
+                                                                champion
+                                                                penalty. Winrate
+                                                                weight remains
+                                                                uncalibrated.
                                                             </p>
                                                         </div>
                                                         <details class="mt-3 border-t border-sky-900/40 pt-3">
                                                             <summary class="cursor-pointer text-xs font-semibold text-sky-200">
-                                                                Player responsibilities ({jobs().length})
+                                                                Player
+                                                                responsibilities
+                                                                ({jobs().length}
+                                                                )
                                                             </summary>
                                                             <div class="mt-3 grid gap-2 lg:grid-cols-2">
-                                                                <For each={jobs()}>
+                                                                <For
+                                                                    each={jobs()}
+                                                                >
                                                                     {(job) => (
                                                                         <div class="rounded-md border border-neutral-800 bg-canvas/60 p-3">
                                                                             <div class="flex flex-wrap items-center justify-between gap-2">
                                                                                 <strong class="text-xs text-neutral-200">
-                                                                                    {job.champion}{" "}
+                                                                                    {
+                                                                                        job.champion
+                                                                                    }{" "}
                                                                                     <span class="font-normal uppercase text-neutral-500">
                                                                                         {job.role
-                                                                                            ? term(job.role)
+                                                                                            ? term(
+                                                                                                  job.role,
+                                                                                              )
                                                                                             : "?"}
                                                                                     </span>
                                                                                 </strong>
                                                                                 <span class="rounded bg-sky-950 px-1.5 py-0.5 text-[10px] font-semibold text-sky-300">
-                                                                                    {job.assignment}
+                                                                                    {
+                                                                                        job.assignment
+                                                                                    }
                                                                                 </span>
                                                                             </div>
                                                                             <dl class="mt-2 grid gap-1 text-[11px] leading-relaxed">
                                                                                 <div>
                                                                                     <dt class="inline font-semibold text-neutral-400">
-                                                                                        Before: {" "}
+                                                                                        Before:{" "}
                                                                                     </dt>
                                                                                     <dd class="inline text-neutral-500">
-                                                                                        {job.before}
+                                                                                        {
+                                                                                            job.before
+                                                                                        }
                                                                                     </dd>
                                                                                 </div>
                                                                                 <div>
                                                                                     <dt class="inline font-semibold text-neutral-400">
-                                                                                        During: {" "}
+                                                                                        During:{" "}
                                                                                     </dt>
                                                                                     <dd class="inline text-neutral-500">
-                                                                                        {job.during}
+                                                                                        {
+                                                                                            job.during
+                                                                                        }
                                                                                     </dd>
                                                                                 </div>
                                                                                 <div>
                                                                                     <dt class="inline font-semibold text-amber-400">
-                                                                                        Avoid: {" "}
+                                                                                        Avoid:{" "}
                                                                                     </dt>
                                                                                     <dd class="inline text-neutral-500">
-                                                                                        {job.avoid}
+                                                                                        {
+                                                                                            job.avoid
+                                                                                        }
                                                                                     </dd>
                                                                                 </div>
                                                                             </dl>
@@ -1810,16 +1880,32 @@ export default function RiftTheoryStrategy() {
                                                         }
                                                     >
                                                         <p class="mt-1 text-sm font-semibold text-neutral-200">
-                                                            {team.damageResources.damageLabel}
+                                                            {
+                                                                team
+                                                                    .damageResources
+                                                                    .damageLabel
+                                                            }
                                                         </p>
                                                         <p class="mt-1 text-xs leading-relaxed text-neutral-500">
-                                                            {team.damageResources.damageDetail}
+                                                            {
+                                                                team
+                                                                    .damageResources
+                                                                    .damageDetail
+                                                            }
                                                         </p>
                                                         <p class="mt-2 text-xs font-semibold text-neutral-300">
-                                                            {team.damageResources.resourceLabel}
+                                                            {
+                                                                team
+                                                                    .damageResources
+                                                                    .resourceLabel
+                                                            }
                                                         </p>
                                                         <p class="mt-1 text-xs leading-relaxed text-neutral-500">
-                                                            {team.damageResources.resourceDetail}
+                                                            {
+                                                                team
+                                                                    .damageResources
+                                                                    .resourceDetail
+                                                            }
                                                         </p>
                                                     </Show>
                                                 </div>
@@ -1907,7 +1993,8 @@ export default function RiftTheoryStrategy() {
                                                 <details class="mt-3 rounded-md border border-amber-900/50 bg-amber-950/10 p-3">
                                                     <summary class="cursor-pointer text-xs font-semibold text-amber-200">
                                                         Unresolved conditions (
-                                                        {team.conditions.length})
+                                                        {team.conditions.length}
+                                                        )
                                                     </summary>
                                                     <ul class="mt-2 space-y-1.5 text-xs text-neutral-400">
                                                         <For
@@ -1929,14 +2016,20 @@ export default function RiftTheoryStrategy() {
                                                                                     "coverage",
                                                                             }}
                                                                         >
-                                                                            {condition.kind}
+                                                                            {
+                                                                                condition.kind
+                                                                            }
                                                                         </span>
                                                                         <span>
                                                                             <strong class="block text-neutral-300">
-                                                                                {condition.title}
+                                                                                {
+                                                                                    condition.title
+                                                                                }
                                                                             </strong>
                                                                             <span class="mt-1 block leading-relaxed text-neutral-500">
-                                                                                {condition.consequence}
+                                                                                {
+                                                                                    condition.consequence
+                                                                                }
                                                                             </span>
                                                                         </span>
                                                                     </div>

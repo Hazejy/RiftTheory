@@ -52,6 +52,8 @@ describe("composition coach benchmark drafts", () => {
         expect(plans[0].target).toContain("Tristana or Locke");
         expect(plans[0].stages[1].detail).toContain("Nocturne, Camille");
         expect(plans[0].stages[2].detail).not.toContain("Nocturne");
+        expect(plans[0].opponentResponse).toContain("Nautilus");
+        expect(plans[0].opponentResponse).toContain("first committed diver");
     });
 
     test("three anchors and multiple protection tools prioritize front-to-back", () => {
@@ -61,7 +63,9 @@ describe("composition coach benchmark drafts", () => {
         ]);
 
         expect(plans[0].key).toBe("front_to_back");
-        expect(plans.some((plan) => plan.key === "coordinated_dive")).toBeTrue();
+        expect(
+            plans.some((plan) => plan.key === "coordinated_dive"),
+        ).toBeTrue();
     });
 
     test("poke requires multiple poke providers and a siege conversion tool", () => {
@@ -78,6 +82,8 @@ describe("composition coach benchmark drafts", () => {
 
         expect(plans[0].key).toBe("poke_siege");
         expect(plans[0].failure).toContain("spacing");
+        expect(plans[0].opponentResponse).toContain("Ornn");
+        expect(plans[0].opponentResponse).toContain("force commitment");
     });
 
     test("one poke champion alone does not create a poke-siege plan", () => {
@@ -115,6 +121,7 @@ describe("plan reliability evidence gates", () => {
         stages: [],
         condition: "Keep formation",
         failure: "Formation splits",
+        opponentResponse: "Attack from a second angle",
     };
 
     test("withholds a verdict when one pick lacks capability evidence", () => {
@@ -200,7 +207,10 @@ describe("plan reliability evidence gates", () => {
 });
 
 describe("strategic winrate bridge", () => {
-    const reliability = (score: number, label: "Coherent" | "Unconfirmed" = "Coherent") => ({
+    const reliability = (
+        score: number,
+        label: "Coherent" | "Unconfirmed" = "Coherent",
+    ) => ({
         score,
         label,
         reasons: [],
@@ -288,6 +298,7 @@ describe("game plan timeline", () => {
         stages: [],
         condition: "Establish flank or vision denial first.",
         failure: "The dive fails when access and follow-up split.",
+        opponentResponse: "Hold peel for the first diver.",
     };
 
     test("connects champion breakpoints to the primary plan", () => {
@@ -336,6 +347,7 @@ describe("composition theme cohesion", () => {
         stages: [],
         condition: "Create access",
         failure: "Split timing",
+        opponentResponse: "Deny the flank.",
     };
     const pick = (name: string, capabilities?: string[]) => ({
         name,

@@ -20,18 +20,6 @@ class MainTests(unittest.TestCase):
 
         text = output.getvalue()
         self.assertIn("Demo selection: Malphite:top, Anivia:mid\n", text)
-<<<<<<< Updated upstream
-        self.assertIn("- engage: provided by Malphite.\n", text)
-        self.assertIn("- frontline: missing.\n", text)
-        self.assertIn("- wave clear: provided by Anivia.\n", text)
-        self.assertIn("Malphite (top):\n  Capabilities: engage, pick\n", text)
-        self.assertIn(
-            "Anivia (mid):\n  Capabilities: disengage, wave clear, zone control\n",
-            text,
-        )
-        self.assertIn("  Main colors: blue\n", text)
-        self.assertIn("  Review status: provisional\n", text)
-=======
         self.assertIn("Baseline capability check (not a draft score):\n", text)
         self.assertIn("- wave clear: provided by Anivia.\n", text)
         self.assertIn("Champion profiles (curated interpretations; see review status):\n", text)
@@ -39,7 +27,6 @@ class MainTests(unittest.TestCase):
         self.assertIn("Anivia (mid):\n", text)
         self.assertIn("  Review status: provisional\n", text)
         self.assertIn("Coaching context (role-specific; provisional where marked):\n", text)
->>>>>>> Stashed changes
 
 
     def test_single_pick_reports_missing_capabilities(self) -> None:
@@ -64,16 +51,6 @@ class MainTests(unittest.TestCase):
         output = io.StringIO()
         with redirect_stdout(output):
             main(["--list-champions"])
-<<<<<<< Updated upstream
-        lines = output.getvalue().splitlines()
-        self.assertEqual(
-            lines[0],
-            "Available local profiles (not a complete champion or role catalog):",
-        )
-        self.assertEqual(lines[1:], sorted(lines[1:]))
-        self.assertIn("- Anivia:mid", lines)
-        self.assertIn("- Malphite:top", lines)
-=======
         text = output.getvalue()
         self.assertTrue(
             text.startswith(
@@ -84,7 +61,6 @@ class MainTests(unittest.TestCase):
         self.assertIn("- Malphite:top\n", text)
         self.assertNotIn("Baseline capability check", text)
         self.assertNotIn("Champion profiles", text)
->>>>>>> Stashed changes
 
     def test_invalid_selection_exits_cleanly_without_partial_output(self) -> None:
         for args in (

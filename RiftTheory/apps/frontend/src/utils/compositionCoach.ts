@@ -12,6 +12,7 @@ export type CompositionPlan = {
     stages: { label: string; detail: string }[];
     condition: string;
     failure: string;
+    opponentResponse: string;
 };
 
 export type PlanReliability = {
@@ -189,6 +190,7 @@ export function compositionPlans(
                 enemyCount("frontline", "peel", "anti_dive") >= 2
                     ? "The dive fails if it enters through the enemy frontline or changes targets after the first defensive response."
                     : "The dive fails if access and follow-up happen on different timings.",
+            opponentResponse: `${joinedProviders(enemyTools, ["frontline", "peel", "anti_dive"], "The opponent")} should deny flank vision, hold protection for the first committed diver and force the follow-up through the frontline.`,
         });
     }
 
@@ -202,8 +204,7 @@ export function compositionPlans(
                 frontliners.length * 2 +
                 protectors.length * 2 +
                 (frontliners.length >= 3 ? 6 : 2),
-            target:
-                "Primary target: the closest safe target; do not bypass the formation without a clear kill.",
+            target: "Primary target: the closest safe target; do not bypass the formation without a clear kill.",
             stages: [
                 {
                     label: "Hold the line",
@@ -222,6 +223,7 @@ export function compositionPlans(
                 "Enter through one controlled angle and keep carries within protection range.",
             failure:
                 "The formation fails when the frontline chases forward while the backline is reached from another angle.",
+            opponentResponse: `${joinedProviders(enemyTools, ["poke", "siege", "dive", "pick"], "The opponent")} should avoid a clean front-door fight: erode the formation before contact or threaten a second access angle onto the backline.`,
         });
     }
 
@@ -230,7 +232,8 @@ export function compositionPlans(
         plans.push({
             key: "pick",
             title: "Vision pick into numbers advantage",
-            score: pickers.length * 2 + count("global_pressure", "zone_control"),
+            score:
+                pickers.length * 2 + count("global_pressure", "zone_control"),
             target: `Best targets: ${targets} while moving between a wave and an objective.`,
             stages: [
                 {
@@ -250,6 +253,7 @@ export function compositionPlans(
                 "The opponent must be forced to move through limited information; grouped five-versus-five contact is not the same plan.",
             failure:
                 "The plan stalls if waves are not prepared or the team waits too long after finding the pick.",
+            opponentResponse: `${joinedProviders(enemyTools, ["wave_clear", "frontline", "global_pressure"], "The opponent")} should keep waves synchronized, move as a protected unit and refuse unsupported face-checks.`,
         });
 
     const poke = providersFor(tools, ["poke"]);
@@ -259,8 +263,7 @@ export function compositionPlans(
             key: "poke_siege",
             title: "Poke and siege setup",
             score: poke.length * 2 + siege.length * 2 + count("wave_clear"),
-            target:
-                "Target health bars and access routes before targeting the structure or objective.",
+            target: "Target health bars and access routes before targeting the structure or objective.",
             stages: [
                 {
                     label: "Secure the wave",
@@ -281,6 +284,7 @@ export function compositionPlans(
                 enemyCount("engage", "dive") >= 2
                     ? "The setup fails if the opponent reaches a clean engage before meaningful poke lands."
                     : "The setup fails if the team enters fog or gives up its spacing.",
+            opponentResponse: `${joinedProviders(enemyTools, ["engage", "dive", "global_pressure"], "The opponent")} should contest the first move, approach through more than one angle and force commitment before repeated poke creates a health advantage.`,
         });
 
     const mapPressure = providersFor(tools, [
@@ -291,9 +295,9 @@ export function compositionPlans(
         plans.push({
             key: "map_pressure",
             title: "Side-lane pressure into a numbers play",
-            score: mapPressure.length * 2 + count("wave_clear", "global_pressure"),
-            target:
-                "Target the defender or objective isolated when the opponent answers the side wave.",
+            score:
+                mapPressure.length * 2 + count("wave_clear", "global_pressure"),
+            target: "Target the defender or objective isolated when the opponent answers the side wave.",
             stages: [
                 {
                     label: "Build two waves",
@@ -312,6 +316,7 @@ export function compositionPlans(
                 "Side pressure and the grouped unit must act on the same wave timing.",
             failure:
                 "The plan fails when the four-player unit fights early or the side-laner pushes without information.",
+            opponentResponse: `${joinedProviders(enemyTools, ["engage", "pick", "global_pressure", "wave_clear"], "The opponent")} should either force on the four-player unit before the side wave connects or match the side threat without surrendering objective tempo.`,
         });
 
     return plans.sort(
@@ -320,8 +325,12 @@ export function compositionPlans(
     );
 }
 
-const executionPenalty = (label: string) =>
-    label === "High coordination" ? 2 : label === "Moderate coordination" ? 1 : 0;
+export const executionPenalty = (label: string) =>
+    label === "High coordination"
+        ? 2
+        : label === "Moderate coordination"
+          ? 1
+          : 0;
 
 export function assessPlanReliability(
     team: ReliabilityInput,
@@ -444,16 +453,14 @@ export function assessDamageResources(
         (pick) => pick.coaching!.damage_focus !== "utility",
     );
     const count = (focus: CoachingRead["damage_focus"]) =>
-        damageSources.filter(
-            (pick) => pick.coaching!.damage_focus === focus,
-        ).length;
+        damageSources.filter((pick) => pick.coaching!.damage_focus === focus)
+            .length;
     const physical = count("physical");
     const magic = count("magic");
     const mixed = count("mixed");
     const buildDependent = count("build_dependent");
     const damageTotal = damageSources.length;
-    const physicalHeavy =
-        damageTotal >= 3 && physical / damageTotal >= 0.75;
+    const physicalHeavy = damageTotal >= 3 && physical / damageTotal >= 0.75;
     const magicHeavy = damageTotal >= 3 && magic / damageTotal >= 0.75;
     const damageLabel = !damageTotal
         ? "Damage profile unconfirmed"
@@ -512,16 +519,12 @@ export function buildGameTimeline(
     const assessed = picks.filter((pick) => pick.coaching);
     const earlyChampions = assessed
         .filter((pick) =>
-            ["early", "early_mid"].includes(
-                pick.coaching!.power_curve ?? "",
-            ),
+            ["early", "early_mid"].includes(pick.coaching!.power_curve ?? ""),
         )
         .map((pick) => pick.name);
     const lateChampions = assessed
         .filter((pick) =>
-            ["mid_late", "late"].includes(
-                pick.coaching!.power_curve ?? "",
-            ),
+            ["mid_late", "late"].includes(pick.coaching!.power_curve ?? ""),
         )
         .map((pick) => pick.name);
     const spikes = [
@@ -598,10 +601,7 @@ export function assessThemeCohesion(
             })),
             calibrationFeature: null,
         };
-    const keysByPlan: Record<
-        string,
-        { core: string[]; enabler: string[] }
-    > = {
+    const keysByPlan: Record<string, { core: string[]; enabler: string[] }> = {
         coordinated_dive: {
             core: ["dive", "engage", "global_pressure"],
             enabler: ["pick", "zone_control", "peel", "disengage"],
@@ -651,14 +651,14 @@ export function assessThemeCohesion(
         return {
             champion: pick.name,
             fit: "unclear" as const,
-            reason:
-                "No assessed capability directly connects this pick to the primary plan.",
+            reason: "No assessed capability directly connects this pick to the primary plan.",
         };
     });
     const known = members.filter((member) => member.fit !== "unknown");
     const points = known.reduce(
         (total, member) =>
-            total + (member.fit === "core" ? 2 : member.fit === "enabler" ? 1 : 0),
+            total +
+            (member.fit === "core" ? 2 : member.fit === "enabler" ? 1 : 0),
         0,
     );
     const score = known.length ? points / (known.length * 2) : null;
@@ -701,8 +701,7 @@ export function buildStrategyCalibrationVector(
         red.theme.calibrationFeature === null
             ? null
             : clampUnit(
-                  blue.theme.calibrationFeature -
-                      red.theme.calibrationFeature,
+                  blue.theme.calibrationFeature - red.theme.calibrationFeature,
               );
     return {
         coverage,
@@ -715,9 +714,7 @@ export function buildStrategyCalibrationVector(
             (red.supportedRiskCount - blue.supportedRiskCount) / 3,
         ),
         structuralCompletenessEdge: clampUnit(
-            (red.structuralConditionCount -
-                blue.structuralConditionCount) /
-                3,
+            (red.structuralConditionCount - blue.structuralConditionCount) / 3,
         ),
         readyForOutcomeCalibration:
             coverage >= 1 &&
