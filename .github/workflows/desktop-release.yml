@@ -43,7 +43,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           projectPath: RiftTheory/apps/frontend
-          tauriScript: bunx tauri build
+          tauriScript: bunx tauri
           args: --bundles ${{ matrix.bundles }}
           tagName: ${{ github.ref_name }}
           releaseName: RiftTheory ${{ github.ref_name }}
