@@ -15,7 +15,10 @@ const KNOWLEDGE_PATH = "data/rifttheory-knowledge.json";
 
 async function fetchKnowledge() {
     const url = new URL(KNOWLEDGE_PATH, document.baseURI);
-    const response = await fetch(url, { cache: "no-cache" });
+    const response = await fetch(url, {
+        cache: "no-cache",
+        signal: AbortSignal.timeout(15_000),
+    });
     if (!response.ok) {
         throw new Error(`Knowledge request failed: ${response.status}`);
     }

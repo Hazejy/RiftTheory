@@ -1,12 +1,20 @@
 import { invoke, isTauri } from "@tauri-apps/api/core";
 
 export async function fetchDatasetJson<T>(url: string): Promise<T> {
-    if (
-        isTauri() &&
-        (url.includes("https://bucket.draftgap.com/datasets/v") ||
-            url.includes("/releases/download/datasets-v"))
-    ) {
-        const text = await invoke<string>("fetch_rank_dataset", { url });
+    // The DraftGap bucket supports browser requests and this is the path used by
+    // the known-good desktop releases. Keep it in the WebView: the native HTTP
+    // client does not inherit every user's proxy/network configuration.
+    // GitHub release assets still need the native bridge to avoid WebView CORS.
+    if (isTauri() && url.includes("/releases/download/datasets-v")) {
+        const text = await Promise.race([
+            invoke<string>("fetch_rank_dataset", { url }),
+            new Promise<never>((_, reject) =>
+                setTimeout(
+                    () => reject(new Error("Dataset request timed out")),
+                    20_000,
+                ),
+            ),
+        ]);
         return JSON.parse(text) as T;
     }
 
