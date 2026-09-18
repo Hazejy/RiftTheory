@@ -9,6 +9,7 @@ use std::os::windows::process::CommandExt;
 use reqwest::Client;
 use serde::Serialize;
 use serde_json::Value;
+use std::path::PathBuf;
 use tauri::async_runtime::Mutex;
 
 struct AppState {
@@ -22,6 +23,56 @@ struct LcuData {
     port: u16,
     password: String,
     username: String,
+}
+
+fn parse_lcu_command_line(command_line: &str) -> Option<LcuData> {
+    let port = regex::Regex::new(r#"--app-port=["']?([0-9]+)"#)
+        .ok()?
+        .captures(command_line)?
+        .get(1)?
+        .as_str()
+        .parse()
+        .ok()?;
+    let password = regex::Regex::new(r#"--remoting-auth-token=["']?([^s"']+)"#)
+        .ok()?
+        .captures(command_line)?
+        .get(1)?
+        .as_str()
+        .trim_end_matches('"')
+        .to_owned();
+    Some(LcuData { port, password, username: "riot".to_owned() })
+}
+
+fn parse_lockfile(path: &PathBuf) -> Option<LcuData> {
+    let contents = std::fs::read_to_string(path).ok()?;
+    let fields: Vec<&str> = contents.trim().split(':').collect();
+    if fields.len() < 5 { return None; }
+    Some(LcuData {
+        port: fields.get(2)?.parse().ok()?,
+        password: fields.get(3)?.to_string(),
+        username: fields.get(4)?.to_string(),
+    })
+}
+
+#[cfg(target_os = "windows")]
+fn windows_lockfile_candidates() -> Vec<PathBuf> {
+    let mut paths = vec![
+        PathBuf::from(r"C:Riot GamesLeague of Legendslockfile"),
+        PathBuf::from(r"C:Program FilesRiot GamesLeague of Legendslockfile"),
+        PathBuf::from(r"C:Program Files (x86)Riot GamesLeague of Legendslockfile"),
+    ];
+    if let Some(root) = std::env::var_os("ProgramFiles") {
+        paths.push(PathBuf::from(root).join("Riot Games/League of Legends/lockfile"));
+    }
+    if let Some(root) = std::env::var_os("ProgramFiles(x86)") {
+        paths.push(PathBuf::from(root).join("Riot Games/League of Legends/lockfile"));
+    }
+    if let Some(root) = std::env::var_os("LOCALAPPDATA") {
+        let root = PathBuf::from(root);
+        paths.push(root.join("Riot Games/League of Legends/lockfile"));
+        paths.push(root.join("Riot Games/Riot Client/Config/lockfile"));
+    }
+    paths
 }
 
 fn get_league_lcu_data() -> Result<LcuData, String> {
@@ -62,36 +113,18 @@ fn get_league_lcu_data() -> Result<LcuData, String> {
 
     let output_str = String::from_utf8_lossy(&output.stdout);
 
-    let port_regex = regex::Regex::new(r#"--app-port=["']?([0-9]+)"#)
-        .map_err(|e| format!("Could not create port regex: {e}"))?;
+    if let Some(data) = parse_lcu_command_line(&output_str) {
+        return Ok(data);
+    }
 
-    let password_regex = regex::Regex::new(r#"--remoting-auth-token=["']?([^\s"']+)"#)
-        .map_err(|e| format!("Could not create password regex: {e}"))?;
+    #[cfg(target_os = "windows")]
+    for path in windows_lockfile_candidates() {
+        if let Some(data) = parse_lockfile(&path) {
+            return Ok(data);
+        }
+    }
 
-    let port: u16 = port_regex
-        .captures(&output_str)
-        .ok_or_else(|| {
-            "League client not found or its process information is unavailable.".to_owned()
-        })?
-        .get(1)
-        .ok_or_else(|| "Could not find port".to_owned())?
-        .as_str()
-        .parse()
-        .map_err(|_| "Could not parse port".to_owned())?;
-
-    let password = password_regex
-        .captures(&output_str)
-        .ok_or_else(|| "Could not find LCU authentication token".to_owned())?
-        .get(1)
-        .ok_or_else(|| "Could not find password".to_owned())?
-        .as_str()
-        .to_owned();
-
-    Ok(LcuData {
-        port,
-        password,
-        username: "riot".to_owned(),
-    })
+    Err("League client not found. Start League of Legends and sign in first.".to_owned())
 }
 
 async fn get_lcu_response(state: &tauri::State<'_, AppState>, path: &str) -> Result<Value, String> {
