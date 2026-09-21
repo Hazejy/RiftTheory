@@ -42,6 +42,18 @@ Die verkürzten `components/`- und `contexts/`-Pfade beziehen sich ebenfalls auf
   Champion. Partner dürfen aus dem übrigen legalen Pool stammen. Ohne Suchtext
   bleibt die Top-12-Auswahl bestehen; mit Suche werden maximal zwölf passende
   Champions und zwölf weitere Partner betrachtet, inklusive legaler Rollenvarianten.
+- Zweiter Durchgang am 21. September: Auch die Sortierung und die Hinweistexte
+  der Ersatzkandidaten nutzen jetzt den tatsächlichen aktuellen Draft als Basis.
+  Bereits vorhandener Schutz wird nicht als neu gewonnene Antwort gezählt;
+  schon vorher festgelegte Rollen werden nicht als neu verlorener Flex ausgegeben.
+- Doppelte Champions und nicht auflösbare Rollen werden jetzt explizit gemeldet.
+  Pläne, Zeitfenster und Empfehlungen werden bei widersprüchlicher Ausgangslage
+  zurückgehalten. Ein Ersatz, der den Konflikt behebt, bleibt möglich; er bekommt
+  aber keine erfundenen Vorher/Nachher-Vorteile aus einem ungültigen Ausgangsdraft.
+- Eine gewählte Vorschau wird fokussiert und in den sichtbaren Bereich gescrollt.
+  Beim Schließen kehrt der Fokus zur Kandidatenkarte beziehungsweise Suche zurück.
+  Änderungen am Draft löschen die alte Vorschau dauerhaft, statt sie bei Rückkehr
+  zur alten Belegung unbeabsichtigt wieder einzublenden.
 
 ## Verifikation des aktuellen Codes
 
@@ -54,11 +66,13 @@ bun run typecheck
 bun run --filter @draftgap/frontend build
 cd apps/frontend
 & ./node_modules/.bin/eslint.exe src/utils/strategyReview.ts src/utils/strategyReview.test.ts src/components/rifttheory/StrategyWorkspace.tsx
+& ./node_modules/.bin/tauri.exe build --no-bundle
 ```
 
-Ergebnis: **79 Tests bestanden**, TypeScript erfolgreich, gezielter ESLint-Lauf
-erfolgreich und Produktionsbuild erfolgreich. Bestehende Bundle-Warnung:
-Haupt-JavaScript etwa 941,47 kB minifiziert / 308,30 kB gzip.
+Ergebnis des zweiten Durchgangs: **86 Tests bestanden**, Workspace-TypeScript
+erfolgreich und finaler ESLint-Lauf mit `--max-warnings 0` erfolgreich.
+Details zum finalen Desktop-Build stehen im neuesten Abschnitt des
+Rechercheprotokolls; frühere Build-Größen gelten nicht automatisch für diesen Stand.
 Auf anderen Plattformen den lokal installierten ESLint-Launcher ohne `.exe` nutzen.
 Bei einer frischen Kopie zuerst `bun install --frozen-lockfile` in `RiftTheory/`.
 
@@ -68,8 +82,13 @@ wurde vom Tool gestoppt, weil die aktuelle Browser-URL unter Windows nicht
 zuverlässig bestimmt werden konnte. Das ist keine bestätigte Fehlfunktion der App.
 
 Der dokumentierte native Smoke-Test vom 20. September gilt nur für den damaligen
-Stand. Seit den neuen Vergleichs-/Suchänderungen wurde kein nativer Build erstellt
-oder geprüft. Kein Installer oder neuer App-Release gehört zu dieser Übergabe.
+Stand. Im zweiten Durchgang am 21. September wurde der finale Quellcode erfolgreich
+mit `tauri build --no-bundle` gebaut, einschließlich Vite-Produktion und optimierter
+Windows-EXE. Dieser neue Build wurde **noch nicht interaktiv geprüft**. Er liegt
+lokal unter `RiftTheory/apps/frontend/src-tauri/target/release/RiftTheory.exe` und
+wird nicht als Binärdatei eingecheckt. Kein Installer oder neuer App-Release gehört
+zu dieser Übergabe. Die bestehende Bundle-Warnung bleibt bestehen
+(943,39 kB Haupt-JavaScript / 306,65 kB gzip).
 
 ## Sinnvolle nächste Schritte
 
@@ -83,8 +102,13 @@ oder geprüft. Kein Installer oder neuer App-Release gehört zu dieser Übergabe
    entfernen. Verlorene Schutzroute und neue Anforderungen müssen gegenüber dem
    ursprünglichen Draft erscheinen. Wechsel von Slot/Rolle/Bans muss eine veraltete
    Vorschau verwerfen. Auch den Live-Draft-Snapshot prüfen.
-5. Layout bei schmalem und breitem Fenster prüfen. Danach bei Bedarf nativen
-   Tauri-Build und Smoke-Test durchführen; diese Prüfungen ehrlich protokollieren.
+5. Fehlerhafte Rollenbelegung testen: sichtbare Meldung, keine scheinbar sicheren
+   Pläne; ein passender Ersatz darf den Konflikt beheben. Kandidatenhinweise und
+   Vergleich müssen dieselben neu beantworteten Anforderungen nennen.
+6. Tastaturfokus beim Öffnen/Schließen prüfen sowie Layout bei schmalem und breitem
+   Fenster. Vorschau nach Rollenwechsel darf auch nach dem Zurückwechseln nicht
+   wieder auftauchen. Anschließend nativen Smoke-Test durchführen; Build-Erfolg
+   allein ersetzt diese Prüfung nicht.
 
 ## Fachliche Grenzen beibehalten
 

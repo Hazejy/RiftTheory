@@ -581,6 +581,55 @@ describe("candidate legality and response windows", () => {
 });
 
 describe("comparison with the current draft", () => {
+    test("replacement shortlist uses the actual draft for answers and role commitments", () => {
+        const enemy = [pick("Entry", "jungle", ["engage"])];
+        const old = pick("Old", "support", ["peel"]);
+        const candidates = [
+            pick("AProtection", "support", ["peel"]),
+            pick("ZWave", "support", ["wave_clear"]),
+        ];
+        const result = strategyOptions(
+            [],
+            enemy,
+            candidates,
+            { bans: [] },
+            1,
+            "",
+            [old],
+        );
+        expect(result.singles[0].picks[0].name).toBe("ZWave");
+        expect(result.singles[0].answers).toEqual([
+            "A reliable way to prepare waves",
+        ]);
+        expect(result.singles[0].newNeeds).toContain(
+            "A way to survive the first entry",
+        );
+        expect(result.singles[1].answers).toEqual([]);
+        for (const option of result.singles) {
+            const comparison = compareStrategyDraft([old], enemy, option.picks);
+            expect(option.answers).toEqual(
+                comparison.own.answeredNeeds.map((n) => n.title),
+            );
+            expect(option.newNeeds).toEqual(
+                comparison.own.newNeeds.map((n) => n.title),
+            );
+        }
+    });
+
+    test("replacement does not claim flex was lost when the old pick already fixed it", () => {
+        const flex = pick("Flex", "top", ["dive"]);
+        flex.role = undefined;
+        flex.possibleRoles = ["top", "mid"];
+        const current = [flex, pick("OldMid", "mid", ["wave_clear"])];
+        const option = compareStrategyOption(
+            [flex],
+            [],
+            [pick("NewMid", "mid", ["wave_clear"])],
+            current,
+        );
+        expect(option.roleCommitments).toEqual([]);
+    });
+
     test("a replacement reports protection lost from the actual current pick", () => {
         const current = [pick("Protector", "support", ["peel"])];
         const enemy = [pick("Entry", "jungle", ["engage", "dive"])];
@@ -639,5 +688,110 @@ describe("comparison with the current draft", () => {
         expect(comparison.own.gainedPlans).toEqual([]);
         expect(comparison.own.lostPlans).toEqual([]);
         expect(comparison.after.blue.plans[0].win).toContain("New");
+    });
+});
+
+describe("strategy draft issues", () => {
+    test("duplicate champions across teams withhold plans and options", () => {
+        const same = pick("Same", "mid", ["pick", "wave_clear"]);
+        const result = reviewStrategy([same], [same]);
+        expect(result.issues.join(" ")).toContain(
+            "Champions appear more than once: Same",
+        );
+        expect(result.blue.plans).toEqual([]);
+        expect(result.red.plans).toEqual([]);
+        expect(result.blue.needs).toEqual([]);
+        expect(result.red.claims).toEqual([]);
+        expect(result.complete).toBe(false);
+        expect(
+            strategyOptions(
+                [same],
+                [same],
+                [pick("Support", "support", ["peel"])],
+                { bans: [] },
+                1,
+            ).singles,
+        ).toEqual([]);
+    });
+
+    test("conflicting enemy roles never become an apparent absence of threats", () => {
+        const own = [pick("Catcher", "support", ["pick"])];
+        const enemy = [
+            pick("Entry1", "jungle", ["engage"]),
+            pick("Entry2", "jungle", ["engage"]),
+        ];
+        const result = reviewStrategy(own, enemy);
+        expect(result.issues.join(" ")).toContain(
+            "Red: no supported role assignment",
+        );
+        expect(result.blue.plans).toEqual([]);
+        expect(result.blue.timeline).toEqual([]);
+        expect(
+            strategyOptions(
+                own,
+                enemy,
+                [pick("Wave", "mid", ["wave_clear"])],
+                { bans: [] },
+                1,
+            ).evaluated,
+        ).toBe(0);
+    });
+
+    test("a missing role sample requires assignment but empty slots are valid", () => {
+        const unknown = {
+            ...pick("Unknown", "top", ["dive"]),
+            role: undefined,
+            possibleRoles: [],
+        };
+        expect(reviewStrategy([unknown], []).issues).toHaveLength(1);
+        expect(
+            reviewStrategy([{ ...unknown, role: "top" }], []).issues,
+        ).toEqual([]);
+        expect(reviewStrategy([], []).issues).toEqual([]);
+    });
+
+    test("repairing an invalid draft is allowed without claiming new answers or lost plans", () => {
+        const a = pick("A", "top", ["dive"]);
+        const old = pick("Old", "top", ["engage"]);
+        const enemy = [pick("Enemy", "mid", ["poke"])];
+        const replacement = pick("New", "support", ["pick"]);
+        const options = strategyOptions(
+            [a],
+            enemy,
+            [replacement],
+            { bans: [] },
+            1,
+            "",
+            [a, old],
+        );
+        expect(options.singles).toHaveLength(1);
+        expect(options.singles[0].answers).toEqual([]);
+        const comparison = compareStrategyDraft([a, old], enemy, [
+            a,
+            replacement,
+        ]);
+        expect(comparison.comparable).toBe(false);
+        expect(comparison.before.issues).toHaveLength(1);
+        expect(comparison.after.issues).toEqual([]);
+        expect(comparison.own.gainedPlans).toEqual([]);
+        expect(comparison.opponent.answeredNeeds).toEqual([]);
+        expect(comparison.after.blue.plans.length).toBeGreaterThan(0);
+    });
+
+    test("ten occupied slots are not a complete valid draft with conflicting roles", () => {
+        const roles: StrategyRole[] = [
+            "top",
+            "jungle",
+            "mid",
+            "bot",
+            "support",
+        ];
+        const blue = roles.map((role, i) => pick(`Blue${i}`, role, ["pick"]));
+        const red = roles.map((role, i) => pick(`Red${i}`, role, ["pick"]));
+        red[4].role = "top";
+        const result = reviewStrategy(blue, red);
+        expect(result.complete).toBe(false);
+        expect(result.issues).toHaveLength(1);
+        expect(result.title).toContain("Resolve draft issues");
     });
 });

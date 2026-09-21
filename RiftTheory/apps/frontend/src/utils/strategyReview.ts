@@ -64,6 +64,7 @@ export type StrategyReview = {
     title: string;
     detail: string;
     complete: boolean;
+    issues: string[];
 };
 
 const usable = (value: { review_status: string }) =>
@@ -517,6 +518,28 @@ export function reviewStrategy(
 ): StrategyReview {
     const blueResolved = resolveStrategyPicks(bluePicks),
         redResolved = resolveStrategyPicks(redPicks);
+    const issues: string[] = [];
+    const allPicks = [...bluePicks, ...redPicks];
+    const duplicates = unique(
+        allPicks
+            .filter(
+                (p, i) =>
+                    allPicks.findIndex((other) => other.key === p.key) !== i,
+            )
+            .map((p) => p.name),
+    );
+    if (duplicates.length)
+        issues.push(
+            `Champions appear more than once: ${duplicates.join(", ")}. Each champion can occupy only one slot.`,
+        );
+    for (const [label, resolved] of [
+        ["Blue", blueResolved],
+        ["Red", redResolved],
+    ] as const)
+        if (!resolved.scenarios)
+            issues.push(
+                `${label}: no supported role assignment fits these picks. Resolve conflicting roles or explicitly assign champions whose role evidence is missing.`,
+            );
     const blue = readTeam(
         blueResolved.picks,
         redResolved.picks,
@@ -527,17 +550,35 @@ export function reviewStrategy(
         blueResolved.picks,
         redResolved.scenarios,
     );
-    const complete = bluePicks.length === 5 && redPicks.length === 5;
-    const title =
-        !bluePicks.length && !redPicks.length
-            ? "Build a draft. Find its plan."
-            : blue.plans[0] && red.plans[0]
-              ? `${blue.plans[0].title} vs ${red.plans[0].title.toLowerCase()}`
-              : "The draft is still finding its identity";
-    const detail = complete
-        ? "Compare the enabling conditions below. The preferred fight can change with vision, cooldowns, items and role assignments; these profiles do not establish a calibrated winner."
-        : "Each pick changes what the teams can threaten and what they still need. Open slots and uncertain roles keep this read conditional.";
-    return { blue, red, title, detail, complete };
+    if (issues.length) {
+        // Do not turn invalid/missing role evidence into apparently answered
+        // needs, enemy advantages or a supported composition plan.
+        for (const team of [blue, red]) {
+            team.plans = [];
+            team.claims = [];
+            team.needs = [];
+            team.timeline = [];
+            team.objective =
+                "Resolve the draft issues before planning objective control.";
+            team.execution =
+                "Resolve the draft issues before comparing execution requirements.";
+        }
+    }
+    const complete =
+        !issues.length && bluePicks.length === 5 && redPicks.length === 5;
+    const title = issues.length
+        ? "Resolve draft issues before comparing plans"
+        : !bluePicks.length && !redPicks.length
+          ? "Build a draft. Find its plan."
+          : blue.plans[0] && red.plans[0]
+            ? `${blue.plans[0].title} vs ${red.plans[0].title.toLowerCase()}`
+            : "The draft is still finding its identity";
+    const detail = issues.length
+        ? "Check the duplicate picks and role assignments below. Strategic plans and candidate comparisons are withheld until the remaining draft has a supported assignment."
+        : complete
+          ? "Compare the enabling conditions below. The preferred fight can change with vision, cooldowns, items and role assignments; these profiles do not establish a calibrated winner."
+          : "Each pick changes what the teams can threaten and what they still need. Open slots and uncertain roles keep this read conditional.";
+    return { blue, red, title, detail, complete, issues };
 }
 
 export type StrategyConstraints = {
@@ -554,23 +595,27 @@ export function compareStrategyDraft(
 ) {
     const before = reviewStrategy(current, enemy);
     const after = reviewStrategy(proposed, enemy);
+    const comparable = !before.issues.length && !after.issues.length;
     const changes = (previous: TeamStrategy, next: TeamStrategy) => ({
         gainedPlans: next.plans.filter(
-            (plan) => !previous.plans.some((p) => p.key === plan.key),
+            (plan) =>
+                comparable && !previous.plans.some((p) => p.key === plan.key),
         ),
         lostPlans: previous.plans.filter(
-            (plan) => !next.plans.some((p) => p.key === plan.key),
+            (plan) => comparable && !next.plans.some((p) => p.key === plan.key),
         ),
         answeredNeeds: previous.needs.filter(
-            (need) => !next.needs.some((n) => n.key === need.key),
+            (need) => comparable && !next.needs.some((n) => n.key === need.key),
         ),
         newNeeds: next.needs.filter(
-            (need) => !previous.needs.some((n) => n.key === need.key),
+            (need) =>
+                comparable && !previous.needs.some((n) => n.key === need.key),
         ),
     });
     return {
         before,
         after,
+        comparable,
         own: changes(before.blue, after.blue),
         opponent: changes(before.red, after.red),
     };
@@ -593,10 +638,14 @@ export function compareStrategyOption(
     own: StrategyPick[],
     enemy: StrategyPick[],
     additions: StrategyPick[],
+    current = own,
 ): StrategyOption {
-    const before = reviewStrategy(own, enemy).blue;
-    const after = reviewStrategy([...own, ...additions], enemy).blue;
-    const remainingKeys = new Set(after.needs.map((n) => n.key));
+    const comparison = compareStrategyDraft(current, enemy, [
+        ...own,
+        ...additions,
+    ]);
+    const before = comparison.before.blue;
+    const after = comparison.after.blue;
     const risks = after.claims.filter(
         (c) =>
             c.kind === "risk" ||
@@ -605,23 +654,23 @@ export function compareStrategyOption(
     );
     return {
         picks: additions,
-        answers: before.needs
-            .filter((n) => !remainingKeys.has(n.key))
-            .map((n) => n.title),
+        answers: comparison.own.answeredNeeds.map((n) => n.title),
         remaining: after.needs.map((n) => n.title),
         risks,
         newRisks: risks.filter(
-            (c) => !before.claims.some((b) => b.id === c.id),
+            (c) =>
+                comparison.comparable &&
+                !before.claims.some((b) => b.id === c.id),
         ),
         plan: after.plans[0]?.title,
         scenarios: after.scenarios,
         covered: after.covered,
-        newNeeds: after.needs
-            .filter((n) => !before.needs.some((b) => b.key === n.key))
-            .map((n) => n.title),
+        newNeeds: comparison.own.newNeeds.map((n) => n.title),
         roleCommitments: after.picks.flatMap((p) => {
             const previous = before.picks.find((b) => b.key === p.key);
-            return previous && previous.roles.length > p.roles.length
+            return comparison.comparable &&
+                previous &&
+                previous.roles.length > p.roles.length
                 ? [
                       `${p.name}: ${previous.roles.join(" / ")} → ${p.roles.join(" / ")}`,
                   ]
@@ -638,8 +687,13 @@ export function strategyOptions(
     constraints: StrategyConstraints,
     windowSize: number,
     search = "",
+    current = own,
 ) {
-    if (!windowSize || own.length >= 5)
+    if (
+        !windowSize ||
+        own.length >= 5 ||
+        reviewStrategy(own, enemy).issues.length
+    )
         return { singles: [], pairs: [], evaluated: 0 };
     const blocked = new Set([
         ...constraints.bans,
@@ -658,7 +712,7 @@ export function strategyOptions(
         const resolved = resolveStrategyPicks([...own, candidate]);
         if (!resolved.scenarios || !resolved.picks.at(-1)?.capabilities.length)
             continue;
-        const option = compareStrategyOption(own, enemy, [candidate]);
+        const option = compareStrategyOption(own, enemy, [candidate], current);
         if (option.covered > baselineCoverage) options.push(option);
     }
     const sort = (a: StrategyOption, b: StrategyOption) =>
@@ -704,7 +758,9 @@ export function strategyOptions(
                     !roleScenarios([...own, ...additions]).length
                 )
                     continue;
-                pairs.push(compareStrategyOption(own, enemy, additions));
+                pairs.push(
+                    compareStrategyOption(own, enemy, additions, current),
+                );
             }
         pairs.sort(sort);
     }

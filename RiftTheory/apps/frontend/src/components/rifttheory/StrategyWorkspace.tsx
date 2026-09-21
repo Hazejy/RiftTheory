@@ -1,4 +1,11 @@
-import { createMemo, createSignal, For, Show } from "solid-js";
+import {
+    createEffect,
+    createMemo,
+    createSignal,
+    For,
+    Show,
+    untrack,
+} from "solid-js";
 import { assessObservedRoles } from "@draftgap/core/src/role/flex-evidence";
 import type { Role } from "@draftgap/core/src/models/Role";
 import { useDraft } from "../../contexts/DraftContext";
@@ -124,6 +131,7 @@ function ComparisonTeam(props: {
     before: TeamStrategy;
     after: TeamStrategy;
     changes: ReturnType<typeof compareStrategyDraft>["own"];
+    comparable: boolean;
 }) {
     return (
         <article class="strategy-claim">
@@ -154,8 +162,12 @@ function ComparisonTeam(props: {
             </Show>
             <p>
                 <strong>Needs addressed: </strong>
-                {props.changes.answeredNeeds.map((n) => n.title).join("; ") ||
-                    "No previously identified need is fully answered."}
+                {!props.comparable
+                    ? "Comparison unavailable until the current draft issues are resolved."
+                    : props.changes.answeredNeeds
+                          .map((n) => n.title)
+                          .join("; ") ||
+                      "No previously identified need is fully answered."}
             </p>
             <Show when={props.changes.newNeeds.length}>
                 <p>
@@ -197,6 +209,9 @@ export default function StrategyWorkspace() {
         option: StrategyOption;
     }>();
     const [candidateSearch, setCandidateSearch] = createSignal("");
+    let previewPanel: HTMLElement | undefined;
+    let previewTrigger: HTMLButtonElement | undefined;
+    let searchInput: HTMLInputElement | undefined;
     const live = () =>
         strategySource() === "live" ? strategyLiveSnapshot() : undefined;
     const [liveSelection, setLiveSelection] = createSignal<{
@@ -292,8 +307,17 @@ export default function StrategyWorkspace() {
         const isBlue = step?.team !== "opponent";
         const raw = teamSlots(isBlue ? "ally" : "opponent");
         const outgoing = step ? raw[step.index]?.championKey : undefined;
-        const own = (isBlue ? blue() : red()).filter((p) => p.key !== outgoing);
-        return { own, enemy: isBlue ? red() : blue(), outgoing, isBlue };
+        const current = isBlue ? blue() : red();
+        const own = step
+            ? toPicks(raw.filter((_, index) => index !== step.index))
+            : current;
+        return {
+            own,
+            current,
+            enemy: isBlue ? red() : blue(),
+            outgoing,
+            isBlue,
+        };
     });
     const options = createMemo(() => {
         const current = planning();
@@ -316,6 +340,7 @@ export default function StrategyWorkspace() {
             },
             windowSteps().length,
             candidateSearch(),
+            current.current,
         );
     });
     const fingerprint = () =>
@@ -337,6 +362,10 @@ export default function StrategyWorkspace() {
         preview()?.fingerprint === fingerprint()
             ? preview()?.option
             : undefined;
+    createEffect(() => {
+        if (preview() && preview()!.fingerprint !== fingerprint())
+            setPreview(undefined);
+    });
     const previewRead = createMemo(() => {
         const option = activePreview();
         if (!option) return undefined;
@@ -346,8 +375,22 @@ export default function StrategyWorkspace() {
             ...option.picks,
         ]);
     });
-    const choosePreview = (option: StrategyOption) =>
+    const choosePreview = (
+        option: StrategyOption,
+        trigger: HTMLButtonElement,
+    ) => {
+        previewTrigger = trigger;
         setPreview({ fingerprint: fingerprint(), option });
+        queueMicrotask(() => {
+            if (untrack(activePreview) !== option) return;
+            previewPanel?.focus({ preventScroll: true });
+            previewPanel?.scrollIntoView({ block: "start" });
+        });
+    };
+    const closePreview = () => {
+        setPreview(undefined);
+        (previewTrigger?.isConnected ? previewTrigger : searchInput)?.focus();
+    };
     const previewMechanics = createMemo(() => {
         const result = previewRead()?.after;
         if (!result) return undefined;
@@ -400,7 +443,10 @@ export default function StrategyWorkspace() {
     const OptionCard = (props: { option: StrategyOption }) => (
         <button
             class="strategy-option"
-            onClick={() => choosePreview(props.option)}
+            aria-pressed={activePreview() === props.option}
+            onClick={(event) =>
+                choosePreview(props.option, event.currentTarget)
+            }
         >
             <div class="strategy-portraits">
                 <For each={props.option.picks}>
@@ -625,6 +671,13 @@ export default function StrategyWorkspace() {
                 </span>
                 <h2>{review().title}</h2>
                 <p>{review().detail}</p>
+                <Show when={review().issues.length}>
+                    <div class="strategy-mechanics-warning" role="alert">
+                        <For each={review().issues}>
+                            {(issue) => <p>{issue}</p>}
+                        </For>
+                    </div>
+                </Show>
                 <small>
                     Role capabilities covered: Blue {review().blue.covered}/
                     {blue().length} · Red {review().red.covered}/{red().length}.
@@ -914,6 +967,7 @@ export default function StrategyWorkspace() {
                     <label class="strategy-search">
                         Explore a champion
                         <input
+                            ref={searchInput}
                             type="search"
                             placeholder="Search legal candidates…"
                             value={candidateSearch()}
@@ -968,6 +1022,9 @@ export default function StrategyWorkspace() {
                         {(option) => (
                             <section
                                 class="strategy-preview"
+                                ref={previewPanel}
+                                tabIndex={-1}
+                                aria-label="Pick comparison"
                                 aria-live="polite"
                             >
                                 <div class="strategy-section-heading">
@@ -980,7 +1037,7 @@ export default function StrategyWorkspace() {
                                     </h3>
                                     <button
                                         class="strategy-button"
-                                        onClick={() => setPreview(undefined)}
+                                        onClick={closePreview}
                                     >
                                         Close comparison
                                     </button>
@@ -1003,12 +1060,18 @@ export default function StrategyWorkspace() {
                                                 }
                                                 after={comparison().after.blue}
                                                 changes={comparison().own}
+                                                comparable={
+                                                    comparison().comparable
+                                                }
                                             />
                                             <ComparisonTeam
                                                 label={`${planning().isBlue ? "Red" : "Blue"} · opponent response`}
                                                 before={comparison().before.red}
                                                 after={comparison().after.red}
                                                 changes={comparison().opponent}
+                                                comparable={
+                                                    comparison().comparable
+                                                }
                                             />
                                         </div>
                                     )}

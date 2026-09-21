@@ -232,3 +232,42 @@ native verification above applies only to its recorded September 20 build.
 The user subsequently requested a GitHub handoff for another/local AI. The source,
 tests and this evidence log are being preserved on a dedicated development
 branch, with continuation instructions in `docs/strategy-handoff.md`.
+
+## Replacement consistency and invalid-draft handling (2026-09-21, second pass)
+
+Replacement candidate ranking and badges now use the same actual-current-draft
+baseline as the expanded comparison. The previous slot-empty baseline could
+credit an already-present protection tool as a new answer, or claim a flex was
+newly committed even though the outgoing champion already fixed that role.
+The remaining roster still supplies legality and coverage checks; a replacement
+removes precisely the selected slot, not every occurrence of its champion key.
+
+The strategy review now exposes duplicate champions and unsupported/conflicting
+role assignments explicitly. Both teams' plans, claims, needs and timelines are
+withheld in that state. Candidate search checks the remaining roster and opponent
+before recommending picks. Replacing the source of a conflict remains possible,
+but comparisons against an invalid baseline do not invent gained/lost plans or
+answered needs. Empty slots alone do not invalidate a draft. Explicit assignment
+can resolve missing observed-role evidence without inventing capability evidence.
+
+Opening a preview now focuses and scrolls to the comparison, marks the selected
+card and restores focus on dismissal. Draft changes clear the stored preview,
+preventing it from reappearing merely because the user returns to the old state.
+These focus/scroll changes still require a visual/keyboard smoke test.
+
+Seven new tests cover replacement ordering and badge consistency, pre-existing
+flex commitments, cross-team duplicate picks, conflicting enemy roles, missing
+role samples versus empty drafts, conflict-repair replacements and invalid full
+drafts. The frontend/core suite passes 86 tests (336 assertions); workspace
+TypeScript passed. No champion-mechanics claims or sources were changed.
+
+Final targeted ESLint passed with `--max-warnings 0`; frontend TypeScript was
+rechecked after the focus callback adjustment. `tauri build --no-bundle` then
+successfully built the final source, including the Vite production assets and
+optimized Windows executable. Existing bundle-size warning: 943.39 kB main JS,
+306.65 kB gzip. The executable is a local build artifact, not a GitHub release
+asset or tracked source file. It has not received a new interactive smoke test;
+the focus/scroll behavior and narrow-screen layout remain explicit handoff tasks.
+
+Final local executable SHA-256:
+`B48420C8AC3416C3A7A0FCCC946CB4CD0445FD2DB6B4AF20BD7088DD7CC47EAF`.
