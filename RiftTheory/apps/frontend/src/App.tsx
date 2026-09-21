@@ -39,7 +39,7 @@ import { useDataset } from "./contexts/DatasetContext";
 import { LoadingIcon } from "./components/icons/LoadingIcon";
 import { DialogTrigger, Dialog } from "./components/common/Dialog";
 import SettingsDialog from "./components/dialogs/SettingsDialog";
-import RiftTheoryStrategy from "./components/rifttheory/RiftTheoryStrategy";
+import RiftTheoryStrategy from "./components/rifttheory/StrategyWorkspace";
 import ChampColors from "./components/rifttheory/ChampColors";
 import { DraftSequence } from "./components/draft/DraftSequence";
 import { useI18n } from "./utils/i18n";
@@ -320,6 +320,7 @@ const App: Component = () => {
     };
 
     const isFullWidthWorkspace = () =>
+        currentDraftView().type === "strategy" ||
         currentDraftView().type === "colors" ||
         currentDraftView().type === "draftPrep" ||
         currentDraftView().type === "riftPlanner" ||

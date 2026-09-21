@@ -16,6 +16,12 @@ import {
 } from "@draftgap/core/src/live-draft/series";
 import { createEffect, createMemo, createSignal, For, Show } from "solid-js";
 import { useDataset } from "../../contexts/DatasetContext";
+import { useDraftView } from "../../contexts/DraftViewContext";
+import {
+    setStrategyLiveSnapshot,
+    setStrategySource,
+} from "../../contexts/StrategySession";
+import { captureStrategyGame } from "../../utils/strategyLiveDraft";
 import { useUser } from "../../contexts/UserContext";
 import {
     championName,
@@ -121,6 +127,7 @@ function loadStoredDraft(): StoredLiveDraft | undefined {
 }
 
 export default function LiveDraftView() {
+    const { setCurrentDraftView } = useDraftView();
     const { t } = useI18n();
     const { dataset } = useDataset();
     const { config: userConfig } = useUser();
@@ -564,6 +571,33 @@ export default function LiveDraftView() {
                                             )}
                                         </For>
                                     </div>
+                                    <button
+                                        type="button"
+                                        class="rounded border border-accent/50 px-3 py-1.5 text-xs text-accent"
+                                        onClick={() => {
+                                            const config = seriesConfig();
+                                            if (!config) return;
+                                            setStrategyLiveSnapshot(
+                                                captureStrategyGame(
+                                                    config,
+                                                    {
+                                                        gameNumber:
+                                                            activeGameNumber(),
+                                                        sides: sides(),
+                                                        actions:
+                                                            currentActions(),
+                                                    },
+                                                    completedGames(),
+                                                ),
+                                            );
+                                            setStrategySource("live");
+                                            setCurrentDraftView({
+                                                type: "strategy",
+                                            });
+                                        }}
+                                    >
+                                        Analyze game
+                                    </button>
                                     <button
                                         type="button"
                                         disabled={currentActions().length > 0}

@@ -16,3 +16,28 @@ export const DRAFT_PICK_ORDER: ReadonlyArray<{ team: Team; index: number }> = [
 
 export const pickLabel = (team: Team, index: number) =>
     `${team === "ally" ? "B" : "R"}${index + 1}`;
+
+/** A replacement is one decision; an empty slot can include the next same-side pick. */
+export function draftResponseWindow(
+    step: { team: Team; index: number } | undefined,
+    teams: Record<Team, readonly { championKey?: string }[]>,
+    order = DRAFT_PICK_ORDER,
+) {
+    if (!step) return [];
+    const start = order.findIndex(
+        (p) => p.team === step.team && p.index === step.index,
+    );
+    if (start < 0) return [];
+    if (teams[step.team][step.index]?.championKey) return [step];
+    const result: { team: Team; index: number }[] = [];
+    for (let i = start; i < order.length; i++) {
+        const current = order[i];
+        if (
+            current.team !== step.team ||
+            teams[current.team][current.index]?.championKey
+        )
+            break;
+        result.push(current);
+    }
+    return result;
+}

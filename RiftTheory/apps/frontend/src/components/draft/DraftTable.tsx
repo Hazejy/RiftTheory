@@ -22,7 +22,7 @@ import { useDraftSuggestions } from "../../contexts/DraftSuggestionsContext";
 import type { RiftTheorySuggestionEvidence } from "../../contexts/DraftSuggestionsContext";
 import { useDataset } from "../../contexts/DatasetContext";
 import { useDraftFilters } from "../../contexts/DraftFiltersContext";
-import { Dialog } from "../common/Dialog";
+import { Dialog, DialogContent } from "../common/Dialog";
 import { ChampionDraftAnalysisDialog } from "../dialogs/ChampionDraftAnalysisDialog";
 import { Team } from "@draftgap/core/src/models/Team";
 import {
@@ -31,6 +31,7 @@ import {
     useI18n,
 } from "../../utils/i18n";
 import SuggestionEvidenceBadges from "../rifttheory/SuggestionEvidenceBadges";
+import SuggestionEvidenceDetails from "../rifttheory/SuggestionEvidenceDetails";
 import { suggestionEvidenceKey } from "../../utils/interactionEvidence";
 import { compareSuggestionEvidence } from "@draftgap/core/src/draft/suggestion-evidence";
 import DraftResponsePlanner from "../rifttheory/DraftResponsePlanner";
@@ -62,6 +63,14 @@ export default function DraftTable() {
         opponentSuggestionEvidence,
     } = useDraftSuggestions();
     const { isFavourite, setFavourite, config } = useUser();
+
+    // A virtualized table row can disappear during async sorting/measurement.
+    // Keep the user's open detail snapshot outside the row's lifecycle.
+    const [evidenceDetail, setEvidenceDetail] = createSignal<{
+        championKey: string;
+        role: Role;
+        evidence: RiftTheorySuggestionEvidence;
+    }>();
 
     const suggestions = () =>
         selection.team === "opponent"
@@ -329,8 +338,13 @@ export default function DraftTable() {
                 ),
             cell: (info) => (
                 <SuggestionEvidenceBadges
-                    championKey={info.row.original.championKey}
-                    role={info.row.original.role}
+                    onOpen={(evidence) =>
+                        setEvidenceDetail({
+                            championKey: info.row.original.championKey,
+                            role: info.row.original.role,
+                            evidence,
+                        })
+                    }
                     evidence={info.getValue<
                         RiftTheorySuggestionEvidence | undefined
                     >()}
@@ -537,6 +551,30 @@ export default function DraftTable() {
                 }
                 id="draft-table"
             />
+            <Dialog
+                open={evidenceDetail() !== undefined}
+                onOpenChange={(open) => {
+                    if (!open) setEvidenceDetail(undefined);
+                }}
+            >
+                <DialogContent
+                    class="max-w-2xl"
+                    onCloseAutoFocus={(event) => {
+                        event.preventDefault();
+                        document.getElementById("draftTableSearch")?.focus();
+                    }}
+                >
+                    <Show when={evidenceDetail()}>
+                        {(detail) => (
+                            <SuggestionEvidenceDetails
+                                championKey={detail().championKey}
+                                role={detail().role}
+                                evidence={detail().evidence}
+                            />
+                        )}
+                    </Show>
+                </DialogContent>
+            </Dialog>
             <Dialog
                 open={showAnalysisPick()}
                 onOpenChange={(open) => {

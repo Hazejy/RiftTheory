@@ -1,0 +1,391 @@
+.strategy-workspace {
+    width: 100%;
+    max-width: 1480px;
+    margin: 0 auto;
+    padding: 28px clamp(16px, 3vw, 42px) 48px;
+    font-family: var(--font-body, inherit);
+    font-size: 14px;
+    line-height: 1.65;
+}
+.strategy-workspace h1,
+.strategy-workspace h2,
+.strategy-workspace h3,
+.strategy-workspace h4 {
+    line-height: 1.3;
+    font-weight: 600;
+    color: var(--color-neutral-100, #eee);
+    margin: 0;
+}
+.strategy-workspace h1 {
+    font-size: 32px;
+    margin-top: 6px;
+}
+.strategy-workspace h2 {
+    font-size: 24px;
+}
+.strategy-workspace h3 {
+    font-size: 18px;
+}
+.strategy-workspace h4 {
+    font-size: 15px;
+}
+.strategy-workspace p {
+    margin: 10px 0;
+    color: var(--color-neutral-300, #c7cbd4);
+    overflow-wrap: anywhere;
+}
+.strategy-workspace small,
+.strategy-explanation {
+    font-size: 12px;
+    color: var(--color-neutral-400, #a3aab8);
+}
+.strategy-eyebrow {
+    color: var(--color-accent, #b497ff);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.17em;
+}
+.strategy-header,
+.strategy-section-heading,
+.strategy-toolbar,
+.strategy-team-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+.strategy-header {
+    margin-bottom: 24px;
+}
+.strategy-button,
+.strategy-segment button {
+    border: 1px solid var(--color-neutral-700, #404552);
+    border-radius: 8px;
+    padding: 8px 13px;
+    font-size: 13px;
+    cursor: pointer;
+}
+.strategy-workspace button:focus-visible,
+.strategy-workspace summary:focus-visible,
+.strategy-workspace select:focus-visible {
+    outline: 2px solid var(--color-accent, #b497ff);
+    outline-offset: 3px;
+}
+.strategy-rosters,
+.strategy-team-grid,
+.strategy-claims {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+.strategy-roster {
+    min-width: 0;
+    padding: 14px;
+    background: var(--color-primary, #171b23);
+    border: 1px solid var(--color-neutral-700, #363d49);
+    border-radius: 12px;
+}
+.strategy-team-heading {
+    font-size: 12px;
+    margin-bottom: 12px;
+}
+[data-side="Blue"] > .strategy-team-heading {
+    color: var(--color-ally, #70acff);
+}
+[data-side="Red"] > .strategy-team-heading {
+    color: var(--color-opponent, #ff8288);
+}
+.strategy-slots {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 7px;
+}
+.strategy-slot {
+    min-width: 0;
+    border: 1px solid var(--color-neutral-700, #3d4351);
+    border-radius: 8px;
+    background: var(--color-canvas, #10131a);
+}
+.strategy-slot.selected {
+    border-color: var(--color-accent, #b497ff);
+    box-shadow: 0 0 0 1px var(--color-accent, #b497ff);
+}
+.strategy-slot button {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 3px;
+    cursor: pointer;
+}
+.strategy-slot strong {
+    font-size: 11px;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.strategy-slot-label {
+    font-size: 10px;
+    color: var(--color-neutral-400, #a3aab8);
+}
+.strategy-empty-slot {
+    height: 42px;
+    display: grid;
+    place-items: center;
+    font-size: 24px;
+    opacity: 0.55;
+}
+.strategy-role-select {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 3px;
+    border-top: 1px solid var(--color-neutral-700, #3d4351);
+}
+.strategy-role-select select {
+    width: 100%;
+    min-width: 0;
+    background: var(--color-canvas, #10131a);
+    color: inherit;
+    font-size: 10px;
+    padding: 3px 0;
+}
+.strategy-verdict {
+    margin: 26px 0 20px;
+    padding: 4px 0 4px 17px;
+    border-left: 3px solid var(--color-accent, #b497ff);
+}
+.strategy-verdict h2 {
+    margin-top: 6px;
+    max-width: 1000px;
+}
+.strategy-team {
+    border: 1px solid var(--color-neutral-700, #363d49);
+    border-top: 3px solid var(--color-ally, #70acff);
+    border-radius: 12px;
+    padding: 22px;
+    background: var(--color-primary, #171b23);
+    min-width: 0;
+}
+.strategy-team[data-side="Red"] {
+    border-top-color: var(--color-opponent, #ff8288);
+}
+.strategy-condition {
+    margin-top: 16px;
+    border-top: 1px solid var(--color-neutral-700, #363d49);
+    padding-top: 10px;
+}
+.strategy-condition > span {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-neutral-400, #b0b6c4);
+}
+.strategy-condition p {
+    margin: 5px 0 0;
+}
+.strategy-workspace details {
+    border-top: 1px solid var(--color-neutral-700, #363d49);
+    margin-top: 16px;
+    padding-top: 12px;
+}
+.strategy-workspace summary {
+    cursor: pointer;
+    font-size: 12px;
+    color: var(--color-accent, #c3afff);
+}
+.strategy-alternative {
+    margin-top: 18px;
+}
+.strategy-toolbar {
+    margin: 26px 0 18px;
+}
+.strategy-segment {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+.strategy-segment button {
+    color: var(--color-neutral-400, #b0b6c4);
+    border-color: transparent;
+}
+.strategy-segment button[aria-pressed="true"] {
+    color: var(--color-neutral-100, #eee);
+    background: var(--color-primary, #252a35);
+    border-color: var(--color-neutral-700, #525967);
+}
+.strategy-claim,
+.strategy-needs,
+.strategy-timeline article,
+.strategy-evidence,
+.strategy-lanes {
+    min-width: 0;
+    border: 1px solid var(--color-neutral-700, #363d49);
+    border-radius: 10px;
+    padding: 20px;
+    background: var(--color-primary, #171b23);
+}
+.strategy-portraits {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-bottom: 10px;
+}
+.strategy-needs {
+    margin-top: 18px;
+}
+.strategy-needs h3 {
+    margin-bottom: 14px;
+}
+.strategy-empty {
+    padding: 24px 0;
+}
+.strategy-timeline {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+    margin-bottom: 18px;
+}
+.strategy-timeline h3 {
+    margin-top: 8px;
+}
+.strategy-lanes {
+    margin-top: 18px;
+}
+.strategy-lanes > div {
+    display: grid;
+    grid-template-columns: 70px 1fr 1.6fr;
+    gap: 12px;
+    padding: 13px 0;
+    border-bottom: 1px solid var(--color-neutral-700, #363d49);
+}
+.strategy-evidence {
+    margin-bottom: 12px;
+}
+.strategy-evidence-heading,
+.strategy-color-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.strategy-color-row {
+    margin-top: 12px;
+    font-size: 12px;
+}
+.strategy-source-line {
+    font-size: 11px;
+}
+.strategy-mechanics {
+    margin: 20px 0;
+}
+.strategy-mechanics .strategy-evidence-heading {
+    margin-bottom: 14px;
+}
+.strategy-mechanics .strategy-mechanic-ability {
+    margin: 2px 0 0;
+    font-size: 12px;
+}
+.strategy-mechanics-warning {
+    padding: 12px;
+    border-left: 3px solid var(--color-accent, #b497ff);
+}
+.strategy-next {
+    border-top: 1px solid var(--color-neutral-700, #363d49);
+    margin-top: 28px;
+    padding-top: 24px;
+}
+.strategy-options {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin: 15px 0;
+}
+.strategy-option {
+    text-align: left;
+    min-width: 0;
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+    border: 1px solid var(--color-neutral-700, #363d49);
+    background: var(--color-primary, #171b23);
+    border-radius: 10px;
+    padding: 17px;
+    cursor: pointer;
+}
+.strategy-option:hover {
+    border-color: var(--color-accent, #b497ff);
+}
+.strategy-option strong {
+    font-size: 14px;
+}
+.strategy-option span {
+    font-size: 12px;
+}
+.strategy-link {
+    color: var(--color-accent, #b497ff);
+    margin-top: auto;
+}
+.strategy-preview {
+    border: 1px solid var(--color-accent, #b497ff);
+    border-radius: 12px;
+    padding: 22px;
+    margin-top: 20px;
+}
+.strategy-limits {
+    padding: 16px 0;
+}
+.strategy-search {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-width: 400px;
+    font-size: 12px;
+    margin: 14px 0;
+}
+.strategy-search input {
+    border: 1px solid var(--color-neutral-700, #363d49);
+    background: var(--color-canvas, #10131a);
+    color: inherit;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 14px;
+    width: 100%;
+}
+@media (max-width: 1000px) {
+    .strategy-rosters,
+    .strategy-team-grid {
+        gap: 12px;
+    }
+    .strategy-timeline,
+    .strategy-options {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+@media (max-width: 760px) {
+    .strategy-rosters,
+    .strategy-team-grid,
+    .strategy-claims,
+    .strategy-timeline,
+    .strategy-options {
+        grid-template-columns: 1fr;
+    }
+    .strategy-lanes > div {
+        grid-template-columns: 60px 1fr;
+    }
+    .strategy-lanes small {
+        grid-column: 1/-1;
+    }
+    .strategy-workspace h2 {
+        font-size: 20px;
+    }
+}
+@media (max-width: 480px) {
+    .strategy-role-select svg {
+        display: none;
+    }
+}

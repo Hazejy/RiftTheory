@@ -144,7 +144,14 @@ export function Table<T>(props: Props<T> & JSX.HTMLAttributes<HTMLDivElement>) {
                                 tabindex={props.onClickRow ? 0 : undefined}
                                 onSubmit={() => props.onClickRow?.(row)}
                                 onKeyDown={(e) => {
-                                    if (e.key === "Enter") {
+                                    if (
+                                        e.key === "Enter" &&
+                                        e.target === e.currentTarget &&
+                                        !e.defaultPrevented
+                                    ) {
+                                        // Enter on a nested details/menu button must
+                                        // not also select the champion in this row.
+                                        e.preventDefault();
                                         props.onClickRow?.(row);
                                     }
                                 }}
