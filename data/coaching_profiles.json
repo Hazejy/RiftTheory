@@ -1603,5 +1603,105 @@
     "confidence": 0.7,
     "review_status": "provisional",
     "source_name": "RiftTheory manual coaching review"
+  },
+  {
+    "champion_name": "Thresh",
+    "role": "support",
+    "damage_focus": "utility",
+    "power_curve": "timing_dependent",
+    "resource_demand": "low",
+    "execution_demand": 4,
+    "spike_notes": [
+      "Death Sentence, Dark Passage and Flay are all available",
+      "Level 6 with The Box available for a committed fight",
+      "Dark Passage ready before an ally enters danger"
+    ],
+    "reasoning": "Thresh can start a catch or hold tools to interrupt entry and move an ally to safety. The value of either route depends on landing the control, keeping the lantern available and having allied follow-up; a missed hook alone does not establish a lost fight.",
+    "patch": "unknown",
+    "assessment_method": "manual",
+    "confidence": 0.6,
+    "review_status": "provisional",
+    "source_name": "RiftTheory editorial review of Riot Thresh abilities",
+    "source_url": "https://www.leagueoflegends.com/en-us/champions/thresh/"
+  },
+  {
+    "champion_name": "Ornn",
+    "role": "top",
+    "damage_focus": "utility",
+    "power_curve": "mid_late",
+    "resource_demand": "medium",
+    "execution_demand": 3,
+    "spike_notes": [
+      "Level 6 with Call of the Forge God available",
+      "Masterwork item upgrades become available to the team",
+      "Allied follow-up is in range before the second ultimate cast"
+    ],
+    "reasoning": "Ornn combines frontline access and area control with later item-upgrade value. His ultimate needs a viable approach and allied damage in range; the upgrade economy does not by itself establish winning lane priority or a favorable early skirmish.",
+    "patch": "unknown",
+    "assessment_method": "manual",
+    "confidence": 0.6,
+    "review_status": "provisional",
+    "source_name": "RiftTheory editorial review of Riot Ornn abilities",
+    "source_url": "https://www.leagueoflegends.com/en-us/champions/ornn/"
+  },
+  {
+    "champion_name": "Lulu",
+    "role": "support",
+    "damage_focus": "utility",
+    "power_curve": "timing_dependent",
+    "resource_demand": "low",
+    "execution_demand": 3,
+    "spike_notes": [
+      "Level 6 with Wild Growth available",
+      "Whimsy and Help, Pix! ready as enemy access begins",
+      "An allied damage dealer is positioned to use the protection"
+    ],
+    "reasoning": "Lulu's support value depends on choosing when to use her spells for allied protection or offensive pressure. She can strengthen a carry and disrupt an entry, but the team needs a protected damage source and cannot assume both uses of the same cooldown at once.",
+    "patch": "unknown",
+    "assessment_method": "manual",
+    "confidence": 0.6,
+    "review_status": "provisional",
+    "source_name": "RiftTheory editorial review of Riot Lulu abilities",
+    "source_url": "https://www.leagueoflegends.com/en-us/champions/lulu/"
+  },
+  {
+    "champion_name": "Viego",
+    "role": "jungle",
+    "damage_focus": "physical",
+    "power_curve": "timing_dependent",
+    "resource_demand": "medium",
+    "execution_demand": 4,
+    "spike_notes": [
+      "Level 6 with Heartbreaker available",
+      "A first takedown creates a Sovereign's Domination possession window",
+      "Allied control and damage can secure the first reset target"
+    ],
+    "reasoning": "Viego's fight route becomes more threatening after the first takedown because possession gives him another set of basic abilities and a free ultimate cast. Before that reset, access, target selection and allied setup matter; the draft should not count later possessions as guaranteed power.",
+    "patch": "unknown",
+    "assessment_method": "manual",
+    "confidence": 0.6,
+    "review_status": "provisional",
+    "source_name": "RiftTheory editorial review of Riot Viego abilities",
+    "source_url": "https://www.leagueoflegends.com/en-us/champions/viego/"
+  },
+  {
+    "champion_name": "Zed",
+    "role": "mid",
+    "damage_focus": "physical",
+    "power_curve": "timing_dependent",
+    "resource_demand": "medium",
+    "execution_demand": 5,
+    "spike_notes": [
+      "Level 6 with Death Mark available",
+      "Living Shadow ready for entry or exit",
+      "Energy and a safe shadow route are available before committing"
+    ],
+    "reasoning": "Zed threatens an exposed target through shadow access and a committed burst window. Shadow placement and energy determine whether he can leave safely; enemy protection and grouped positioning can deny the intended target even when his ultimate is ready.",
+    "patch": "unknown",
+    "assessment_method": "manual",
+    "confidence": 0.55,
+    "review_status": "provisional",
+    "source_name": "RiftTheory editorial review of Riot Zed abilities",
+    "source_url": "https://www.leagueoflegends.com/en-us/champions/zed/"
   }
 ]

@@ -7,9 +7,11 @@ import {
     untrack,
 } from "solid-js";
 import { assessObservedRoles } from "@draftgap/core/src/role/flex-evidence";
+import { analyzeDraft } from "@draftgap/core/src/draft/analysis";
 import type { Role } from "@draftgap/core/src/models/Role";
 import { useDraft } from "../../contexts/DraftContext";
 import { useDataset } from "../../contexts/DatasetContext";
+import { useUser } from "../../contexts/UserContext";
 import { useDraftAnalysis } from "../../contexts/DraftAnalysisContext";
 import { useDraftView } from "../../contexts/DraftViewContext";
 import { useRiftTheoryKnowledge } from "../../contexts/RiftTheoryKnowledgeContext";
@@ -24,16 +26,22 @@ import {
     type StrategySlot,
 } from "../../utils/strategyLiveDraft";
 import { draftResponseWindow, pickLabel } from "../../utils/draftOrder";
+import { draftCoachWindow, sameSlotAlternative } from "../../utils/draftCoach";
+import { draftGapPickEvidence, type DraftGapPickEvidence } from "../../utils/draftGapPickEvidence";
+import { screenDraftGapReplacements } from "../../utils/draftGapReplacementScreen";
 import { ChampionIcon } from "../icons/ChampionIcon";
 import { RoleIcon } from "../icons/roles/RoleIcon";
 import StrategicColorChips from "./StrategicColorChips";
 import StrategyMechanicsPanel from "./StrategyMechanicsPanel";
+import { assessStrategyOutcome } from "../../utils/strategyOutcome";
 import { reviewStrategyMechanics } from "../../utils/strategyMechanics";
 import {
     reviewStrategy,
     compareStrategyDraft,
+    compareStrategyOption,
     strategyOptions,
     strategyColorEvidence,
+    strategyThemeFits,
     STRATEGY_ROLES,
     type StrategyClaim,
     type StrategyOption,
@@ -41,6 +49,14 @@ import {
     type TeamStrategy,
 } from "../../utils/strategyReview";
 import "./strategyWorkspace.css";
+
+function colorProvenance(entry: NonNullable<ReturnType<typeof strategyColorEvidence>>) {
+    return entry.scope === "role"
+        ? `Role profile · ${entry.profile.review_status} · patch ${"patch_version" in entry.profile ? entry.profile.patch_version : "unknown"}`
+        : entry.tier === "historical_reference"
+          ? "Historical champion-wide color reference"
+          : `Champion-wide baseline · ${entry.profile.review_status}`;
+}
 
 function Claim(props: { claim: StrategyClaim }) {
     return (
@@ -68,6 +84,7 @@ function Claim(props: { claim: StrategyClaim }) {
 }
 
 function TeamPlan(props: { team: TeamStrategy; side: "Blue" | "Red" }) {
+    const fits = () => strategyThemeFits(props.team);
     return (
         <article class="strategy-team" data-side={props.side}>
             <div class="strategy-team-heading">
@@ -77,26 +94,58 @@ function TeamPlan(props: { team: TeamStrategy; side: "Blue" | "Red" }) {
                     role scenarios
                 </small>
             </div>
-            <h3>
-                {props.team.plans[0]?.title ??
-                    "A shared plan is not established yet"}
-            </h3>
-            <p>
-                {props.team.plans[0]?.win ??
-                    "Add picks or resolve their roles to identify how this team can create and convert an advantage."}
-            </p>
+            <span class="strategy-eyebrow">TEAM THEME</span>
+            <h3>{props.team.plans[0]?.title ?? "Theme not established yet"}</h3>
+            <p>{props.team.plans[0]?.win ??
+                "Add picks or resolve roles to see how this team creates an advantage."}</p>
+            <Show when={props.team.picks.length}>
+                <div class="strategy-team-colors" aria-label={`${props.side} color identities`}>
+                    <span class="strategy-eyebrow">COLOR MAP · THEME FIT BY PICK</span>
+                    <For each={props.team.picks}>
+                        {(pick) => {
+                            const evidence = () => strategyColorEvidence(pick);
+                            const fit = () => fits().find((entry) => entry.key === pick.key);
+                            return (
+                                <div class="strategy-team-color">
+                                    <div class="strategy-team-color-text">
+                                        <strong>{pick.name}</strong>
+                                        <small>
+                                            <b data-fit={fit()?.label}>{fit()?.label}</b>
+                                            {" · "}{fit()?.reason}
+                                        </small>
+                                    </div>
+                                    <Show when={evidence()} fallback={<small>Unreviewed</small>}>
+                                        {(entry) => (
+                                            <div class="strategy-team-color-evidence">
+                                                <StrategicColorChips
+                                                    compact
+                                                    english
+                                                    colors={entry().profile.colors
+                                                        .filter((color) => color.assignment === "main")
+                                                        .map((color) => color.color)}
+                                                />
+                                                <small>{colorProvenance(entry())}</small>
+                                            </div>
+                                        )}
+                                    </Show>
+                                </div>
+                            );
+                        }}
+                    </For>
+                </div>
+            </Show>
             <Show when={props.team.plans[0]}>
                 {(plan) => (
-                    <>
-                        <div class="strategy-condition">
-                            <span>Make it work</span>
+                    <div class="strategy-team-logic">
+                        <div>
+                            <span class="strategy-eyebrow">WHY IT WORKS</span>
                             <p>{plan().requires}</p>
                         </div>
-                        <div class="strategy-condition">
-                            <span>Opponent's best question</span>
+                        <div>
+                            <span class="strategy-eyebrow">OPPONENT RESPONSE</span>
                             <p>{plan().answer}</p>
                         </div>
-                    </>
+                    </div>
                 )}
             </Show>
             <Show when={props.team.plans.length > 1}>
@@ -121,6 +170,59 @@ function TeamPlan(props: { team: TeamStrategy; side: "Blue" | "Red" }) {
                         )}
                     </For>
                 </details>
+            </Show>
+        </article>
+    );
+}
+
+function ChoiceSummary(props: {
+    label: string;
+    option: StrategyOption;
+    samples?: DraftGapPickEvidence[];
+}) {
+    const costs = () => [...new Set([
+        ...props.option.newNeeds,
+        ...props.option.newRisks.map((risk) => risk.title),
+        ...props.option.roleCommitments,
+        ...props.option.opponentAnswers.map((answer) => `Opponent answers: ${answer}`),
+    ])];
+    return (
+        <article class="strategy-choice-card">
+            <span class="strategy-eyebrow">{props.label}</span>
+            <h4>{props.option.picks.map((pick) => `${pick.name} · ${pick.role}`).join(" + ")}</h4>
+            <dl>
+                <div>
+                    <dt>Team theme</dt>
+                    <dd>{props.option.plan ?? "No shared plan established"}</dd>
+                </div>
+                <div>
+                    <dt>Needs answered</dt>
+                    <dd>{props.option.answers.join("; ") || "None established"}</dd>
+                </div>
+                <div>
+                    <dt>Pressure created</dt>
+                    <dd>{props.option.opponentNewNeeds.join("; ") || "No new opponent need established"}</dd>
+                </div>
+                <div>
+                    <dt>New costs</dt>
+                    <dd>{costs().join("; ") || "No new concern established"}</dd>
+                </div>
+            </dl>
+            <Show when={props.samples?.length}>
+                <div class="strategy-choice-samples">
+                    <strong>DraftGap role samples · current patch</strong>
+                    <For each={props.samples}>
+                        {(sample) => (
+                            <p>
+                                {sample.champion} · {sample.role}: {sample.roleGames.toLocaleString()} games
+                                {sample.roleRate === undefined
+                                    ? " · rate unavailable"
+                                    : ` · ${(sample.roleRate * 100).toFixed(1)}% rank-adjusted rate`}
+                                {sample.roleThin ? " · small sample" : ""}
+                            </p>
+                        )}
+                    </For>
+                </div>
             </Show>
         </article>
     );
@@ -196,6 +298,7 @@ function ComparisonTeam(props: {
 
 export default function StrategyWorkspace() {
     const draft = useDraft();
+    const { config: userConfig } = useUser();
     const { dataset, dataset30Days, rankStatus } = useDataset();
     const { allyDraftAnalysis } = useDraftAnalysis();
     const { setCurrentDraftView } = useDraftView();
@@ -260,6 +363,9 @@ export default function StrategyWorkspace() {
         }),
     );
     const poolByKey = createMemo(() => new Map(pool().map((p) => [p.key, p])));
+    const roleCandidates = createMemo(() => pool().flatMap((pick) =>
+        pick.possibleRoles.map((role) => ({ ...pick, role })),
+    ));
     const toPicks = (team: readonly StrategySlot[]): StrategyPick[] =>
         team.flatMap((p) => {
             if (!p.championKey) return [];
@@ -302,6 +408,11 @@ export default function StrategyWorkspace() {
             live() ? LIVE_STRATEGY_ORDER : undefined,
         ),
     );
+    const coachWindow = createMemo(() => draftCoachWindow(
+        selectedStep(),
+        windowSteps(),
+        { ally: teamSlots("ally"), opponent: teamSlots("opponent") },
+    ));
     const planning = createMemo(() => {
         const step = selectedStep();
         const isBlue = step?.team !== "opponent";
@@ -321,9 +432,6 @@ export default function StrategyWorkspace() {
     });
     const options = createMemo(() => {
         const current = planning();
-        const candidates = pool().flatMap((p) =>
-            p.possibleRoles.map((role) => ({ ...p, role })),
-        );
         const unavailable = [
             ...(live()?.unavailable[current.isBlue ? "ally" : "opponent"] ??
                 []),
@@ -332,7 +440,7 @@ export default function StrategyWorkspace() {
         return strategyOptions(
             current.own,
             current.enemy,
-            candidates,
+            roleCandidates(),
             {
                 bans: bans(),
                 unavailable,
@@ -362,6 +470,33 @@ export default function StrategyWorkspace() {
         preview()?.fingerprint === fingerprint()
             ? preview()?.option
             : undefined;
+    const sameSlotChoice = createMemo(() => {
+        const selected = activePreview();
+        if (!selected) return undefined;
+        const current = planning();
+        const shortlist = candidateSearch().trim()
+            ? strategyOptions(
+                  current.own,
+                  current.enemy,
+                  roleCandidates(),
+                  {
+                      bans: bans(),
+                      unavailable: [
+                          ...(live()?.unavailable[current.isBlue ? "ally" : "opponent"] ?? []),
+                          ...(current.outgoing ? [current.outgoing] : []),
+                      ],
+                      owned: live() ? undefined : draft.ownedChampions(),
+                  },
+                  windowSteps().length,
+                  "",
+                  current.current,
+              )
+            : options();
+        return sameSlotAlternative(
+            selected,
+            selected.picks.length > 1 ? shortlist.pairs : shortlist.singles,
+        );
+    });
     createEffect(() => {
         if (preview() && preview()!.fingerprint !== fingerprint())
             setPreview(undefined);
@@ -374,6 +509,146 @@ export default function StrategyWorkspace() {
             ...p.own,
             ...option.picks,
         ]);
+    });
+    const previewReplies = createMemo(() => {
+        const option = activePreview();
+        const window = coachWindow();
+        if (!option || !window?.chronological || !window.nextOpponentPick ||
+            window.bansBeforeReply.length || !previewRead()?.after) return [];
+        const current = planning();
+        return strategyOptions(
+            current.enemy,
+            [...current.own, ...option.picks],
+            roleCandidates(),
+            {
+                bans: bans(),
+                unavailable: live()?.unavailable[current.isBlue ? "opponent" : "ally"] ?? [],
+            },
+            1,
+            "",
+            current.enemy,
+            "pressure",
+        ).singles.slice(0, 3);
+    });
+    const previewReplyEvidence = createMemo(() => {
+        const activeDataset = dataset();
+        const fullDataset = dataset30Days();
+        const option = activePreview();
+        if (!option || !activeDataset || !fullDataset || !rankStatus().available)
+            return new Map<string, DraftGapPickEvidence>();
+        const current = planning();
+        return new Map(previewReplies().flatMap((reply) => {
+            const entry = draftGapPickEvidence(
+                activeDataset,
+                fullDataset,
+                reply.picks,
+                current.enemy,
+                [...current.own, ...option.picks],
+                userConfig.minGames,
+            )[0];
+            return entry ? [[reply.picks[0].key, entry] as const] : [];
+        }));
+    });
+    const draftGapForOption = (option: Pick<StrategyOption, "picks"> | undefined) => {
+        const activeDataset = dataset();
+        const fullDataset = dataset30Days();
+        if (
+            !option || live() || !rankStatus().available ||
+            !activeDataset || !fullDataset
+        ) return undefined;
+        const after = reviewStrategy(
+            [...planning().own, ...option.picks],
+            planning().enemy,
+        );
+        if (!after.complete || after.issues.length) return undefined;
+        const roleMap = (picks: typeof after.blue.picks) => {
+            if (picks.length !== 5 || picks.some((pick) => pick.roles.length !== 1))
+                return undefined;
+            return new Map(picks.map((pick) => [
+                STRATEGY_ROLES.indexOf(pick.roles[0]) as Role,
+                pick.key,
+            ]));
+        };
+        const own = roleMap(after.blue.picks);
+        const enemy = roleMap(after.red.picks);
+        if (!own || !enemy || own.size !== 5 || enemy.size !== 5) return undefined;
+        if ([...own, ...enemy].some(([role, key]) =>
+            !activeDataset.championData[key]?.statsByRole[role])) return undefined;
+        const rating = analyzeDraft(activeDataset, fullDataset, own, enemy, {
+            ignoreChampionWinrates: userConfig.ignoreChampionWinrates,
+            riskLevel: userConfig.riskLevel,
+            minGames: userConfig.minGames,
+        });
+        return Number.isFinite(rating.winrate) ? rating : undefined;
+    };
+    const previewDraftGap = createMemo(() => draftGapForOption(activePreview()));
+    const alternativeDraftGap = createMemo(() => draftGapForOption(sameSlotChoice()));
+    const currentDraftGap = createMemo(() => {
+        const current = planning();
+        const original = current.current.find((pick) => pick.key === current.outgoing);
+        return original ? draftGapForOption({ picks: [original] }) : undefined;
+    });
+    const previewDraftGapPicks = createMemo(() => {
+        const option = activePreview();
+        const activeDataset = dataset();
+        const fullDataset = dataset30Days();
+        if (!option || !activeDataset || !fullDataset || !rankStatus().available)
+            return undefined;
+        return draftGapPickEvidence(
+            activeDataset,
+            fullDataset,
+            option.picks,
+            planning().own,
+            planning().enemy,
+            userConfig.minGames,
+        );
+    });
+    const alternativeDraftGapPicks = createMemo(() => {
+        const option = sameSlotChoice();
+        const activeDataset = dataset();
+        const fullDataset = dataset30Days();
+        if (!option || !activeDataset || !fullDataset || !rankStatus().available)
+            return undefined;
+        return draftGapPickEvidence(
+            activeDataset,
+            fullDataset,
+            option.picks,
+            planning().own,
+            planning().enemy,
+            userConfig.minGames,
+        );
+    });
+    const replacementScreen = createMemo(() => {
+        const activeDataset = dataset();
+        const fullDataset = dataset30Days();
+        const current = planning();
+        if (live() || !current.outgoing || windowSteps().length !== 1 ||
+            !rankStatus().available || !activeDataset || !fullDataset)
+            return undefined;
+        return screenDraftGapReplacements(
+            current.own,
+            current.enemy,
+            roleCandidates(),
+            {
+                bans: bans(),
+                unavailable: [current.outgoing],
+                owned: draft.ownedChampions(),
+            },
+            (team, enemy, pick) => {
+                if ([...team, ...enemy].some(([role, key]) =>
+                    !activeDataset.championData[key]?.statsByRole[role])) return undefined;
+                const rating = analyzeDraft(activeDataset, fullDataset, team, enemy, {
+                    ignoreChampionWinrates: userConfig.ignoreChampionWinrates,
+                    riskLevel: userConfig.riskLevel,
+                    minGames: userConfig.minGames,
+                });
+                return {
+                    modelIndex: rating.winrate,
+                    roleGames: activeDataset.championData[pick.key]
+                        ?.statsByRole[STRATEGY_ROLES.indexOf(pick.role!) as Role]?.games ?? 0,
+                };
+            },
+        );
     });
     const choosePreview = (
         option: StrategyOption,
@@ -406,6 +681,13 @@ export default function StrategyWorkspace() {
         setFocus(team === "ally" ? "blue" : "red");
     };
     const statistical = () => allyDraftAnalysis()?.winrate;
+    const outcome = createMemo(() =>
+        assessStrategyOutcome(
+            review(),
+            rankStatus().available ? statistical() : undefined,
+            !!live(),
+        ),
+    );
     const assignRole = (
         team: "ally" | "opponent",
         index: number,
@@ -458,18 +740,26 @@ export default function StrategyWorkspace() {
                     .map((p) => `${p.name} · ${p.role}`)
                     .join(" + ")}
             </strong>
-            <span>
-                {props.option.answers.length
-                    ? `Adds an answer: ${props.option.answers.join("; ")}.`
+            <span class="strategy-option-reason">
+                {props.option.unassessedPicks.length
+                    ? "Role capability profile missing. Inspect this legal pick without a strength ranking."
+                    : props.option.answers.length
+                    ? `Answers: ${props.option.answers.join("; ")}.`
                     : props.option.plan
-                      ? `Explore: ${props.option.plan}.`
+                      ? `Team theme: ${props.option.plan}.`
                       : "Explore this role assignment."}
             </span>
-            <small>
-                {props.option.remaining.length
-                    ? `Still needs: ${props.option.remaining.slice(0, 2).join("; ")}`
-                    : "Check conditions and enemy replies before locking."}
-            </small>
+            <span class="strategy-option-response">
+                {props.option.unassessedPicks.length
+                    ? "Team fit, timing and counterplay need a manual check."
+                    : props.option.opponentAnswers.length
+                    ? `Opponent gains: ${props.option.opponentAnswers.slice(0, 2).join("; ")}`
+                    : props.option.opponentNewNeeds.length
+                      ? `Opponent must solve: ${props.option.opponentNewNeeds.slice(0, 2).join("; ")}`
+                      : props.option.remaining.length
+                        ? `Still needs: ${props.option.remaining.slice(0, 2).join("; ")}`
+                        : "Check enemy replies before locking."}
+            </span>
             <span class="strategy-link">
                 Compare this {props.option.picks.length > 1 ? "pair" : "pick"} →
             </span>
@@ -663,6 +953,7 @@ export default function StrategyWorkspace() {
                     )}
                 </For>
             </div>
+            <div class="strategy-overview">
             <div class="strategy-verdict">
                 <span class="strategy-eyebrow">
                     {review().complete
@@ -683,11 +974,37 @@ export default function StrategyWorkspace() {
                     {blue().length} · Red {review().red.covered}/{red().length}.
                     Coverage is not confidence.
                 </small>
+                <Show when={blue().length || red().length}>
+                    <p class="strategy-evidence-caveat">
+                        Capability tags include curated interpretations without
+                        current-patch verification. Knowledge snapshot: patch{" "}
+                        {knowledge()?.metadata.latestPatch?.version ?? "unknown"}.
+                        Check role, build and matchup conditions before locking a pick.
+                    </p>
+                </Show>
+            </div>
+            <section class="strategy-outcome" aria-label="Draft outcome assessment">
+                <span class="strategy-eyebrow">WHICH DRAFT WINS?</span>
+                <h2>{outcome().heading}</h2>
+                <p>{outcome().explanation}</p>
+                <Show when={outcome().modelIndex !== undefined}>
+                    <small>
+                        Rating index: Blue {outcome().modelIndex!.toFixed(1)} ·
+                        Red {(100 - outcome().modelIndex!).toFixed(1)}. This is
+                        not a calibrated win chance.
+                    </small>
+                </Show>
+            </section>
             </div>
             <div class="strategy-team-grid">
                 <TeamPlan side="Blue" team={review().blue} />
                 <TeamPlan side="Red" team={review().red} />
             </div>
+            <details class="strategy-deep-dive">
+                <summary>
+                    <span>Explore mechanics, timing and source evidence</span>
+                    <small>Detailed claims and champion records</small>
+                </summary>
             <div class="strategy-toolbar">
                 <div class="strategy-segment" aria-label="Team to inspect">
                     <button
@@ -866,6 +1183,7 @@ export default function StrategyWorkspace() {
                                             <div class="strategy-color-row">
                                                 <span>Main</span>
                                                 <StrategicColorChips
+                                                    english
                                                     colors={entry()
                                                         .profile.colors.filter(
                                                             (c) =>
@@ -876,6 +1194,7 @@ export default function StrategyWorkspace() {
                                                 />
                                                 <span>Off</span>
                                                 <StrategicColorChips
+                                                    english
                                                     colors={entry()
                                                         .profile.colors.filter(
                                                             (c) =>
@@ -890,6 +1209,13 @@ export default function StrategyWorkspace() {
                                                 {entry().profile.review_status}{" "}
                                                 · {entry().scope} profile
                                             </small>
+                                            <Show when={entry().profile.source_url}>
+                                                {(url) => (
+                                                    <a href={url()} target="_blank" rel="noopener noreferrer">
+                                                        Color source ↗
+                                                    </a>
+                                                )}
+                                            </Show>
                                         </>
                                     )}
                                 </Show>
@@ -909,9 +1235,17 @@ export default function StrategyWorkspace() {
                                     <small>
                                         Coaching:{" "}
                                         {p.coaching?.review_status ?? "missing"}{" "}
-                                        · reviewed patch{" "}
+                                        · profile patch{" "}
                                         {p.coaching?.patch_version ?? "unknown"}
                                     </small>
+                                    <Show when={p.coaching?.source_url}>
+                                        {(url) => (
+                                            <p class="strategy-source-line">
+                                                Kit reference: <a href={url()} target="_blank" rel="noopener noreferrer">Riot champion abilities ↗</a>.
+                                                Coaching interpretation: RiftTheory, provisional unless marked reviewed.
+                                            </p>
+                                        )}
+                                    </Show>
                                     <For
                                         each={
                                             p.knowledge?.capabilities.filter(
@@ -940,6 +1274,7 @@ export default function StrategyWorkspace() {
                     }}
                 </For>
             </Show>
+            </details>
             <Show when={windowSteps().length}>
                 <section class="strategy-next">
                     <div class="strategy-section-heading">
@@ -954,16 +1289,96 @@ export default function StrategyWorkspace() {
                         </div>
                         <small>
                             {options().evaluated} legal champion-role options
-                            with capability evidence
+                            with recorded capability tags
                         </small>
                     </div>
-                    <p class="strategy-explanation">
-                        Ordered by answered draft needs, fewer new concerns,
-                        then capability coverage. Ties are alphabetical. Pair
-                        comparisons sample the top 12 champions; a search pairs
-                        up to 12 matches with up to 12 other partners. This is a
-                        shortlist to examine, not a winrate ranking.
-                    </p>
+                    <details class="strategy-method">
+                        <summary>How this shortlist is ordered</summary>
+                        <p class="strategy-explanation">
+                            Ordered by answered draft needs, opponent responses,
+                            fewer new concerns, then capability coverage. Ties are
+                            alphabetical. Pair comparisons sample the top 12
+                            champions; a search pairs up to 12 matches with up to
+                            12 other partners. This is a shortlist to examine,
+                            not a winrate ranking.
+                        </p>
+                    </details>
+                    <Show when={replacementScreen()?.top.length}>
+                        <details class="strategy-method">
+                            <summary>
+                                DraftGap model screen · {replacementScreen()?.evaluated} legal
+                                {" "}{replacementScreen()?.role} replacements
+                            </summary>
+                            <p class="strategy-explanation">
+                                Fixed other nine picks and one role assignment. Highest DraftGap
+                                rating indices in the screened legal pool are shown below.
+                                The pool follows current bans, established role samples
+                                and your available champions.
+                                This retrospective model screen does not value the original
+                                pick order, future opponent responses or player comfort.
+                                The index is not a calibrated win chance.
+                            </p>
+                            <Show when={currentDraftGap()}>
+                                {(rating) => (
+                                    <p class="strategy-explanation">
+                                        Current pick in this completed draft:{" "}
+                                        <strong>{(rating().winrate * 100).toFixed(1)} / 100</strong>
+                                        {" "}DraftGap rating index for the choosing team.
+                                    </p>
+                                )}
+                            </Show>
+                            <div class="strategy-replacement-list">
+                                <For each={replacementScreen()?.top}>
+                                    {(entry) => (
+                                        <button
+                                            class="strategy-button"
+                                            onClick={(event) => choosePreview(
+                                                compareStrategyOption(
+                                                    planning().own,
+                                                    planning().enemy,
+                                                    [entry.pick],
+                                                    planning().current,
+                                                ),
+                                                event.currentTarget,
+                                            )}
+                                        >
+                                            <strong>{entry.pick.name} · {entry.pick.role}</strong>
+                                            <span>{(entry.modelIndex * 100).toFixed(1)} / 100 rating index · {entry.roleGames.toLocaleString()} role games</span>
+                                            <Show when={currentDraftGap()}>
+                                                {(rating) => (
+                                                    <small>
+                                                        {((entry.modelIndex - rating().winrate) * 100) >= 0 ? "+" : ""}
+                                                        {((entry.modelIndex - rating().winrate) * 100).toFixed(1)} index points vs current pick
+                                                    </small>
+                                                )}
+                                            </Show>
+                                        </button>
+                                    )}
+                                </For>
+                            </div>
+                        </details>
+                    </Show>
+                    <Show when={coachWindow()}>
+                        {(window) => (
+                            <section class="strategy-coach" aria-label="Pick order coach">
+                                <span class="strategy-eyebrow">PICK ORDER COACH · {window().label}</span>
+                                <For each={window().questions}>
+                                    {(question) => <p>{question}</p>}
+                                </For>
+                                <p>
+                                    <strong>Next draft actions: </strong>
+                                    {window().nextActions.join(" → ") || "Draft complete after this pick."}
+                                </p>
+                                <Show when={!window().chronological}>
+                                    <small>
+                                        Retrospective edit: later picks may already be visible.
+                                        This comparison cannot prove what was best with only
+                                        the information available at this original slot.
+                                    </small>
+                                </Show>
+                            </section>
+                        )}
+                    </Show>
                     <label class="strategy-search">
                         Explore a champion
                         <input
@@ -1005,19 +1420,35 @@ export default function StrategyWorkspace() {
                             </For>
                         </div>
                     </Show>
+                    <h3>Shortlist from recorded role profiles</h3>
                     <div class="strategy-options">
                         <For
                             each={options().singles}
                             fallback={
                                 <p>
-                                    No supported legal options found. Check
-                                    bans, role assignments and dataset samples.
+                                    No legal option with a recorded role capability profile
+                                    matches this view. Check bans, roles and the search results below.
                                 </p>
                             }
                         >
                             {(option) => <OptionCard option={option} />}
                         </For>
                     </div>
+                    <Show when={options().unassessed.length}>
+                        <section class="strategy-unassessed" aria-label="Search results with missing role evidence">
+                            <h3>Legal picks with missing role evidence</h3>
+                            <p class="strategy-explanation">
+                                These match your search and are legal for the selected role. They are
+                                outside the ranked shortlist because the role capability profile is
+                                missing; missing data is not a weakness of the champion.
+                            </p>
+                            <div class="strategy-options">
+                                <For each={options().unassessed}>
+                                    {(option) => <OptionCard option={option} />}
+                                </For>
+                            </div>
+                        </section>
+                    </Show>
                     <Show when={activePreview()}>
                         {(option) => (
                             <section
@@ -1050,9 +1481,246 @@ export default function StrategyWorkspace() {
                                     . Both teams are reassessed; these are
                                     conditional routes, not a predicted winner.
                                 </p>
+                                <Show when={option().unassessedPicks.length}>
+                                    <p class="strategy-evidence-caveat">
+                                        No role capability profile for {option().unassessedPicks.join(", ")}.
+                                        Any displayed team plan is based on the other recorded picks.
+                                        This comparison cannot establish this pick's theme fit or
+                                        counterplay; check the champion kit, build and matchup.
+                                    </p>
+                                </Show>
                                 <Show when={previewRead()}>
                                     {(comparison) => (
-                                        <div class="strategy-claims">
+                                        <div class="strategy-preview-colors" aria-label="Candidate color reasoning">
+                                            <span class="strategy-eyebrow">COLOR IDENTITY OF THIS CHOICE</span>
+                                            <For each={option().picks}>
+                                                {(candidate) => {
+                                                    const picked = () => comparison().after.blue.picks.find((pick) => pick.key === candidate.key);
+                                                    const evidence = () => {
+                                                        const pick = picked();
+                                                        return pick ? strategyColorEvidence(pick) : undefined;
+                                                    };
+                                                    const fit = () => strategyThemeFits(comparison().after.blue)
+                                                        .find((entry) => entry.key === candidate.key);
+                                                    return (
+                                                        <div class="strategy-preview-color">
+                                                            <strong>{candidate.name}</strong>
+                                                            <Show when={evidence()} fallback={<small>No reviewed color profile for this role.</small>}>
+                                                                {(entry) => (
+                                                                    <>
+                                                                        <StrategicColorChips
+                                                                            english
+                                                                            colors={entry().profile.colors
+                                                                                .filter((color) => color.assignment === "main")
+                                                                                .map((color) => color.color)}
+                                                                        />
+                                                                        <p>{entry().profile.reasoning}</p>
+                                                                        <small>{colorProvenance(entry())}</small>
+                                                                    </>
+                                                                )}
+                                                            </Show>
+                                                            <small><strong>Theme fit: {fit()?.label ?? "Unconfirmed"}.</strong> {fit()?.reason}</small>
+                                                        </div>
+                                                    );
+                                                }}
+                                            </For>
+                                        </div>
+                                    )}
+                                </Show>
+                                <Show when={sameSlotChoice()}>
+                                    {(alternative) => (
+                                        <section class="strategy-choice-compare" aria-label="Same-slot pick comparison">
+                                            <div class="strategy-section-heading">
+                                                <div>
+                                                    <span class="strategy-eyebrow">WHY THIS PICK NOW?</span>
+                                                    <h4>Compare the same draft slot</h4>
+                                                </div>
+                                                <button class="strategy-button" onClick={(event) => choosePreview(alternative(), event.currentTarget)}>
+                                                    Inspect alternative →
+                                                </button>
+                                            </div>
+                                            <p class="strategy-explanation">Both choices use the same visible draft state and legal slot window. This shortlist compares supported changes; it does not prove either pick wins more games.</p>
+                                            <div class="strategy-choice-grid">
+                                                <ChoiceSummary label="SELECTED CHOICE" option={option()} samples={previewDraftGapPicks()} />
+                                                <ChoiceSummary label="SHORTLIST ALTERNATIVE" option={alternative()} samples={alternativeDraftGapPicks()} />
+                                            </div>
+                                            <Show when={previewDraftGapPicks()?.length && alternativeDraftGapPicks()?.length}>
+                                                <small class="strategy-choice-sample-note">
+                                                    DraftGap rates are rank-adjusted estimates; game
+                                                    counts are samples. They do not predict this
+                                                    unfinished draft or isolate a pick's effect.
+                                                </small>
+                                            </Show>
+                                            <Show when={previewDraftGap() && alternativeDraftGap()}>
+                                                <div class="strategy-choice-rating" aria-label="DraftGap same-slot rating comparison">
+                                                    <strong>Complete-draft rating index</strong>
+                                                    <p>
+                                                        Selected {(previewDraftGap()!.winrate * 100).toFixed(1)} / 100
+                                                        {" · "}Alternative {(alternativeDraftGap()!.winrate * 100).toFixed(1)} / 100
+                                                    </p>
+                                                    <small>
+                                                        Same opponents and pick window, with the candidate
+                                                        choice changed.
+                                                        This is a DraftGap model comparison, not a calibrated
+                                                        win chance or a proven effect of the pick.
+                                                    </small>
+                                                </div>
+                                            </Show>
+                                        </section>
+                                    )}
+                                </Show>
+                                <Show when={coachWindow()?.chronological && coachWindow()?.nextOpponentPick && !coachWindow()?.bansBeforeReply.length}>
+                                    <section class="strategy-replies" aria-label="Possible opponent replies">
+                                        <span class="strategy-eyebrow">NEXT OPPONENT PICK · {coachWindow()?.nextOpponentPick}</span>
+                                        <h4>Replies to stress-test</h4>
+                                        <p class="strategy-explanation">Legal options screened from recorded capability tags for pressure on your plan. DraftGap role samples use the current patch; matchups use 30 days. Their rates are rank-adjusted estimates, and these scenarios do not predict the opponent's choice.</p>
+                                        <div class="strategy-reply-list">
+                                            <For each={previewReplies()} fallback={<p>No supported reply surfaced in this bounded screen. Counterplay may still exist.</p>}>
+                                                {(reply) => (
+                                                    <article>
+                                                        <strong>{reply.picks[0].name} · {reply.picks[0].role}</strong>
+                                                        <p>{reply.answers.length ? `Answers: ${reply.answers.join("; ")}` : reply.plan ? `Team theme: ${reply.plan}` : "Explore the resulting team plan."}</p>
+                                                        <Show when={previewReplyEvidence().get(reply.picks[0].key)}>
+                                                            {(sample) => (
+                                                                <small>
+                                                                    DraftGap: {sample().roleGames.toLocaleString()} role games
+                                                                    {sample().roleRate === undefined
+                                                                        ? " · rate unavailable"
+                                                                        : ` · ${(sample().roleRate! * 100).toFixed(1)}% rank-adjusted rate`}
+                                                                    {sample().roleThin ? " · small sample" : ""}
+                                                                    {sample().matchups[0]
+                                                                        ? ` · ${sample().matchups[0].label}: ${(sample().matchups[0].rate * 100).toFixed(1)}% / ${sample().matchups[0].games.toLocaleString()} games${sample().matchups[0].thin ? " · small sample" : ""}`
+                                                                        : ""}
+                                                                </small>
+                                                            )}
+                                                        </Show>
+                                                        <Show when={reply.opponentLostPlans.length}>
+                                                            <small>Your lost route: {reply.opponentLostPlans.join("; ")}</small>
+                                                        </Show>
+                                                        <Show when={reply.opponentNewNeeds.length}>
+                                                            <small>Your draft must then solve: {reply.opponentNewNeeds.join("; ")}</small>
+                                                        </Show>
+                                                    </article>
+                                                )}
+                                            </For>
+                                        </div>
+                                    </section>
+                                </Show>
+                                <Show when={coachWindow()?.chronological && coachWindow()?.bansBeforeReply.length && !coachWindow()?.nextOpponentPick}>
+                                    <p class="strategy-explanation">The second ban phase comes before another opponent pick. Recheck the reply set after those bans; the current pool cannot establish a final counterpick.</p>
+                                </Show>
+                                <Show when={previewRead()}>
+                                    {(comparison) => (
+                                        <div class="strategy-coach-grid" aria-label="Draft coach explanation">
+                                            <article class="strategy-coach-card">
+                                                <h4>What this choice gains</h4>
+                                                <p>
+                                                    {comparison().own.answeredNeeds.map((n) => n.title).join("; ") ||
+                                                        "No previously identified team need is fully answered."}
+                                                </p>
+                                                <Show when={comparison().own.gainedPlans.length}>
+                                                    <p>New route: {comparison().own.gainedPlans.map((p) => p.title).join("; ")}</p>
+                                                </Show>
+                                                <Show when={comparison().opponent.newNeeds.length}>
+                                                    <p>Opponent must now solve: {comparison().opponent.newNeeds.map((n) => n.title).join("; ")}</p>
+                                                </Show>
+                                            </article>
+                                            <article class="strategy-coach-card">
+                                                <h4>What it costs or reveals</h4>
+                                                <p>
+                                                    {[
+                                                        ...comparison().own.newNeeds.map((n) => n.title),
+                                                        ...comparison().own.lostPlans.map((p) => `Lost route: ${p.title}`),
+                                                        ...option().roleCommitments,
+                                                    ].join("; ") || "No new obligation or lost route is established."}
+                                                </p>
+                                                <Show when={comparison().opponent.answeredNeeds.length}>
+                                                    <p>Opponent gains an answer: {comparison().opponent.answeredNeeds.map((n) => n.title).join("; ")}</p>
+                                                </Show>
+                                            </article>
+                                            <article class="strategy-coach-card">
+                                                <h4>Win condition and response</h4>
+                                                <p>{comparison().after.blue.plans[0]?.win ?? "A shared win route is not established yet."}</p>
+                                                <p><strong>Requires: </strong>{comparison().after.blue.plans[0]?.requires ?? "More picks or role evidence."}</p>
+                                                <p><strong>Opponent can test: </strong>{comparison().after.blue.plans[0]?.answer ?? "Compare legal replies as the draft continues."}</p>
+                                            </article>
+                                            <article class="strategy-coach-card">
+                                                <h4>Timing and resources</h4>
+                                                <For each={comparison().after.blue.timeline.slice(0, 3)} fallback={<p>No supported timing route yet.</p>}>
+                                                    {(phase) => <p><strong>{phase.phase}: </strong>{phase.action} {phase.check}</p>}
+                                                </For>
+                                            </article>
+                                        </div>
+                                    )}
+                                </Show>
+                                <Show when={previewDraftGap()}>
+                                    {(rating) => (
+                                        <section class="strategy-coach-stats" aria-label="DraftGap statistical baseline">
+                                            <h4>DraftGap statistical baseline</h4>
+                                            <p>
+                                                Complete-draft rating index for the choosing team:
+                                                {" "}{(rating().winrate * 100).toFixed(1)} / 100.
+                                                This is not a calibrated win probability.
+                                            </p>
+                                            <small>
+                                                Rating contributions · champions {(
+                                                    rating().allyChampionRating.totalRating -
+                                                    rating().enemyChampionRating.totalRating
+                                                ).toFixed(0)} · duos {(
+                                                    rating().allyDuoRating.totalRating -
+                                                    rating().enemyDuoRating.totalRating
+                                                ).toFixed(0)} · matchups {rating().matchupRating.totalRating.toFixed(0)}.
+                                                Positive values favor the choosing team within this rating model.
+                                            </small>
+                                        </section>
+                                    )}
+                                </Show>
+                                <Show when={previewDraftGapPicks()?.length}>
+                                    <section class="strategy-coach-stats" aria-label="DraftGap pick samples">
+                                        <h4>DraftGap pick samples</h4>
+                                        <p class="strategy-explanation">
+                                            Current-patch role sample; duo and matchup samples use the
+                                            30-day dataset. The percentages are DraftGap's rank-adjusted
+                                            rates; game counts show sample size. They are not raw win
+                                            rates, a pick's isolated value or an unfinished-draft forecast.
+                                        </p>
+                                        <small>
+                                            {rankStatus().active} · patch {dataset()?.version} ·
+                                            current-patch snapshot {dataset()?.date
+                                                ? new Date(dataset()!.date).toLocaleDateString()
+                                                : "date unknown"}
+                                        </small>
+                                        <For each={previewDraftGapPicks()}>
+                                            {(entry) => (
+                                                <div class="strategy-sample-pick">
+                                                    <strong>{entry.champion} · {entry.role}</strong>
+                                                    <p>
+                                                        Role: {entry.roleGames.toLocaleString()} games
+                                                        {entry.roleRate === undefined
+                                                            ? " · rate unavailable"
+                                                            : ` · ${(entry.roleRate * 100).toFixed(1)}% rank-adjusted rate`}
+                                                        {entry.roleThin ? " · small sample" : ""}
+                                                    </p>
+                                                    <For each={entry.duos}>
+                                                        {(sample) => (
+                                                            <p>Duo {sample.label}: {(sample.rate * 100).toFixed(1)}% · {sample.games.toLocaleString()} games{sample.thin ? " · small sample" : ""}</p>
+                                                        )}
+                                                    </For>
+                                                    <For each={entry.matchups}>
+                                                        {(sample) => (
+                                                            <p>Matchup {sample.label}: {(sample.rate * 100).toFixed(1)}% · {sample.games.toLocaleString()} games{sample.thin ? " · small sample" : ""}</p>
+                                                        )}
+                                                    </For>
+                                                </div>
+                                            )}
+                                        </For>
+                                    </section>
+                                </Show>
+                                <Show when={previewRead()}>
+                                    {(comparison) => (
+                                        <details class="strategy-comparison-detail">
+                                            <summary>Full before and after comparison</summary>
+                                            <div class="strategy-claims">
                                             <ComparisonTeam
                                                 label={`${planning().isBlue ? "Blue" : "Red"} · team choosing`}
                                                 before={
@@ -1073,7 +1741,8 @@ export default function StrategyWorkspace() {
                                                     comparison().comparable
                                                 }
                                             />
-                                        </div>
+                                            </div>
+                                        </details>
                                     )}
                                 </Show>
                                 <p>
@@ -1144,21 +1813,6 @@ export default function StrategyWorkspace() {
                     . 30-day dataset: {dataset30Days()?.version}. Requested
                     rank: {rankStatus().requested}.
                 </p>
-                <Show
-                    when={
-                        !live() &&
-                        review().complete &&
-                        typeof statistical() === "number" &&
-                        Number.isFinite(statistical())
-                    }
-                >
-                    <p>
-                        Separate statistical estimate: Blue{" "}
-                        {(statistical()! * 100).toFixed(1)}% · Red{" "}
-                        {((1 - statistical()!) * 100).toFixed(1)}%. Strategy
-                        does not adjust this estimate.
-                    </p>
-                </Show>
             </details>
         </section>
     );

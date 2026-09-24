@@ -3,6 +3,7 @@ import {
     STANDARD_DRAFT_SEQUENCE,
     type CompletedLiveDraftGame,
     type LiveDraftSeriesConfig,
+    nextDraftStep,
 } from "@draftgap/core/src/live-draft/series";
 import type { Role } from "@draftgap/core/src/models/Role";
 import type { Team } from "@draftgap/core/src/models/Team";
@@ -51,8 +52,10 @@ export function captureStrategyGame(
                 championKey: action.championKey,
             };
     }
-    const upcoming = STANDARD_DRAFT_SEQUENCE.slice(game.actions.length).find(
-        (step) => step.kind === "pick",
+    const upcoming = STANDARD_DRAFT_SEQUENCE.find(
+        (step) => step.kind === "pick" && !game.actions.some((action) =>
+            action.kind === step.kind && action.side === step.side && action.slot === step.slot,
+        ),
     );
     const name = (id: "team1" | "team2") =>
         id === "team1" ? config.team1Name : config.team2Name;
@@ -78,7 +81,6 @@ export function captureStrategyGame(
                   index: upcoming.slot,
               }
             : undefined,
-        pendingBans:
-            STANDARD_DRAFT_SEQUENCE[game.actions.length]?.kind === "ban",
+        pendingBans: nextDraftStep(game.actions)?.kind === "ban",
     };
 }

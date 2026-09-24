@@ -41,6 +41,7 @@ export default function StrategicColorChips(props: {
     colors: readonly string[];
     prefix?: string;
     compact?: boolean;
+    english?: boolean;
 }) {
     const { t, term } = useI18n();
     return (
@@ -61,7 +62,7 @@ export default function StrategicColorChips(props: {
                         style={COLOR_STYLES[color]}
                     >
                         {props.prefix ? `${props.prefix} ` : ""}
-                        {term(color)}
+                        {props.english ? `${color[0].toUpperCase()}${color.slice(1)}` : term(color)}
                     </span>
                 )}
             </For>

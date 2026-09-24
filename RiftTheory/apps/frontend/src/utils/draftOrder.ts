@@ -32,6 +32,11 @@ export function draftResponseWindow(
     const result: { team: Team; index: number }[] = [];
     for (let i = start; i < order.length; i++) {
         const current = order[i];
+        // R3 and R4 are separated by the second ban phase, even though they
+        // appear adjacent in the pick-only order.
+        if (i > start && current.team === "opponent" && current.index === 3 &&
+            order[i - 1].team === "opponent" && order[i - 1].index === 2)
+            break;
         if (
             current.team !== step.team ||
             teams[current.team][current.index]?.championKey

@@ -623,6 +623,7 @@ export function compareStrategyDraft(
 
 export type StrategyOption = {
     picks: StrategyPick[];
+    unassessedPicks: string[];
     answers: string[];
     remaining: string[];
     risks: StrategyClaim[];
@@ -631,6 +632,9 @@ export type StrategyOption = {
     scenarios: number;
     covered: number;
     newNeeds: string[];
+    opponentNewNeeds: string[];
+    opponentAnswers: string[];
+    opponentLostPlans: string[];
     roleCommitments: string[];
 };
 
@@ -654,6 +658,9 @@ export function compareStrategyOption(
     );
     return {
         picks: additions,
+        unassessedPicks: after.picks
+            .filter((pick) => additions.some((addition) => addition.key === pick.key) && !pick.capabilities.length)
+            .map((pick) => pick.name),
         answers: comparison.own.answeredNeeds.map((n) => n.title),
         remaining: after.needs.map((n) => n.title),
         risks,
@@ -666,6 +673,9 @@ export function compareStrategyOption(
         scenarios: after.scenarios,
         covered: after.covered,
         newNeeds: comparison.own.newNeeds.map((n) => n.title),
+        opponentNewNeeds: comparison.opponent.newNeeds.map((n) => n.title),
+        opponentAnswers: comparison.opponent.answeredNeeds.map((n) => n.title),
+        opponentLostPlans: comparison.opponent.lostPlans.map((p) => p.title),
         roleCommitments: after.picks.flatMap((p) => {
             const previous = before.picks.find((b) => b.key === p.key);
             return comparison.comparable &&
@@ -688,13 +698,14 @@ export function strategyOptions(
     windowSize: number,
     search = "",
     current = own,
+    mode: "default" | "pressure" = "default",
 ) {
     if (
         !windowSize ||
         own.length >= 5 ||
         reviewStrategy(own, enemy).issues.length
     )
-        return { singles: [], pairs: [], evaluated: 0 };
+        return { singles: [], pairs: [], unassessed: [], evaluated: 0 };
     const blocked = new Set([
         ...constraints.bans,
         ...(constraints.unavailable ?? []),
@@ -702,7 +713,9 @@ export function strategyOptions(
         ...enemy.map((p) => p.key),
     ]);
     const options: StrategyOption[] = [];
+    const unassessed: StrategyOption[] = [];
     const baselineCoverage = reviewCoverage(own);
+    const query = search.trim().toLowerCase();
     for (const candidate of candidates) {
         if (
             blocked.has(candidate.key) ||
@@ -710,13 +723,27 @@ export function strategyOptions(
         )
             continue;
         const resolved = resolveStrategyPicks([...own, candidate]);
-        if (!resolved.scenarios || !resolved.picks.at(-1)?.capabilities.length)
+        if (!resolved.scenarios) continue;
+        if (!resolved.picks.at(-1)?.capabilities.length) {
+            // An explicit search must not hide a legal champion just because
+            // our role knowledge is incomplete. Keep it out of ranked lists.
+            if (query && candidate.name.toLowerCase().includes(query))
+                unassessed.push(compareStrategyOption(own, enemy, [candidate], current));
             continue;
+        }
         const option = compareStrategyOption(own, enemy, [candidate], current);
         if (option.covered > baselineCoverage) options.push(option);
     }
+    // First address our own needs, then prefer changes that force an enemy
+    // answer and avoid changes that remove one of the enemy's open problems.
     const sort = (a: StrategyOption, b: StrategyOption) =>
+        (mode === "pressure"
+            ? b.opponentLostPlans.length - a.opponentLostPlans.length ||
+              b.opponentNewNeeds.length - a.opponentNewNeeds.length
+            : 0) ||
         b.answers.length - a.answers.length ||
+        a.opponentAnswers.length - b.opponentAnswers.length ||
+        b.opponentNewNeeds.length - a.opponentNewNeeds.length ||
         a.newRisks.length - b.newRisks.length ||
         b.covered - a.covered ||
         a.picks
@@ -728,7 +755,6 @@ export function strategyOptions(
     for (const option of options)
         if (!distinct.some((o) => o.picks[0].key === option.picks[0].key))
             distinct.push(option);
-    const query = search.trim().toLowerCase();
     const matches = (option: StrategyOption) =>
         option.picks.some((p) => p.name.toLowerCase().includes(query));
     const matching = distinct.filter(matches);
@@ -779,6 +805,12 @@ export function strategyOptions(
     return {
         singles: matching.slice(0, 6),
         pairs: distinctPairs.slice(0, 3),
+        unassessed: unassessed
+            .sort((a, b) => a.picks[0].name.localeCompare(b.picks[0].name))
+            .filter((option, index, all) =>
+                all.findIndex((other) => other.picks[0].key === option.picks[0].key) === index,
+            )
+            .slice(0, 6),
         evaluated: options.filter(matches).length,
     };
 }
@@ -792,4 +824,55 @@ export function strategyColorEvidence(pick: ResolvedPick) {
         pick.knowledge,
         pick.roles.length === 1 ? pick.roles[0] : undefined,
     );
+}
+
+export type StrategyThemeFit = {
+    key: string;
+    label: "Core" | "Supports" | "Unclear" | "Unconfirmed";
+    reason: string;
+};
+
+const THEME_SUPPORT: Record<string, string[]> = {
+    dive: ["zone_control", "pick", "global_pressure"],
+    poke: ["wave_clear", "siege", "zone_control", "peel", "anti_dive"],
+    front: ["wave_clear", "sustain", "zone_control"],
+    pick: ["zone_control", "global_pressure", "wave_clear"],
+    split: ["global_pressure", "zone_control"],
+    disengage: ["wave_clear", "zone_control", "sustain"],
+};
+
+/** A transparent role in the primary plan; colors alone never establish fit. */
+export function strategyThemeFits(team: TeamStrategy): StrategyThemeFit[] {
+    const plan = team.plans[0];
+    return team.picks.map((pick) => {
+        if (!plan || !pick.capabilities.length)
+            return {
+                key: pick.key,
+                label: "Unconfirmed" as const,
+                reason: !plan
+                    ? "No supported team theme yet."
+                    : "Role-specific capability evidence is missing.",
+            };
+        const direct = plan.champions.includes(pick.key);
+        const support = pick.capabilities.filter((capability) =>
+            THEME_SUPPORT[plan.key]?.includes(capability),
+        );
+        if (direct)
+            return {
+                key: pick.key,
+                label: "Core" as const,
+                reason: `Directly contributes to ${plan.title.toLowerCase()}.`,
+            };
+        if (support.length)
+            return {
+                key: pick.key,
+                label: "Supports" as const,
+                reason: `Adds ${support.map((capability) => capability.replaceAll("_", " ")).join(" and ")} to the plan.`,
+            };
+        return {
+            key: pick.key,
+            label: "Unclear" as const,
+            reason: "No assessed capability directly connects this pick to the primary theme.",
+        };
+    });
 }

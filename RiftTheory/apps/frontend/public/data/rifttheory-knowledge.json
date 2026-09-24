@@ -1,12 +1,12 @@
 {
   "metadata": {
     "schemaVersion": 7,
-    "generatedAt": "2026-09-14T17:32:11.088Z",
+    "generatedAt": "2026-09-24T20:17:30.660Z",
     "latestPatch": {
       "version": "16.17.1",
       "discovered_at": "2026-09-04T18:41:58.403Z"
     },
-    "sourceCount": 12
+    "sourceCount": 17
   },
   "sources": [
     {
@@ -36,6 +36,41 @@
       "kind": "manual",
       "url": "https://www.leagueoflegends.com/en-us/champions/anivia/",
       "access_note": "Riot documents the ability kit. Trait levels and contextual conclusions are provisional RiftTheory interpretations, not Riot ratings."
+    },
+    {
+      "source_key": "rifttheory_editorial_review_of_riot_lulu_abilities",
+      "label": "RiftTheory editorial review of Riot Lulu abilities",
+      "kind": "manual",
+      "url": "https://www.leagueoflegends.com/en-us/champions/lulu/",
+      "access_note": null
+    },
+    {
+      "source_key": "rifttheory_editorial_review_of_riot_ornn_abilities",
+      "label": "RiftTheory editorial review of Riot Ornn abilities",
+      "kind": "manual",
+      "url": "https://www.leagueoflegends.com/en-us/champions/ornn/",
+      "access_note": null
+    },
+    {
+      "source_key": "rifttheory_editorial_review_of_riot_thresh_abilities",
+      "label": "RiftTheory editorial review of Riot Thresh abilities",
+      "kind": "manual",
+      "url": "https://www.leagueoflegends.com/en-us/champions/thresh/",
+      "access_note": null
+    },
+    {
+      "source_key": "rifttheory_editorial_review_of_riot_viego_abilities",
+      "label": "RiftTheory editorial review of Riot Viego abilities",
+      "kind": "manual",
+      "url": "https://www.leagueoflegends.com/en-us/champions/viego/",
+      "access_note": null
+    },
+    {
+      "source_key": "rifttheory_editorial_review_of_riot_zed_abilities",
+      "label": "RiftTheory editorial review of Riot Zed abilities",
+      "kind": "manual",
+      "url": "https://www.leagueoflegends.com/en-us/champions/zed/",
+      "access_note": null
     },
     {
       "source_key": "rifttheory_editorial_synthesis_evidence_and_limits_research_anivia_mid_profile",
@@ -15172,7 +15207,27 @@
         }
       ],
       "roleTraits": [],
-      "coachingProfiles": []
+      "coachingProfiles": [
+        {
+          "role": "support",
+          "damage_focus": "utility",
+          "power_curve": "timing_dependent",
+          "resource_demand": "low",
+          "execution_demand": 3,
+          "reasoning": "Lulu's support value depends on choosing when to use her spells for allied protection or offensive pressure. She can strengthen a carry and disrupt an entry, but the team needs a protected damage source and cannot assume both uses of the same cooldown at once.",
+          "patch_version": "unknown",
+          "assessment_method": "manual",
+          "confidence": 0.6,
+          "review_status": "provisional",
+          "source_key": "rifttheory_editorial_review_of_riot_lulu_abilities",
+          "source_url": "https://www.leagueoflegends.com/en-us/champions/lulu/",
+          "spike_notes": [
+            "Level 6 with Wild Growth available",
+            "Whimsy and Help, Pix! ready as enemy access begins",
+            "An allied damage dealer is positioned to use the protection"
+          ]
+        }
+      ]
     },
     {
       "riotKey": "99",
@@ -19130,7 +19185,27 @@
         }
       ],
       "roleTraits": [],
-      "coachingProfiles": []
+      "coachingProfiles": [
+        {
+          "role": "top",
+          "damage_focus": "utility",
+          "power_curve": "mid_late",
+          "resource_demand": "medium",
+          "execution_demand": 3,
+          "reasoning": "Ornn combines frontline access and area control with later item-upgrade value. His ultimate needs a viable approach and allied damage in range; the upgrade economy does not by itself establish winning lane priority or a favorable early skirmish.",
+          "patch_version": "unknown",
+          "assessment_method": "manual",
+          "confidence": 0.6,
+          "review_status": "provisional",
+          "source_key": "rifttheory_editorial_review_of_riot_ornn_abilities",
+          "source_url": "https://www.leagueoflegends.com/en-us/champions/ornn/",
+          "spike_notes": [
+            "Level 6 with Call of the Forge God available",
+            "Masterwork item upgrades become available to the team",
+            "Allied follow-up is in range before the second ultimate cast"
+          ]
+        }
+      ]
     },
     {
       "riotKey": "80",
@@ -26196,7 +26271,27 @@
         }
       ],
       "roleTraits": [],
-      "coachingProfiles": []
+      "coachingProfiles": [
+        {
+          "role": "support",
+          "damage_focus": "utility",
+          "power_curve": "timing_dependent",
+          "resource_demand": "low",
+          "execution_demand": 4,
+          "reasoning": "Thresh can start a catch or hold tools to interrupt entry and move an ally to safety. The value of either route depends on landing the control, keeping the lantern available and having allied follow-up; a missed hook alone does not establish a lost fight.",
+          "patch_version": "unknown",
+          "assessment_method": "manual",
+          "confidence": 0.6,
+          "review_status": "provisional",
+          "source_key": "rifttheory_editorial_review_of_riot_thresh_abilities",
+          "source_url": "https://www.leagueoflegends.com/en-us/champions/thresh/",
+          "spike_notes": [
+            "Death Sentence, Dark Passage and Flay are all available",
+            "Level 6 with The Box available for a committed fight",
+            "Dark Passage ready before an ally enters danger"
+          ]
+        }
+      ]
     },
     {
       "riotKey": "18",
@@ -29111,7 +29206,27 @@
         }
       ],
       "roleTraits": [],
-      "coachingProfiles": []
+      "coachingProfiles": [
+        {
+          "role": "jungle",
+          "damage_focus": "physical",
+          "power_curve": "timing_dependent",
+          "resource_demand": "medium",
+          "execution_demand": 4,
+          "reasoning": "Viego's fight route becomes more threatening after the first takedown because possession gives him another set of basic abilities and a free ultimate cast. Before that reset, access, target selection and allied setup matter; the draft should not count later possessions as guaranteed power.",
+          "patch_version": "unknown",
+          "assessment_method": "manual",
+          "confidence": 0.6,
+          "review_status": "provisional",
+          "source_key": "rifttheory_editorial_review_of_riot_viego_abilities",
+          "source_url": "https://www.leagueoflegends.com/en-us/champions/viego/",
+          "spike_notes": [
+            "Level 6 with Heartbreaker available",
+            "A first takedown creates a Sovereign's Domination possession window",
+            "Allied control and damage can secure the first reset target"
+          ]
+        }
+      ]
     },
     {
       "riotKey": "112",
@@ -32060,7 +32175,27 @@
         }
       ],
       "roleTraits": [],
-      "coachingProfiles": []
+      "coachingProfiles": [
+        {
+          "role": "mid",
+          "damage_focus": "physical",
+          "power_curve": "timing_dependent",
+          "resource_demand": "medium",
+          "execution_demand": 5,
+          "reasoning": "Zed threatens an exposed target through shadow access and a committed burst window. Shadow placement and energy determine whether he can leave safely; enemy protection and grouped positioning can deny the intended target even when his ultimate is ready.",
+          "patch_version": "unknown",
+          "assessment_method": "manual",
+          "confidence": 0.55,
+          "review_status": "provisional",
+          "source_key": "rifttheory_editorial_review_of_riot_zed_abilities",
+          "source_url": "https://www.leagueoflegends.com/en-us/champions/zed/",
+          "spike_notes": [
+            "Level 6 with Death Mark available",
+            "Living Shadow ready for entry or exit",
+            "Energy and a safe shadow route are available before committing"
+          ]
+        }
+      ]
     },
     {
       "riotKey": "221",

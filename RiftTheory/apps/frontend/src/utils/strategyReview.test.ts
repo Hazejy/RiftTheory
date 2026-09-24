@@ -10,6 +10,7 @@ import {
     reviewStrategy,
     roleScenarios,
     strategyOptions,
+    strategyThemeFits,
     type StrategyPick,
     type StrategyRole,
 } from "./strategyReview";
@@ -136,6 +137,20 @@ describe("strategy role resolution", () => {
 });
 
 describe("conditional strategy reasoning", () => {
+    test("primary theme fit distinguishes direct actors, support and unproven fit", () => {
+        const team = reviewStrategy([
+            pick("Diver", "top", ["dive"]),
+            pick("Starter", "jungle", ["engage"]),
+            pick("Setup", "mid", ["zone_control"]),
+            pick("Other", "bot", ["sustain"]),
+        ], []).blue;
+        expect(team.plans[0].key).toBe("dive");
+        expect(strategyThemeFits(team).map((fit) => fit.label)).toEqual([
+            "Core", "Core", "Supports", "Unclear",
+        ]);
+        expect(strategyThemeFits(reviewStrategy([pick("Solo", "top", ["dive"])], []).blue)[0].label)
+            .toBe("Unconfirmed");
+    });
     test("a catch route can address access without being relabeled hard engage", () => {
         const option = compareStrategyOption(
             [],
@@ -309,6 +324,18 @@ describe("conditional strategy reasoning", () => {
         expect(option.newNeeds).toContain("A reliable way to prepare waves");
     });
 
+    test("a candidate exposes the opponent's newly required protection", () => {
+        const option = compareStrategyOption(
+            [],
+            [pick("Enemy", "mid", ["wave_clear"])],
+            [pick("Entry", "jungle", ["engage"])],
+        );
+        expect(option.opponentNewNeeds).toContain(
+            "A way to survive the first entry",
+        );
+        expect(option.opponentAnswers).toEqual([]);
+    });
+
     test("committing a role explicitly explains the lost flex option", () => {
         const flex = pick("Flex", "top", ["dive"]);
         flex.role = undefined;
@@ -323,6 +350,37 @@ describe("conditional strategy reasoning", () => {
 });
 
 describe("candidate legality and response windows", () => {
+    test("equal own coverage prefers a pick that creates an opponent problem", () => {
+        const options = strategyOptions(
+            [pick("Ally", "top", ["zone_control"])],
+            [pick("Enemy", "mid", ["wave_clear"])],
+            [
+                pick("APlain", "jungle", ["wave_clear"]),
+                pick("ZThreat", "jungle", ["wave_clear", "engage"]),
+            ],
+            { bans: [] },
+            1,
+        );
+        expect(options.singles.map((option) => option.picks[0].name)).toEqual([
+            "ZThreat",
+            "APlain",
+        ]);
+    });
+
+    test("reply stress test prioritizes pressure on the choosing team's plan", () => {
+        const own = [pick("Own", "top", ["wave_clear"])];
+        const enemy = [pick("Enemy", "mid", ["engage"])];
+        const candidates = [
+            pick("AProtect", "support", ["peel"]),
+            pick("ZThreat", "support", ["engage"]),
+        ];
+        const defaultOrder = strategyOptions(own, enemy, candidates, { bans: [] }, 1);
+        const pressureOrder = strategyOptions(own, enemy, candidates, { bans: [] }, 1, "", own, "pressure");
+        expect(defaultOrder.singles[0].picks[0].name).toBe("AProtect");
+        expect(pressureOrder.singles[0].picks[0].name).toBe("ZThreat");
+        expect(pressureOrder.singles[0].opponentNewNeeds.length).toBeGreaterThan(0);
+    });
+
     test("search keeps partners outside the query and includes anchors below the default shortlist", () => {
         const candidates = [
             ...Array.from({ length: 14 }, (_, i) =>
@@ -356,7 +414,7 @@ describe("candidate legality and response windows", () => {
         ).toEqual([]);
         expect(
             strategyOptions([], [], candidates, { bans: [] }, 2, "missing"),
-        ).toEqual({ singles: [], pairs: [], evaluated: 0 });
+        ).toEqual({ singles: [], pairs: [], unassessed: [], evaluated: 0 });
     });
 
     test("search anchors and partners still obey bans, ownership, history and role conflicts", () => {
@@ -431,6 +489,19 @@ describe("candidate legality and response windows", () => {
         );
         expect(options.singles).toEqual([]);
     });
+    test("explicit search keeps legal unknown picks separate from the ranked shortlist", () => {
+        const unknown = pick("Yunara", "bot", []);
+        const ranked = pick("Yone", "mid", ["dive"]);
+        const result = strategyOptions(
+            [], [], [unknown, ranked], { bans: [] }, 1, "y",
+        );
+        expect(result.singles.map((option) => option.picks[0].name)).toEqual(["Yone"]);
+        expect(result.unassessed.map((option) => option.picks[0].name)).toEqual(["Yunara"]);
+        expect(result.unassessed[0].unassessedPicks).toEqual(["Yunara"]);
+        expect(strategyOptions([], [], [unknown], { bans: [] }, 1).unassessed).toEqual([]);
+        expect(strategyOptions([], [], [unknown], { bans: ["Yunara"] }, 1, "Yunara").unassessed).toEqual([]);
+        expect(strategyOptions([pick("Other", "bot", ["wave_clear"])], [], [unknown], { bans: [] }, 1, "Yunara").unassessed).toEqual([]);
+    });
     test("banned, unavailable, enemy, owned and duplicate-role constraints are respected", () => {
         const pool = ["Banned", "Unavailable", "Enemy", "Unowned", "Valid"].map(
             (name) => pick(name, "support", ["peel"]),
@@ -499,7 +570,7 @@ describe("candidate legality and response windows", () => {
             "R2",
             "B2+B3",
             "B3",
-            "R3+R4",
+            "R3",
             "R4",
             "B4+B5",
             "B5",

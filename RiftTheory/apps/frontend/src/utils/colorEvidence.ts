@@ -15,7 +15,8 @@ export function effectiveColorEvidence(
     role: string | undefined,
 ): EffectiveColorEvidence | undefined {
     const roleProfile = champion?.strategicProfiles.find(
-        (profile) => profile.role === role,
+        (profile) => profile.role === role &&
+            !["outdated", "deprecated", "rejected"].includes(profile.review_status),
     );
     if (roleProfile) {
         return {
@@ -25,7 +26,9 @@ export function effectiveColorEvidence(
         };
     }
 
-    if (!champion?.colorBaseline) return undefined;
+    if (!champion?.colorBaseline ||
+        ["outdated", "deprecated", "rejected"].includes(champion.colorBaseline.review_status))
+        return undefined;
     return {
         profile: champion.colorBaseline,
         scope: "champion",

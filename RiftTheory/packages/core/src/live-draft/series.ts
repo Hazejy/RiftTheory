@@ -25,14 +25,14 @@ export const STANDARD_DRAFT_SEQUENCE: readonly DraftSequenceStep[] = [
     { kind: "pick", side: "red", slot: 1 },
     { kind: "pick", side: "blue", slot: 1 },
     { kind: "pick", side: "blue", slot: 2 },
+    { kind: "pick", side: "red", slot: 2 },
     { kind: "ban", side: "red", slot: 3 },
     { kind: "ban", side: "blue", slot: 3 },
     { kind: "ban", side: "red", slot: 4 },
     { kind: "ban", side: "blue", slot: 4 },
-    { kind: "pick", side: "red", slot: 2 },
+    { kind: "pick", side: "red", slot: 3 },
     { kind: "pick", side: "blue", slot: 3 },
     { kind: "pick", side: "blue", slot: 4 },
-    { kind: "pick", side: "red", slot: 3 },
     { kind: "pick", side: "red", slot: 4 },
 ];
 
@@ -125,5 +125,14 @@ export function sidesFromBlueTeam(
 }
 
 export function nextDraftStep(actions: readonly LiveDraftAction[]) {
-    return STANDARD_DRAFT_SEQUENCE[actions.length];
+    // Saved drafts from the previous sequence can contain later bans/picks
+    // before an earlier slot. Resume at the first missing legal step without
+    // discarding any selections the user already made.
+    return STANDARD_DRAFT_SEQUENCE.find(
+        (step) => !actions.some((action) =>
+            action.kind === step.kind &&
+            action.side === step.side &&
+            action.slot === step.slot,
+        ),
+    );
 }
