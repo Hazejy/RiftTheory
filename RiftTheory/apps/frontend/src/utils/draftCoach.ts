@@ -48,6 +48,23 @@ export function draftCoachWindow(
     );
     const immediate = following.slice(0, nextOwn < 0 ? undefined : nextOwn + 1);
     const opponentSide = selected.team === "ally" ? "red" : "blue";
+    const beforeOwn = following.slice(0, nextOwn < 0 ? undefined : nextOwn);
+    const firstBan = beforeOwn.findIndex((action) => action.kind === "ban");
+    const beforeBan = beforeOwn.slice(0, firstBan < 0 ? undefined : firstBan);
+    const replyPicks = beforeBan.filter(
+        (action) => action.kind === "pick" && action.side === opponentSide,
+    );
+    const nextOwnSequence = nextOwn < 0 || firstBan >= 0
+        ? []
+        : following.slice(nextOwn);
+    const nextOwnEnd = nextOwnSequence.findIndex(
+        (action) => action.kind !== "pick" ||
+            action.side !== (selected.team === "ally" ? "blue" : "red"),
+    );
+    const nextOwnPicks = nextOwnSequence.slice(
+        0,
+        nextOwnEnd < 0 ? undefined : nextOwnEnd,
+    );
     const replyIndex = immediate.findIndex(
         (action) => action.kind === "pick" && action.side === opponentSide,
     );
@@ -65,6 +82,8 @@ export function draftCoachWindow(
         ),
         nextActions: immediate.map(actionLabel),
         nextOpponentPick: reply?.kind === "pick" ? actionLabel(reply) : undefined,
+        replyPicks: replyPicks.map(actionLabel),
+        nextOwnPicks: nextOwnPicks.map(actionLabel),
         bansBeforeReply: immediate
             .slice(0, replyIndex < 0 ? undefined : replyIndex)
             .filter((action) => action.kind === "ban")

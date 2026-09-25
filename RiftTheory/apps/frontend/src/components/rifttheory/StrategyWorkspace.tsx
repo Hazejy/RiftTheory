@@ -515,10 +515,10 @@ export default function StrategyWorkspace() {
     const previewReplies = createMemo(() => {
         const option = activePreview();
         const window = coachWindow();
-        if (!option || !window?.chronological || !window.nextOpponentPick ||
+        if (!option || !window?.chronological || !window.replyPicks.length ||
             window.bansBeforeReply.length || !previewRead()?.after) return [];
         const current = planning();
-        return strategyOptions(
+        const replies = strategyOptions(
             current.enemy,
             [...current.own, ...option.picks],
             roleCandidates(),
@@ -526,29 +526,58 @@ export default function StrategyWorkspace() {
                 bans: bans(),
                 unavailable: live()?.unavailable[current.isBlue ? "opponent" : "ally"] ?? [],
             },
-            1,
+            window.replyPicks.length,
             "",
             current.enemy,
             "pressure",
-        ).singles.slice(0, 3);
+        );
+        return window.replyPicks.length > 1
+            ? replies.pairs
+            : replies.singles.slice(0, 3);
+    });
+    const replyKey = (reply: Pick<StrategyOption, "picks">) =>
+        reply.picks.map((pick) => `${pick.key}:${pick.role ?? "?"}`).join("|");
+    const previewFallbacks = createMemo(() => {
+        const window = coachWindow();
+        const option = activePreview();
+        if (!option || !window?.nextOwnPicks.length) return new Map<string, StrategyOption>();
+        const current = planning();
+        const ownAfter = [...current.own, ...option.picks];
+        return new Map(previewReplies().flatMap((reply) => {
+            const responses = strategyOptions(
+                ownAfter,
+                [...current.enemy, ...reply.picks],
+                roleCandidates(),
+                {
+                    bans: bans(),
+                    unavailable: live()?.unavailable[current.isBlue ? "ally" : "opponent"] ?? [],
+                    owned: live() ? undefined : draft.ownedChampions(),
+                },
+                window.nextOwnPicks.length,
+            );
+            const fallback = window.nextOwnPicks.length > 1
+                ? responses.pairs[0]
+                : responses.singles[0];
+            return fallback ? [[replyKey(reply), fallback] as const] : [];
+        }));
     });
     const previewReplyEvidence = createMemo(() => {
         const activeDataset = dataset();
         const fullDataset = dataset30Days();
         const option = activePreview();
         if (!option || !activeDataset || !fullDataset || !rankStatus().available)
-            return new Map<string, DraftGapPickEvidence>();
+            return new Map<string, DraftGapPickEvidence[]>();
         const current = planning();
-        return new Map(previewReplies().flatMap((reply) => {
-            const entry = draftGapPickEvidence(
+        return new Map(previewReplies().map((reply) => {
+            const entries = draftGapPickEvidence(
                 activeDataset,
                 fullDataset,
                 reply.picks,
                 current.enemy,
                 [...current.own, ...option.picks],
                 userConfig.minGames,
-            )[0];
-            return entry ? [[reply.picks[0].key, entry] as const] : [];
+            );
+            return [replyKey(reply), entries] as const;
         }));
     });
     const draftGapForOption = (option: Pick<StrategyOption, "picks"> | undefined) => {
@@ -1580,41 +1609,57 @@ export default function StrategyWorkspace() {
                                         </section>
                                     )}
                                 </Show>
-                                <Show when={coachWindow()?.chronological && coachWindow()?.nextOpponentPick && !coachWindow()?.bansBeforeReply.length}>
+                                <Show when={coachWindow()?.chronological && coachWindow()?.replyPicks.length && !coachWindow()?.bansBeforeReply.length}>
                                     <section class="strategy-replies" aria-label="Possible opponent replies">
-                                        <span class="strategy-eyebrow">NEXT OPPONENT PICK · {coachWindow()?.nextOpponentPick}</span>
+                                        <span class="strategy-eyebrow">NEXT OPPONENT {coachWindow()!.replyPicks.length > 1 ? "PICKS" : "PICK"} · {coachWindow()?.replyPicks.join(" + ")}</span>
                                         <h4>Replies to stress-test</h4>
                                         <p class="strategy-explanation">Legal options screened from recorded capability tags for pressure on your plan. DraftGap role samples use the current patch; matchups use 30 days. Their rates are rank-adjusted estimates, and these scenarios do not predict the opponent's choice.</p>
                                         <div class="strategy-reply-list">
                                             <For each={previewReplies()} fallback={<p>No supported reply surfaced in this bounded screen. Counterplay may still exist.</p>}>
                                                 {(reply) => (
                                                     <article>
-                                                        <strong>{reply.picks[0].name} · {reply.picks[0].role}</strong>
+                                                        <strong>{reply.picks.map((pick) => `${pick.name} · ${pick.role}`).join(" + ")}</strong>
                                                         <p>{reply.answers.length ? `Answers: ${reply.answers.join("; ")}` : reply.plan ? `Team theme: ${reply.plan}` : "Explore the resulting team plan."}</p>
-                                                        <Show when={previewReplyEvidence().get(reply.picks[0].key)}>
+                                                        <For each={previewReplyEvidence().get(replyKey(reply)) ?? []}>
                                                             {(sample) => (
                                                                 <small>
-                                                                    DraftGap: {sample().roleGames.toLocaleString()} role games
-                                                                    {sample().roleRate === undefined
+                                                                    DraftGap {sample.champion}: {sample.roleGames.toLocaleString()} role games
+                                                                    {sample.roleRate === undefined
                                                                         ? " · rate unavailable"
-                                                                        : ` · ${(sample().roleRate! * 100).toFixed(1)}% rank-adjusted rate`}
-                                                                    {sample().roleThin ? " · small sample" : ""}
-                                                                    {sample().matchups[0]
-                                                                        ? ` · ${sample().matchups[0].label}: ${(sample().matchups[0].rate * 100).toFixed(1)}% / ${sample().matchups[0].games.toLocaleString()} games${sample().matchups[0].thin ? " · small sample" : ""}`
+                                                                        : ` · ${(sample.roleRate * 100).toFixed(1)}% rank-adjusted rate`}
+                                                                    {sample.roleThin ? " · small sample" : ""}
+                                                                    {sample.matchups[0]
+                                                                        ? ` · ${sample.matchups[0].label}: ${(sample.matchups[0].rate * 100).toFixed(1)}% / ${sample.matchups[0].games.toLocaleString()} games${sample.matchups[0].thin ? " · small sample" : ""}`
                                                                         : ""}
                                                                 </small>
                                                             )}
-                                                        </Show>
+                                                        </For>
                                                         <Show when={reply.opponentLostPlans.length}>
                                                             <small>Your lost route: {reply.opponentLostPlans.join("; ")}</small>
                                                         </Show>
                                                         <Show when={reply.opponentNewNeeds.length}>
                                                             <small>Your draft must then solve: {reply.opponentNewNeeds.join("; ")}</small>
                                                         </Show>
+                                                        <Show when={previewFallbacks().get(replyKey(reply))}>
+                                                            {(fallback) => (
+                                                                <small>
+                                                                    Possible next choice ({coachWindow()?.nextOwnPicks.join(" + ")}): {fallback().picks.map((pick) => `${pick.name} · ${pick.role}`).join(" + ")}. Recheck after the opponent response; this is a bounded scenario, not an optimal line.
+                                                                </small>
+                                                            )}
+                                                        </Show>
+                                                        <Show when={previewFallbacks().get(replyKey(reply))?.answers.length}>
+                                                            <small>That follow-up addresses: {previewFallbacks().get(replyKey(reply))?.answers.join("; ")}</small>
+                                                        </Show>
+                                                        <Show when={coachWindow()?.nextOwnPicks.length && !previewFallbacks().has(replyKey(reply))}>
+                                                            <small>No supported next choice surfaced in this bounded screen; other legal choices may still exist.</small>
+                                                        </Show>
                                                     </article>
                                                 )}
                                             </For>
                                         </div>
+                                        <Show when={!coachWindow()?.nextOwnPicks.length && coachWindow()?.nextActions.some((action) => action.includes("ban"))}>
+                                            <p class="strategy-explanation">Another ban phase intervenes before your next pick. Recheck the fallback after those bans.</p>
+                                        </Show>
                                     </section>
                                 </Show>
                                 <Show when={coachWindow()?.chronological && coachWindow()?.bansBeforeReply.length && !coachWindow()?.nextOpponentPick}>

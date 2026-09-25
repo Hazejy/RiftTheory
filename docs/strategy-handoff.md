@@ -440,3 +440,23 @@ Der neue lokale NSIS-Installer wurde erfolgreich gebaut:
 (5.826.274 Bytes), SHA-256
 `4D12B0233230B1528C95D8FD06D3AF9D77A9E746C2F649CB52B507A8F5093970`.
 Die bekannte Tauri-Warnung zur Bundle-Markierung bleibt bestehen.
+
+Naechster Draft-Coach-Schritt: Die chronologische Vorschau prueft jetzt die
+gesamte unmittelbare Gegner-Pickphase als eine Antwort. B1 fuehrt zu R1+R2,
+R1+R2 zu B2+B3 und R4 zu B4+B5; einzelne Antworten bleiben einzeln. Jede
+angezeigte Doppelantwort hat eine legale gemeinsame Rollenbelegung, und
+DraftGap-Stichproben werden fuer beide Picks getrennt gezeigt. Wenn danach vor
+einer Banphase ein eigener Pick oder Doppelpick folgt, wird ein legaler,
+heuristisch gewaehlter Fallback mit beantworteten Beduerfnissen angezeigt.
+Die zweite Banphase stoppt diesen Pfad; nach ihr wird keine scheinbar sichere
+Fortsetzung aus dem alten Zustand angezeigt. Die Ausgabe bleibt ein begrenzter
+Szenario-Stresstest, keine optimale Draftsuche oder validierte Siegchance.
+Ein Integrationstest prueft B1 -> R1+R2 -> B2+B3 mit dem ausgelieferten
+Championpool auf legale Rollen und eindeutige Champions.
+Verifiziert: 104 Frontend/Core-Tests, Workspace-TypeScript, gezielter ESLint,
+`git diff --check` und lokaler NSIS-Build. Installer:
+`RiftTheory/apps/frontend/src-tauri/target/release/bundle/nsis/RiftTheory_3.2.10_x64-setup.exe`
+(5.831.748 Bytes), SHA-256
+`DEC7CA103EF3922D958C82BF0DEB6E4B99E45A3061A4EEEEA7533091A111B62B`.
+Die bekannte Tauri-Bundle-Warnung besteht; interaktive Sichtpruefung bleibt
+wegen fehlender Browser-/App-Anbindung offen.
