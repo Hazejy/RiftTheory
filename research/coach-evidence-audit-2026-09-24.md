@@ -110,3 +110,81 @@ observed picks respectively, not an improvement in win prediction or proof of
 profile accuracy. The largest remaining missing Solo Queue pilot coaching cases
 are Syndra mid (35), Nami support (34), Garen top (32), Milio support (32) and
 Yunara bot (32). Capability and color coverage did not change.
+
+## Follow-up profile batch, 25 September 2026
+
+The five remaining leading Solo Queue pilot gaps above now have provisional
+role-specific coaching profiles. Syndra mid, Nami support, Garen top, Milio
+support and Yunara bot each link to Riot's official champion page as a kit
+reference. The stated windows and trade-offs are RiftTheory editorial
+interpretations, with `patch: unknown`; they are not patch-reviewed balance,
+build or matchup findings. In particular, Yunara bot still lacks a recorded
+role capability, so this coaching profile cannot supply missing plan evidence.
+
+The offline export and database integrity check succeeded. Rerunning the same
+retrospective audits gives **1,554 / 3,410 (45.6%)** covered picks in the local
+Solo Queue pilot and **6,820 / 13,810 (49.4%)** in the separate pro sample.
+The gains over the previous batch are 165 and 843 repeated appearances. They
+measure profile availability, not recommendation accuracy or independent
+observations. The next missing Solo Queue profiles are Talon jungle (31), Karma
+support (30), Pyke support (30) and Leona support (29); pro gaps remain led by
+Ryze mid (318), Rumble top (305) and Orianna mid (285).
+
+The online patch check reports Riot 16.19.1 while this offline export still
+contains the saved 16.17.1 champion snapshot. That mismatch and the unknown
+review patches keep these assessments provisional. No patch refresh or
+historical recommendation backtest was inferred from the coverage figures.
+
+## Yunara capability and current snapshot, 25 September 2026
+
+Yunara bot now has narrowly scoped `poke` and `wave_clear` capability tags.
+Riot's [champion page](https://www.leagueoflegends.com/en-us/champions/yunara/)
+documents the slowing projectile and attack-based kit; the official
+[25.17 patch notes](https://www.leagueoflegends.com/en-us/news/game-updates/patch-25-17-notes/)
+describe her Q bounces. These tags are provisional RiftTheory interpretations.
+They do not assign protection, engage, matchup superiority or a patch-reviewed
+ability assessment. The exported source includes a direct Riot link and an
+interpretation note.
+
+Riot Data Dragon was refreshed to 16.19.1, and DraftGap's public current-patch
+dataset supplied 852 role samples for patch 16.19. Yunara bot has 67,821
+observed Emerald+ ranked games in that aggregate as of 25 September 2026;
+this is role-use evidence, not a champion win-rate or recommendation result.
+The snapshot keeps each observation's patch and collection date explicit.
+
+Re-running the historical coverage audits after this refresh gives
+**3,099 / 3,410 (90.9%)** Solo Queue pilot picks and
+**13,481 / 13,810 (97.6%)** pro picks with any capability tag, increases of
+32 and 274 repeated Yunara bot appearances. The coaching-profile counts remain
+1,554 and 6,820. Provisional primary plans on both sides occur in 328 / 341
+pilot games and 1,345 / 1,381 pro games. These are coverage and rule-engine
+outputs, not evidence that the plans predict outcomes. Only 10 pilot picks and
+no picks in the pro cohort match the new 16.19 snapshot patch, so neither
+historical sample validates current-patch advice.
+
+## Role-profile follow-up, 25 September 2026
+
+Seven more role-specific coaching profiles cover Talon jungle, Karma support,
+Pyke support, Leona support, Ryze mid, Rumble top and Orianna mid. Each links
+to the corresponding official Riot champion page. They describe conditional
+timing, access and counterplay as RiftTheory interpretations with `patch:
+unknown` and `review_status: provisional`; no item build, lane matchup or
+measured strength is inferred. The Strategy evidence view now resolves a
+capability source key to its readable label and link when present.
+
+With the same historical samples, coaching-profile availability is
+**1,707 / 3,410 (50.1%)** in the Solo Queue pilot and
+**8,143 / 13,810 (59.0%)** in the pro cohort. Those increases are 153 and
+1,323 repeated observed picks. Capability coverage and the count of games
+with a provisional plan on both sides are unchanged. The highest remaining
+pilot gaps are Ahri mid (28), Malphite top (27), Janna support (26) and Yone
+mid (25). The highest pro gaps are K'Sante top (262), Ambessa top (245), Bard
+support (245) and Wukong jungle (235). This is an editorial work queue, not
+evidence that the added profiles or generated plans are accurate.
+
+The existing leakage-aware pro outcome backtest was rerun on the saved 9,204
+games. Its selected prior player/team model still has validation log loss
+0.6218 and test log loss 0.6326; the tested draft-feature variants do not
+beat that validation baseline. This experiment therefore provides no basis
+for publishing a calibrated draft win probability. The Solo Queue pilot
+remains too small and patch-confounded for such a model.

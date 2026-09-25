@@ -386,3 +386,57 @@ Der abschliessende NSIS-Build fuer diesen Stand war erfolgreich. Installer:
 `RiftTheory/apps/frontend/src-tauri/target/release/bundle/nsis/RiftTheory_3.2.10_x64-setup.exe`
 (5.806.178 Bytes), SHA-256
 `3894638EB0AF913AE0842F6742587A43BCB73DCA53E62BC5724D82879C4045CF`.
+
+Am 25. September wurden fuenf weitere vorlaeufige Rollenprofile fuer Syndra
+Mid, Nami Support, Garen Top, Milio Support und Yunara Bot mit offiziellen
+Riot-Kit-Links aufgenommen und offline exportiert. Der lokale Solo-Queue-Audit
+zeigt damit 1.554 / 3.410 (45,6 %) und der getrennte Profi-Audit
+6.820 / 13.810 (49,4 %) Picks mit Coaching-Profil. Das ist Abdeckung, keine
+Validierung der Empfehlungen. Yunara Bot hat weiterhin keine Rollenfaehigkeits-
+Evidenz. Der gespeicherte Champion-Snapshot ist 16.17.1; der Online-Patchcheck
+meldet 16.19.1. Datenbankintegritaet, 102 Frontend/Core-Tests, Workspace-
+TypeScript und `git diff --check` waren erfolgreich. Der interaktive Desktop-
+Smoke-Test blieb offen, weil Computer Use keine Verbindung zum nativen Dienst
+herstellen konnte. Der lokale NSIS-Build war erfolgreich. Installer:
+`RiftTheory/apps/frontend/src-tauri/target/release/bundle/nsis/RiftTheory_3.2.10_x64-setup.exe`
+(5.809.604 Bytes), SHA-256
+`106E618C4F6F636E1DEEF604080E6BBECAD5271F398A8A70655279D7581A5BA3`.
+Die bekannte Tauri-Warnung zur fehlenden `__TAURI_BUNDLE_TYPE`-Markierung bleibt.
+
+Danach wurde Yunara Bot mit den eng begrenzten Rollenfaehigkeiten `poke` und
+`wave_clear` ergaenzt. Der Eintrag verlinkt die offizielle Riot-Championseite
+und bezeichnet die Tags als vorlaeufige RiftTheory-Interpretation; Engage,
+Schutz oder ein Matchup-Urteil werden daraus nicht abgeleitet. Data Dragon ist
+nun auf 16.19.1 aktualisiert. Aus dem oeffentlichen DraftGap-Datensatz wurden
+852 Rollenstichproben fuer Patch 16.19 importiert; Yunara Bot hat dort
+67.821 beobachtete Spiele (Emerald+, alle Regionen, Erhebung 25. September).
+Der Online-Patchcheck zeigt keinen ausstehenden Patch mehr. Die historische
+Evidenz-Abdeckung betraegt jetzt 3.099 / 3.410 im Solo-Queue-Pilot und
+13.481 / 13.810 im Profi-Audit. Diese Audits validieren keine aktuelle
+Empfehlung: Nur zehn Pilot-Picks und kein Profi-Pick stammen aus 16.19.
+Datenbankintegritaet, 103 Frontend/Core-Tests, TypeScript, gezielter ESLint-Lauf
+und lokaler NSIS-Build sind erfolgreich. Installer:
+`RiftTheory/apps/frontend/src-tauri/target/release/bundle/nsis/RiftTheory_3.2.10_x64-setup.exe`
+(5.829.159 Bytes), SHA-256
+`668CD7146027E040C7F588A7C75C5DCDCFD221617104EA90B513F01FC0FED267`.
+Die bekannte Tauri-Bundle-Warnung besteht. Eine interaktive Sichtpruefung ist
+weiterhin offen, da der native Computer-Use-Dienst nicht erreichbar war.
+
+Weiterer Coach-Durchgang am 25. September: Sieben vorlaeufige Coaching-Profile
+fuer Talon Jungle, Karma Support, Pyke Support, Leona Support, Ryze Mid,
+Rumble Top und Orianna Mid wurden mit Riot-Kit-Links exportiert. Die Profil-
+Abdeckung steigt im lokalen Pilot auf 1.707 / 3.410 (50,1 %) und im Profi-
+Audit auf 8.143 / 13.810 (59,0 %) beobachtete Picks. Die Tags und Profile
+sind damit verfuegbar, aber nicht durch Matchergebnisse validiert. Die
+Strategy-Evidenzansicht zeigt bei Rollenfaehigkeiten nun lesbare Quellenlabels
+und vorhandene Links. Der vorhandene Profi-Backtest wurde reproduziert; sein
+Spieler-/Team-Baseline-Modell bleibt besser als die getesteten Draftvarianten.
+Eine Draft-Siegwahrscheinlichkeit wird weiterhin nicht ausgegeben. 103
+Frontend/Core-Tests, TypeScript, ESLint, Datenbankintegritaet und `git diff
+--check` sind gruen. Die interaktive Sichtpruefung scheiterte erneut an der
+fehlenden Browser-/App-Anbindung; der lokale Produktionsserver startet.
+Der neue lokale NSIS-Installer wurde erfolgreich gebaut:
+`RiftTheory/apps/frontend/src-tauri/target/release/bundle/nsis/RiftTheory_3.2.10_x64-setup.exe`
+(5.826.274 Bytes), SHA-256
+`4D12B0233230B1528C95D8FD06D3AF9D77A9E746C2F649CB52B507A8F5093970`.
+Die bekannte Tauri-Warnung zur Bundle-Markierung bleibt bestehen.

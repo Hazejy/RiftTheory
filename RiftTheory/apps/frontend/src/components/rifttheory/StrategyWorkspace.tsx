@@ -303,6 +303,8 @@ export default function StrategyWorkspace() {
     const { allyDraftAnalysis } = useDraftAnalysis();
     const { setCurrentDraftView } = useDraftView();
     const { knowledge, championForKey } = useRiftTheoryKnowledge();
+    const capabilitySource = (sourceKey: string) =>
+        knowledge()?.sources.find((source) => source.source_key === sourceKey);
     const [focus, setFocus] = createSignal<"blue" | "red">("blue");
     const [section, setSection] = createSignal<"plan" | "timing" | "evidence">(
         "plan",
@@ -1261,7 +1263,16 @@ export default function StrategyWorkspace() {
                                                 {c.role} · {c.capability} ·{" "}
                                                 {c.review_status} · patch{" "}
                                                 {c.patch_version} ·{" "}
-                                                {c.source_key}
+                                                <Show
+                                                    when={capabilitySource(c.source_key)?.url}
+                                                    fallback={capabilitySource(c.source_key)?.label ?? c.source_key}
+                                                >
+                                                    {(url) => (
+                                                        <a href={url()} target="_blank" rel="noopener noreferrer">
+                                                            {capabilitySource(c.source_key)?.label ?? c.source_key} ↗
+                                                        </a>
+                                                    )}
+                                                </Show>
                                                 {c.reasoning
                                                     ? ` — ${c.reasoning}`
                                                     : ""}

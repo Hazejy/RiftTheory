@@ -985,6 +985,13 @@
     "source": "manually_curated"
   },
   {
+    "name": "Yunara",
+    "role": "bot",
+    "capabilities": ["poke", "wave_clear"],
+    "source": "RiftTheory provisional Yunara kit interpretation",
+    "source_url": "https://www.leagueoflegends.com/en-us/champions/yunara/"
+  },
+  {
     "name": "Yone",
     "role": ["mid", "top"],
     "capabilities": ["engage", "dive", "side_lane_pressure"],

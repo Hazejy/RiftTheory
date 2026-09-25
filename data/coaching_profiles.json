@@ -1703,5 +1703,245 @@
     "review_status": "provisional",
     "source_name": "RiftTheory editorial review of Riot Zed abilities",
     "source_url": "https://www.leagueoflegends.com/en-us/champions/zed/"
+  },
+  {
+    "champion_name": "Syndra",
+    "role": "mid",
+    "damage_focus": "magic",
+    "power_curve": "mid_late",
+    "resource_demand": "high",
+    "execution_demand": 4,
+    "spike_notes": [
+      "Level 6 with Unleashed Power available",
+      "Transcendent ability upgrades earned through Splinters of Wrath",
+      "Scatter the Weak ready before committing to a pick"
+    ],
+    "reasoning": "Syndra can threaten a target with sphere setup and a burst window while holding Scatter the Weak to interrupt an approach. Her upgraded abilities depend on earned Splinters of Wrath; an early draft must not assume those upgrades or a safe firing position are already present.",
+    "patch": "unknown",
+    "assessment_method": "manual",
+    "confidence": 0.6,
+    "review_status": "provisional",
+    "source_name": "RiftTheory editorial review of Riot Syndra abilities",
+    "source_url": "https://www.leagueoflegends.com/en-us/champions/syndra/"
+  },
+  {
+    "champion_name": "Nami",
+    "role": "support",
+    "damage_focus": "utility",
+    "power_curve": "timing_dependent",
+    "resource_demand": "low",
+    "execution_demand": 3,
+    "spike_notes": [
+      "Level 6 with Tidal Wave available",
+      "Tidecaller's Blessing ready when an ally can reach a target",
+      "Aqua Prison available to follow up or stop an approach"
+    ],
+    "reasoning": "Nami can support a trade with ally movement, added damage and healing, then use her control for a catch or counter-engage. Her offensive value needs an ally who can make contact; committing Aqua Prison early leaves less control for the next enemy entry.",
+    "patch": "unknown",
+    "assessment_method": "manual",
+    "confidence": 0.6,
+    "review_status": "provisional",
+    "source_name": "RiftTheory editorial review of Riot Nami abilities",
+    "source_url": "https://www.leagueoflegends.com/en-us/champions/nami/"
+  },
+  {
+    "champion_name": "Garen",
+    "role": "top",
+    "damage_focus": "physical",
+    "power_curve": "timing_dependent",
+    "resource_demand": "medium",
+    "execution_demand": 2,
+    "spike_notes": [
+      "Level 6 with Demacian Justice available",
+      "Courage ready before taking a committed trade",
+      "Time outside enemy damage to use Perseverance"
+    ],
+    "reasoning": "Garen can threaten a close-range target after reaching them and can recover health between trades when enemy pressure lets his passive run. Courage helps him survive a commitment, but limited access to distant targets and repeated damage that interrupts recovery can deny this route.",
+    "patch": "unknown",
+    "assessment_method": "manual",
+    "confidence": 0.6,
+    "review_status": "provisional",
+    "source_name": "RiftTheory editorial review of Riot Garen abilities",
+    "source_url": "https://www.leagueoflegends.com/en-us/champions/garen/"
+  },
+  {
+    "champion_name": "Milio",
+    "role": "support",
+    "damage_focus": "utility",
+    "power_curve": "timing_dependent",
+    "resource_demand": "low",
+    "execution_demand": 3,
+    "spike_notes": [
+      "Level 6 with Breath of Life available",
+      "Cozy Campfire and Warm Hugs ready for an allied carry",
+      "Breath of Life held until an enemy control commitment"
+    ],
+    "reasoning": "Milio increases the space and safety available to an allied damage dealer, and his ultimate can answer a committed control sequence. This depends on an ally positioned to use the range and protection; a forced ultimate or an enemy reaching Milio first reduces the value of the defensive window.",
+    "patch": "unknown",
+    "assessment_method": "manual",
+    "confidence": 0.6,
+    "review_status": "provisional",
+    "source_name": "RiftTheory editorial review of Riot Milio abilities",
+    "source_url": "https://www.leagueoflegends.com/en-us/champions/milio/"
+  },
+  {
+    "champion_name": "Yunara",
+    "role": "bot",
+    "damage_focus": "mixed",
+    "power_curve": "mid_late",
+    "resource_demand": "high",
+    "execution_demand": 4,
+    "spike_notes": [
+      "Level 6 with Transcend One's Self available",
+      "Critical-strike items support Vow of the First Lands",
+      "A protected attack route is available before entering Transcendent State"
+    ],
+    "reasoning": "Yunara's critical strikes add magic damage and her ultimate opens a stronger temporary ability window. She still needs gold, repeated attack access and protection to deliver that damage; the temporary state does not guarantee a safe route through enemy engage.",
+    "patch": "unknown",
+    "assessment_method": "manual",
+    "confidence": 0.55,
+    "review_status": "provisional",
+    "source_name": "RiftTheory editorial review of Riot Yunara abilities",
+    "source_url": "https://www.leagueoflegends.com/en-us/champions/yunara/"
+  },
+  {
+    "champion_name": "Talon",
+    "role": "jungle",
+    "damage_focus": "physical",
+    "power_curve": "early_mid",
+    "resource_demand": "medium",
+    "execution_demand": 4,
+    "spike_notes": [
+      "Basic abilities available for a terrain-assisted approach",
+      "Level 6 with Shadow Assault available",
+      "A target can be reached for the third Wound stack and follow-up attack"
+    ],
+    "reasoning": "Jungle Talon can use terrain routes to approach an exposed target, then convert stacked Wounds into burst. He needs a reachable target and a route out after committing; mobility alone does not supply frontline or a guaranteed first takedown.",
+    "patch": "unknown",
+    "assessment_method": "manual",
+    "confidence": 0.55,
+    "review_status": "provisional",
+    "source_name": "RiftTheory editorial review of Riot Talon abilities",
+    "source_url": "https://www.leagueoflegends.com/en-us/champions/talon/"
+  },
+  {
+    "champion_name": "Karma",
+    "role": "support",
+    "damage_focus": "utility",
+    "power_curve": "timing_dependent",
+    "resource_demand": "low",
+    "execution_demand": 3,
+    "spike_notes": [
+      "Mantra and Inner Flame ready for lane pressure",
+      "Mantra and Inspire ready before allied repositioning",
+      "Focused Resolve can remain connected to the chosen target"
+    ],
+    "reasoning": "Support Karma can spend Mantra on damage and space or reserve it for allied protection and movement. The team cannot count both empowered uses from one Mantra cast; the value of her control also depends on maintaining contact rather than merely starting a tether.",
+    "patch": "unknown",
+    "assessment_method": "manual",
+    "confidence": 0.6,
+    "review_status": "provisional",
+    "source_name": "RiftTheory editorial review of Riot Karma abilities",
+    "source_url": "https://www.leagueoflegends.com/en-us/champions/karma/"
+  },
+  {
+    "champion_name": "Pyke",
+    "role": "support",
+    "damage_focus": "physical",
+    "power_curve": "early_mid",
+    "resource_demand": "low",
+    "execution_demand": 4,
+    "spike_notes": [
+      "Bone Skewer and Phantom Undertow available for a coordinated catch",
+      "Level 6 with Death From Below available",
+      "A low-health target and allied follow-up make an execute route plausible"
+    ],
+    "reasoning": "Pyke can create a catch and threaten an execute after allies bring a target low. His stealth and movement help him find an angle, but his passive prevents bonus maximum health from making him a conventional tank; missed control or protected targets can deny the reset route.",
+    "patch": "unknown",
+    "assessment_method": "manual",
+    "confidence": 0.55,
+    "review_status": "provisional",
+    "source_name": "RiftTheory editorial review of Riot Pyke abilities",
+    "source_url": "https://www.leagueoflegends.com/en-us/champions/pyke/"
+  },
+  {
+    "champion_name": "Leona",
+    "role": "support",
+    "damage_focus": "utility",
+    "power_curve": "early_mid",
+    "resource_demand": "low",
+    "execution_demand": 3,
+    "spike_notes": [
+      "Shield of Daybreak and Zenith Blade ready with allied follow-up",
+      "Level 6 with Solar Flare available",
+      "Eclipse ready before absorbing a committed response"
+    ],
+    "reasoning": "Leona can start a close-range control sequence and mark targets for allied damage through Sunlight. She needs a teammate positioned to convert that entry; committing Zenith Blade without follow-up can leave her exposed despite Eclipse's defenses.",
+    "patch": "unknown",
+    "assessment_method": "manual",
+    "confidence": 0.6,
+    "review_status": "provisional",
+    "source_name": "RiftTheory editorial review of Riot Leona abilities",
+    "source_url": "https://www.leagueoflegends.com/en-us/champions/leona/"
+  },
+  {
+    "champion_name": "Ryze",
+    "role": "mid",
+    "damage_focus": "magic",
+    "power_curve": "mid_late",
+    "resource_demand": "high",
+    "execution_demand": 4,
+    "spike_notes": [
+      "Mana and completed items support repeated spell rotations",
+      "Spell Flux and Overload available for a prepared wave or grouped target",
+      "Level 6 with Realm Warp available for a coordinated reposition"
+    ],
+    "reasoning": "Ryze converts mana and repeated spell access into sustained damage and wave pressure. Flux setup determines whether Overload can spread, while Realm Warp needs a coordinated destination; short reach and interrupted rotations can keep him from delivering the intended fight pattern.",
+    "patch": "unknown",
+    "assessment_method": "manual",
+    "confidence": 0.55,
+    "review_status": "provisional",
+    "source_name": "RiftTheory editorial review of Riot Ryze abilities",
+    "source_url": "https://www.leagueoflegends.com/en-us/champions/ryze/"
+  },
+  {
+    "champion_name": "Rumble",
+    "role": "top",
+    "damage_focus": "magic",
+    "power_curve": "timing_dependent",
+    "resource_demand": "medium",
+    "execution_demand": 4,
+    "spike_notes": [
+      "Danger Zone Heat is prepared before a trade",
+      "Level 6 with The Equalizer available over a contested route",
+      "Heat remains below Overheat when another spell is required"
+    ],
+    "reasoning": "Rumble can control a narrow approach with The Equalizer and sustained close-range damage. Heat management changes the strength of his basic abilities and can also lock him out of spell casts; opponents who leave the zone or force an early Overheat can break the intended sequence.",
+    "patch": "unknown",
+    "assessment_method": "manual",
+    "confidence": 0.55,
+    "review_status": "provisional",
+    "source_name": "RiftTheory editorial review of Riot Rumble abilities",
+    "source_url": "https://www.leagueoflegends.com/en-us/champions/rumble/"
+  },
+  {
+    "champion_name": "Orianna",
+    "role": "mid",
+    "damage_focus": "magic",
+    "power_curve": "timing_dependent",
+    "resource_demand": "high",
+    "execution_demand": 4,
+    "spike_notes": [
+      "The Ball is positioned before a contested entry",
+      "Level 6 with Command: Shockwave available",
+      "Command: Protect is ready for the intended ally"
+    ],
+    "reasoning": "Orianna can shape an area around the Ball and protect an ally while threatening a coordinated Shockwave. Ball position and allied timing are prerequisites; using protection or moving the Ball changes the available control angle, and an opponent can avoid a grouped entry.",
+    "patch": "unknown",
+    "assessment_method": "manual",
+    "confidence": 0.6,
+    "review_status": "provisional",
+    "source_name": "RiftTheory editorial review of Riot Orianna abilities",
+    "source_url": "https://www.leagueoflegends.com/en-us/champions/orianna/"
   }
 ]

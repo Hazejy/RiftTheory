@@ -17,6 +17,26 @@ import {
 import { DRAFT_PICK_ORDER, draftResponseWindow, pickLabel } from "./draftOrder";
 import shippedKnowledge from "../../public/data/rifttheory-knowledge.json";
 
+test("shipped Yunara bot evidence remains narrow and traceable", () => {
+    const yunara = shippedKnowledge.champions.find((champion) => champion.name === "Yunara");
+    expect(yunara).toBeDefined();
+    expect(
+        yunara!.capabilities
+            .filter((capability) => capability.role === "bot")
+            .map((capability) => capability.capability)
+            .sort(),
+    ).toEqual(["poke", "wave_clear"]);
+    const sourceKey = yunara!.capabilities.find(
+        (capability) => capability.role === "bot",
+    )!.source_key;
+    expect(
+        shippedKnowledge.sources.find((source) => source.source_key === sourceKey),
+    ).toMatchObject({
+        url: "https://www.leagueoflegends.com/en-us/champions/yunara/",
+        kind: "manual",
+    });
+});
+
 function pick(
     name: string,
     role: StrategyRole,

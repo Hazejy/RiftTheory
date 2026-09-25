@@ -34,6 +34,7 @@ type CapabilityInput = {
   Role?: string | string[];
   capabilities: string[];
   source: string;
+  source_url?: string | null;
 };
 
 type StrategicInput = {
@@ -144,6 +145,10 @@ export async function importCuratedData(database: Database) {
           key: sourceKey(sourceName),
           label: sourceName,
           kind: "manual",
+          url: profile.source_url ?? null,
+          accessNote: profile.source_url
+            ? "Riot documents the kit; these capability tags are provisional RiftTheory interpretations, not patch-reviewed findings."
+            : null,
         });
         const championId = upsertChampion(database, {
           slug: slugify(name),
