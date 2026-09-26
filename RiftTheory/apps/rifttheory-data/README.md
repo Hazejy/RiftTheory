@@ -6,7 +6,7 @@ contain a Riot API key.
 
 ## Commands
 
-Run from `draftgap/`:
+Run from `RiftTheory/`:
 
 ```powershell
 bun run data:init
@@ -16,7 +16,7 @@ bun run data:check
 bun run data:refresh
 bun run data:import:roles -- C:\path\to\role-snapshot.json
 bun run data:import:interactions
-bun run data:sync:draftgap-roles
+bun run data:sync:upstream-roles
 bun run data:status
 ```
 
@@ -49,7 +49,7 @@ presented as source data.
 
 ### DraftGap compatibility provider
 
-`data:sync:draftgap-roles` reads the public DraftGap v5 current-patch dataset,
+`data:sync:upstream-roles` reads the public DraftGap v5 current-patch dataset,
 imports positive role game samples and updates the frontend export. Its context
 is recorded as Emerald+, ranked solo, all regions, matching the collector in the
 vendored upstream code. DraftGap queries two-part Lolalytics patches, so an

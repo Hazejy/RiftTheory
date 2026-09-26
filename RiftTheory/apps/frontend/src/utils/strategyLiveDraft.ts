@@ -4,9 +4,9 @@ import {
     type CompletedLiveDraftGame,
     type LiveDraftSeriesConfig,
     nextDraftStep,
-} from "@draftgap/core/src/live-draft/series";
-import type { Role } from "@draftgap/core/src/models/Role";
-import type { Team } from "@draftgap/core/src/models/Team";
+} from "@rifttheory/core/src/live-draft/series";
+import type { Role } from "@rifttheory/core/src/models/Role";
+import type { Team } from "@rifttheory/core/src/models/Team";
 
 export type StrategySlot = { championKey?: string; role?: Role };
 export type StrategyLiveSnapshot = {

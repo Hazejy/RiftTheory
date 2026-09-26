@@ -42,7 +42,7 @@ export const UpdateDialog: Component = () => {
                     <DialogTitle>Update available!</DialogTitle>
                 </DialogHeader>
                 <p class="text-xl uppercase text-neutral-300">
-                    A new version of DraftGap is available.
+                    A new version of RiftTheory is available.
                 </p>
                 <DialogFooter>
                     <Button variant="primary" onClick={doUpdate}>

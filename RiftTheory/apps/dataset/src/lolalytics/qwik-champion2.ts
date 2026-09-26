@@ -1,6 +1,6 @@
 import { retry } from "../utils";
 import { type LolalyticsRole } from "./roles";
-import type { RankBracket } from "@draftgap/core/src/models/user/Config";
+import type { RankBracket } from "@rifttheory/core/src/models/user/Config";
 
 export type LolalyticsChampion2Response = {
     team_h: string[];

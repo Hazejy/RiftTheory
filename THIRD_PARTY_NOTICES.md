@@ -1,12 +1,12 @@
 # Third-party notices
 
-The application is now named RiftTheory (formerly DraftOS). The upstream MIT
+The application is named RiftTheory. The upstream MIT
 license and copyright remain unchanged. Attribution is retained in these files;
 it is no longer displayed as a banner over the draft workspace.
 
 ## DraftGap
 
-The `draftgap/` directory contains a modified copy of
+The `RiftTheory/` directory contains a modified copy of
 [DraftGap by Vigo Vlugt](https://github.com/vigovlugt/draftgap).
 
 - Upstream version: 3.2.1
@@ -14,9 +14,9 @@ The `draftgap/` directory contains a modified copy of
 - Import date: 2026-09-04
 - Copyright (c) 2026 Vigo Vlugt
 - License: MIT; the complete upstream notice and license remain in
-  [draftgap/LICENSE](draftgap/LICENSE).
+  [RiftTheory/LICENSE](RiftTheory/LICENSE).
 
-DraftOS changes include branding, a curated strategy view, local storage keys,
+RiftTheory changes include branding, a curated strategy view, local storage keys,
 loopback-only local serving, disabled Google Analytics initialization and disabled
 upstream desktop updates. This is an independent fork, not an official DraftGap release.
 
@@ -30,6 +30,6 @@ jobs were run as part of this import.
 
 Inter, Roboto and Plus Jakarta Sans are bundled through their Fontsource variable
 font packages (5.3.0). Each uses the SIL Open Font License 1.1. Complete copyright
-and license notices are shipped in `draftgap/apps/frontend/public/licenses/` and
+and license notices are shipped in `RiftTheory/apps/frontend/public/licenses/` and
 copied into the web build under `/licenses/`. These fonts use system fallbacks
 for Korean and Chinese glyphs.

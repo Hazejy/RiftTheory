@@ -6,8 +6,8 @@ import {
     useContext,
 } from "solid-js";
 import { createStore } from "solid-js/store";
-import { displayNameByRole, Role } from "@draftgap/core/src/models/Role";
-import { Team } from "@draftgap/core/src/models/Team";
+import { displayNameByRole, Role } from "@rifttheory/core/src/models/Role";
+import { Team } from "@rifttheory/core/src/models/Team";
 import { useDraftView } from "./DraftViewContext";
 import { DRAFT_PICK_ORDER } from "../utils/draftOrder";
 import { useDataset } from "./DatasetContext";
@@ -345,20 +345,20 @@ const DraftContext = createContext<ReturnType<typeof createDraftContext>>();
 export function DraftProvider(props: { children: JSXElement }) {
     const ctx = createDraftContext();
 
-    const DRAFTGAP_DEBUG = ((window as any).DRAFTGAP_DEBUG = ctx) as any;
-    DRAFTGAP_DEBUG.test = () => {
+    const RIFTTHEORY_DEBUG = ((window as any).RIFTTHEORY_DEBUG = ctx) as any;
+    RIFTTHEORY_DEBUG.test = () => {
         batch(() => {
-            DRAFTGAP_DEBUG.pickChampion("ally", 0, "57", 0);
-            DRAFTGAP_DEBUG.pickChampion("ally", 1, "234", 1);
-            DRAFTGAP_DEBUG.pickChampion("ally", 2, "30", 2);
-            DRAFTGAP_DEBUG.pickChampion("ally", 3, "429", 3);
-            DRAFTGAP_DEBUG.pickChampion("ally", 4, "412", 4);
+            RIFTTHEORY_DEBUG.pickChampion("ally", 0, "57", 0);
+            RIFTTHEORY_DEBUG.pickChampion("ally", 1, "234", 1);
+            RIFTTHEORY_DEBUG.pickChampion("ally", 2, "30", 2);
+            RIFTTHEORY_DEBUG.pickChampion("ally", 3, "429", 3);
+            RIFTTHEORY_DEBUG.pickChampion("ally", 4, "412", 4);
 
-            DRAFTGAP_DEBUG.pickChampion("opponent", 0, "164", 0);
-            DRAFTGAP_DEBUG.pickChampion("opponent", 1, "64", 1);
-            DRAFTGAP_DEBUG.pickChampion("opponent", 2, "147", 2);
-            DRAFTGAP_DEBUG.pickChampion("opponent", 3, "145", 3);
-            DRAFTGAP_DEBUG.pickChampion("opponent", 4, "16", 4);
+            RIFTTHEORY_DEBUG.pickChampion("opponent", 0, "164", 0);
+            RIFTTHEORY_DEBUG.pickChampion("opponent", 1, "64", 1);
+            RIFTTHEORY_DEBUG.pickChampion("opponent", 2, "147", 2);
+            RIFTTHEORY_DEBUG.pickChampion("opponent", 3, "145", 3);
+            RIFTTHEORY_DEBUG.pickChampion("opponent", 4, "16", 4);
         });
     };
 

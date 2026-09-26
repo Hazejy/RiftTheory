@@ -1,4 +1,4 @@
-import { assessObservedRoles, flexStrengthForShare } from "@draftgap/core/src/role/flex-evidence";
+import { assessObservedRoles, flexStrengthForShare } from "@rifttheory/core/src/role/flex-evidence";
 
 export function flexStrengthLabel(share: number) {
     return {

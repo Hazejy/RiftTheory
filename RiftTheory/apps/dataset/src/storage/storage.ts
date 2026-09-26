@@ -9,14 +9,14 @@ import { getStorageClient } from "./client";
 import {
     DATASET_VERSION,
     type Dataset,
-} from "@draftgap/core/src/models/dataset/Dataset";
+} from "@rifttheory/core/src/models/dataset/Dataset";
 import { bytesToHumanReadable } from "../utils";
 import { mkdir } from "node:fs/promises";
 
 export async function getDataset({ name }: { name: string }) {
     const client = getStorageClient();
     const params = {
-        Bucket: process.env.S3_BUCKET || "draftgap",
+        Bucket: process.env.S3_BUCKET || "rifttheory",
         Key: `datasets/v${DATASET_VERSION}/${name}.json`,
     } satisfies GetObjectCommandInput;
     const command = new GetObjectCommand(params);
@@ -44,7 +44,7 @@ export async function storeDataset(
     const client = getStorageClient();
 
     const params = {
-        Bucket: process.env.S3_BUCKET || "draftgap",
+        Bucket: process.env.S3_BUCKET || "rifttheory",
         Key: `datasets/v${DATASET_VERSION}/${name}.json`,
         Body: body,
         ContentType: "application/json",
@@ -62,7 +62,7 @@ export async function storeDataset(
     );
 
     const corsCommand = new PutBucketCorsCommand({
-        Bucket: process.env.S3_BUCKET || "draftgap",
+        Bucket: process.env.S3_BUCKET || "rifttheory",
         CORSConfiguration: {
             CORSRules: [
                 {

@@ -29,7 +29,7 @@ const [
     return value ?? "";
 });
 
-const S3_BUCKET = process.env.S3_BUCKET || "draftgap";
+const S3_BUCKET = process.env.S3_BUCKET || "rifttheory";
 
 if (errors.length > 0) {
     console.error(errors.join("\n"));

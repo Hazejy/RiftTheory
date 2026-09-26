@@ -1,4 +1,4 @@
-import { Team } from "@draftgap/core/src/models/Team";
+import { Team } from "@rifttheory/core/src/models/Team";
 
 // Pick slots are chronological, not lane assignments. B = ally, R = opponent.
 export const DRAFT_PICK_ORDER: ReadonlyArray<{ team: Team; index: number }> = [

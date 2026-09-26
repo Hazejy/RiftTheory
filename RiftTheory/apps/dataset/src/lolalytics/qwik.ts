@@ -1,5 +1,5 @@
 import { retry } from "../utils";
-import type { RankBracket } from "@draftgap/core/src/models/user/Config";
+import type { RankBracket } from "@rifttheory/core/src/models/user/Config";
 import { type LolalyticsRole } from "./roles";
 
 export type QwikLolalyticsData = {

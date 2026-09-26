@@ -1,4 +1,4 @@
-import type { Role } from "@draftgap/core/src/models/Role";
+import type { Role } from "@rifttheory/core/src/models/Role";
 import {
     roleScenarios,
     STRATEGY_ROLES,
@@ -6,14 +6,14 @@ import {
     type StrategyPick,
 } from "./strategyReview";
 
-export type DraftGapReplacement = {
+export type RiftTheoryReplacement = {
     pick: StrategyPick;
     modelIndex: number;
     roleGames: number;
 };
 
-/** Screen fixed-role, legal replacements; the caller supplies DraftGap's rating. */
-export function screenDraftGapReplacements(
+/** Screen fixed-role, legal replacements; the caller supplies RiftTheory's rating. */
+export function screenRiftTheoryReplacements(
     own: readonly StrategyPick[],
     enemy: readonly StrategyPick[],
     candidates: readonly StrategyPick[],
@@ -29,10 +29,10 @@ export function screenDraftGapReplacements(
     const enemyScenarios = roleScenarios([...enemy]);
     if (own.length !== 4 || enemy.length !== 5 ||
         ownScenarios.length !== 1 || enemyScenarios.length !== 1)
-        return { evaluated: 0, role: undefined, top: [] as DraftGapReplacement[] };
+        return { evaluated: 0, role: undefined, top: [] as RiftTheoryReplacement[] };
 
     const missing = STRATEGY_ROLES.find((role) => !ownScenarios[0].includes(role));
-    if (!missing) return { evaluated: 0, role: undefined, top: [] as DraftGapReplacement[] };
+    if (!missing) return { evaluated: 0, role: undefined, top: [] as RiftTheoryReplacement[] };
     const ownRoles = new Map(ownScenarios[0].map((role, index) => [
         STRATEGY_ROLES.indexOf(role) as Role, own[index].key,
     ]));
@@ -45,7 +45,7 @@ export function screenDraftGapReplacements(
         ...own.map((pick) => pick.key),
         ...enemy.map((pick) => pick.key),
     ]);
-    const scored: DraftGapReplacement[] = [];
+    const scored: RiftTheoryReplacement[] = [];
     const seen = new Set<string>();
     for (const pick of candidates) {
         if (pick.role !== missing || blocked.has(pick.key) || seen.has(pick.key) ||

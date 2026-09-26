@@ -80,7 +80,7 @@ jobs:
 
       - name: Generate rank datasets
         if: steps.freshness.outputs.refresh == 'true'
-        run: bun run --filter @draftgap/dataset start
+        run: bun run --filter @rifttheory/dataset start
         env:
           DATASET_RANK_BRACKET: ${{ matrix.rank_bracket }}
           DATASET_OUTPUT_DIR: ${{ github.workspace }}/rank-datasets

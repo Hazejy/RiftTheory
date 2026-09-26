@@ -13,8 +13,8 @@ import {
     getPickableChampionIds,
     getGameflowPhase,
 } from "../api/lcu-api";
-import { getRoleFromString, Role } from "@draftgap/core/src/models/Role";
-import { Team } from "@draftgap/core/src/models/Team";
+import { getRoleFromString, Role } from "@rifttheory/core/src/models/Role";
+import { Team } from "@rifttheory/core/src/models/Team";
 import {
     LolChampSelectChampSelectPlayerSelection,
     LolChampSelectChampSelectSession,
@@ -27,6 +27,7 @@ import { useDraft } from "./DraftContext";
 import { useMedia } from "../hooks/useMedia";
 import { useUser } from "./UserContext";
 import { LolalyticsRole } from "../../../dataset/src/lolalytics/roles";
+import { createLiveRoleOverrides } from "../utils/liveRoleOverrides";
 
 const createChampSelectSession = (): LolChampSelectChampSelectSession => ({
     actions: [],
@@ -107,11 +108,25 @@ export const createLolClientContext = () => {
         createStore<LolChampSelectChampSelectSession>(
             createChampSelectSession(),
         );
+    const manualRoleOverrides = createLiveRoleOverrides();
+
+    const setManualRoleOverride = (
+        team: Team,
+        index: number,
+        championKey: string,
+        role: Role | undefined,
+    ) => {
+        if (clientState() !== ClientState.InChampSelect) return;
+        manualRoleOverrides.set(team, index, championKey, role);
+    };
 
     const updateChampSelectSession = (
         session: LolChampSelectChampSelectSession,
         firstTime = false,
     ) => {
+        if (firstTime || session.gameId !== champSelectSession.gameId) {
+            manualRoleOverrides.clear();
+        }
         const nextPick = (session.actions ?? [])
             .flat()
             .find((a) => a.type === "pick" && !a.completed && a.isInProgress);
@@ -133,12 +148,15 @@ export const createLolClientContext = () => {
         ) => {
             const teamPicks = team === "ally" ? allyTeam : opponentTeam;
 
-            const role = selection.assignedPosition
+            const assignedRole = selection.assignedPosition
                 ? getRole(selection.assignedPosition)
                 : undefined;
 
             if (selection.championId) {
                 const championKey = selection.championId.toString();
+                const role = manualRoleOverrides.resolve(
+                    team, index, championKey, assignedRole,
+                );
                 if (
                     teamPicks[index].championKey === championKey &&
                     teamPicks[index].role === role
@@ -156,6 +174,7 @@ export const createLolClientContext = () => {
 
                 return true;
             } else {
+                const role = assignedRole;
                 let championKey = undefined;
                 if (
                     selection.championPickIntent &&
@@ -254,10 +273,10 @@ export const createLolClientContext = () => {
     };
 
     const checkImportFavourites = async () => {
-        const DRAFTGAP_IMPORT_FAVOURITES_LAST_ASKED =
-            "draftgap-import-favourites-last-asked";
+        const RIFTTHEORY_IMPORT_FAVOURITES_LAST_ASKED =
+            "rifttheory-import-favourites-last-asked";
         const lastAsked = localStorage.getItem(
-            DRAFTGAP_IMPORT_FAVOURITES_LAST_ASKED,
+            RIFTTHEORY_IMPORT_FAVOURITES_LAST_ASKED,
         );
         if (lastAsked) {
             const lastAskedDate = new Date(lastAsked);
@@ -298,7 +317,7 @@ export const createLolClientContext = () => {
         });
 
         localStorage.setItem(
-            DRAFTGAP_IMPORT_FAVOURITES_LAST_ASKED,
+            RIFTTHEORY_IMPORT_FAVOURITES_LAST_ASKED,
             new Date().toISOString(),
         );
     };
@@ -331,6 +350,7 @@ export const createLolClientContext = () => {
                 const session = await getChampSelectSession();
                 if (!active()) return;
                 if (session == null) {
+                    manualRoleOverrides.clear();
                     const phase = await getGameflowPhase();
                     if (!active()) return;
                     if (clientState() !== ClientState.MainMenu) {
@@ -386,6 +406,7 @@ export const createLolClientContext = () => {
     };
 
     const stopLolClientIntegration = () => {
+        manualRoleOverrides.clear();
         running = false;
         generation++;
         clearTimeout(integrationTimeout);
@@ -402,6 +423,7 @@ export const createLolClientContext = () => {
     return {
         clientState,
         champSelectSession,
+        setManualRoleOverride,
         startLolClientIntegration,
         stopLolClientIntegration,
         clientError,

@@ -8,8 +8,8 @@ import {
     SortingState,
 } from "@tanstack/solid-table";
 import { useDraft } from "../../contexts/DraftContext";
-import { Role } from "@draftgap/core/src/models/Role";
-import { Suggestion } from "@draftgap/core/src/draft/suggestions";
+import { Role } from "@rifttheory/core/src/models/Role";
+import { Suggestion } from "@rifttheory/core/src/draft/suggestions";
 import { Table } from "../common/Table";
 import ChampionCell from "../common/ChampionCell";
 import { RoleCell } from "../common/RoleCell";
@@ -24,7 +24,7 @@ import { useDataset } from "../../contexts/DatasetContext";
 import { useDraftFilters } from "../../contexts/DraftFiltersContext";
 import { Dialog, DialogContent } from "../common/Dialog";
 import { ChampionDraftAnalysisDialog } from "../dialogs/ChampionDraftAnalysisDialog";
-import { Team } from "@draftgap/core/src/models/Team";
+import { Team } from "@rifttheory/core/src/models/Team";
 import {
     championName,
     normalizeChampionSearch,
@@ -33,7 +33,7 @@ import {
 import SuggestionEvidenceBadges from "../rifttheory/SuggestionEvidenceBadges";
 import SuggestionEvidenceDetails from "../rifttheory/SuggestionEvidenceDetails";
 import { suggestionEvidenceKey } from "../../utils/interactionEvidence";
-import { compareSuggestionEvidence } from "@draftgap/core/src/draft/suggestion-evidence";
+import { compareSuggestionEvidence } from "@rifttheory/core/src/draft/suggestion-evidence";
 import DraftResponsePlanner from "../rifttheory/DraftResponsePlanner";
 
 export default function DraftTable() {

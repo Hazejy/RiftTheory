@@ -3,7 +3,7 @@ import { useDraft } from "../../contexts/DraftContext";
 import { useDataset } from "../../contexts/DatasetContext";
 import { useUser } from "../../contexts/UserContext";
 import { useDraftAnalysis } from "../../contexts/DraftAnalysisContext";
-import { ratingToWinrate } from "@draftgap/core/src/rating/ratings";
+import { ratingToWinrate } from "@rifttheory/core/src/rating/ratings";
 import { championName, useI18n } from "../../utils/i18n";
 import { downloadDraftSnapshot } from "../../utils/draftSnapshot";
 import { pickLabel } from "../../utils/draftOrder";

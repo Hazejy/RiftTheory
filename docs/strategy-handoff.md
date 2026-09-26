@@ -63,7 +63,7 @@ Die folgenden Prüfungen wurden am 21. September erfolgreich ausgeführt:
 cd RiftTheory
 bun test apps/frontend/src/utils packages/core/src
 bun run typecheck
-bun run --filter @draftgap/frontend build
+bun run --filter @rifttheory/frontend build
 cd apps/frontend
 & ./node_modules/.bin/eslint.exe src/utils/strategyReview.ts src/utils/strategyReview.test.ts src/components/rifttheory/StrategyWorkspace.tsx
 & ./node_modules/.bin/tauri.exe build --no-bundle
@@ -93,7 +93,7 @@ zu dieser Übergabe. Die bestehende Bundle-Warnung bleibt bestehen
 ## Sinnvolle nächste Schritte
 
 1. Produktionsvorschau starten: in `RiftTheory/`
-   `bun run --filter @draftgap/frontend serve --port 3011`.
+   `bun run --filter @rifttheory/frontend serve --port 3011`.
 2. Im Strategy-Tab einen Doppelpick-Slot auswählen und einen einzelnen Champion
    suchen. Prüfen, dass Paare mit anders benannten Partnern angeboten werden.
 3. Eine Vorschau auf beiden Seiten öffnen. Zuordnung von Blue/Red, aktueller Plan,
@@ -460,3 +460,98 @@ Verifiziert: 104 Frontend/Core-Tests, Workspace-TypeScript, gezielter ESLint,
 `DEC7CA103EF3922D958C82BF0DEB6E4B99E45A3061A4EEEEA7533091A111B62B`.
 Die bekannte Tauri-Bundle-Warnung besteht; interaktive Sichtpruefung bleibt
 wegen fehlender Browser-/App-Anbindung offen.
+
+## Weiterarbeit am 26. September 2026
+
+Der Pick-Order-Coach verfolgt fuer B3 und R3 nun auch die naechste eigene
+Pickphase hinter den vier zweiten Bans. Ein begrenzter Stresstest nimmt die
+fuehrende heuristische Wahl, laesst die zwei gegnerischen Bans nacheinander
+jeweils einen Champion dieser Wahl treffen und sucht danach erneut eine legale
+Wahl. Nach B3 geschieht dies pro angezeigter R3-Antwort; nach R3 ohne
+vorherigen Gegnerpick. Eigene Zwischen-Bans und tatsaechliche Gegnerentscheidungen
+bleiben offen. Die UI nennt diese Grenze und behauptet weder optimale Bans
+noch eine gesicherte Fortsetzung.
+
+Die gezielten Tests fuer Sequenz, zwei gegnerische Bans und legale Rollen wurden
+ergaenzt und bestanden (4 Tests, 54 Assertions). Der Workspace-Typecheck war
+ebenfalls erfolgreich. Die unsichtbare lokale Testanbindung brach beim Starten
+von Bun mit `Transport closed` ab; nach ausdruecklicher Freigabe des Nutzers
+wurde genau ein sichtbarer Befehlslauf fuer Tests und Typecheck verwendet.
+Interaktive Sichtpruefung und ein neuer Installer stehen fuer diesen Stand aus.
+
+Abschluss am 26. September: Die gesamte Frontend/Core-Suite bestand mit 104
+Tests und 442 Assertions; Workspace-Typecheck, gezielter ESLint-Lauf,
+Frontend-Produktionsbuild und `git diff --check` waren erfolgreich. Der aktuelle
+NSIS-Installer wurde gebaut:
+`RiftTheory/apps/frontend/src-tauri/target/release/bundle/nsis/RiftTheory_3.2.10_x64-setup.exe`
+(5.831.665 Bytes), SHA-256
+`A83BE07F26D85B8D1B0B1A82C0FBB10775D3594A24BB47AAE007C73A2BC45337`.
+Die bekannte Tauri-Warnung zu `__TAURI_BUNDLE_TYPE` bleibt bestehen. Eine
+interaktive native Desktop-Pruefung des neuesten Stands wurde nicht ausgefuehrt,
+da der Nutzer die stoerenden Codex-Terminalfenster zuerst behoben haben wollte. Als
+konkrete Ursache fuer wiederholte Starts am Turn-Ende wurde ein `notify`-Eintrag
+in der persoenlichen Codex-Konfiguration gefunden, der
+`codex-computer-use.exe` aufrief. Dieser Eintrag wurde entfernt und die
+Originalkonfiguration im Temp-Verzeichnis gesichert; der Erfolg muss nach dem
+naechsten Turn-Ende beobachtet werden.
+
+Anschliessend wurde die gebaute Produktionsvorschau mit unsichtbarem Headless-
+Chrome geprueft: Strategy-Tab oeffnet, Kandidatenliste wird gefuellt, Ashe-
+Vergleich oeffnet und scrollt in den sichtbaren Bereich. Auf 1440 x 1000 und
+390 x 844 wurde das Layout aufgenommen; bei 390 Pixeln gab es keinen
+Dokument-Seitenueberlauf. Die konkrete B3/R3-Banphase wurde in diesem
+ersten Browser-Smoke-Test nicht durchgeklickt; ihre Reihenfolge, legalen
+Antworten und erneute Auswahl nach zwei Ziel-Bans waren zu diesem Zeitpunkt
+durch die gezielten Logiktests abgedeckt.
+
+Abnahme-Durchlauf danach: In der Produktionsvorschau und in der frisch gebauten
+nativen Windows-EXE wurden alle zehn chronologischen Slots B1-B5/R1-R5 mit
+einer legalen schrittweise aufgebauten Beispielbelegung geoeffnet. Jede
+Slot-Ansicht zeigte den erwarteten Pick-Order-Coach und eine oeffnende
+Kandidatenvorschau; bei keinem Slot trat Dokument-Seitenueberlauf bei 1440 px
+auf. Die Doppelpick-Fenster R1+R2, B2+B3 und B4+B5 sowie die unmittelbaren
+Gegnerantworten entsprachen der Draft-Reihenfolge. B2, B3 und R3 zeigten die
+zweite Banphase; R3 zeigte zwei Ziel-Bans und eine neu berechnete legale Wahl.
+Die native B3-Ansicht wurde zusaetzlich als Screenshot kontrolliert: drei
+R3-Antwortzweige, je zwei Ziel-Bans und danach neu berechnete B4+B5-Picks waren
+lesbar. Der Durchlauf nutzte die `RIFTTHEORY_DEBUG`-Schnittstelle
+zum Setzen der Beispielpicks und klickte die Kandidatenvorschau in der UI. Er
+prueft damit die gerenderten Strategy-Ablaufe, aber keine Installation des NSIS-
+Pakets oder manuelle Maus- und Tastatureingaben an einem sichtbaren Fenster.
+
+## Stand nach Antwort-Screen und Umbenennung (2026-09-26)
+
+Der Strategy-Vergleich prueft zwei Picks im selben Slot nun auch gegen bis zu
+drei legale heuristische Gegnerantworten. Liegt vor der naechsten Banphase noch
+eine eigene Wahl, wird ein legaler Ersatzzug gezeigt. Ein Vorteil wird nur bei
+vollstaendiger, strukturell dominierender Evidenz behauptet; sonst bleibt das
+Ergebnis offen. Das ist ein begrenzter Screen, kein geloester Minimax-Baum und
+keine kalibrierte Gewinnwahrscheinlichkeit. Doppelpick-Kandidaten behalten
+jetzt Vertreter aus allen Rollen, statt durch ein globales Top-12-Limit
+gueltige Paare zu verlieren.
+
+Die App-Anzeige, FAQ, Download-Dialog, Workspace-Pakete, Imports und interne
+Debug-Kennung verwenden RiftTheory. Die Download-Seite zeigt auf die
+RiftTheory-Releases. Externe Dataset-URLs, Quellmetadaten und Lizenzhinweise
+benennen weiterhin die tatsaechliche Upstream-Quelle. Nach der Umbenennung:
+95 Frontend-Tests, Typecheck aller vier Pakete, Quellcode-ESLint ohne Fehler,
+Produktions-Build und NSIS-Build erfolgreich. Die Produktionsvorschau zeigte
+B1- und B3-Antwortvergleiche sowie B3-Ban-Fallbacks ohne Seitenueberlauf.
+Der Installer wurde unter
+`RiftTheory/apps/frontend/src-tauri/target/release/bundle/nsis/RiftTheory_3.2.10_x64-setup.exe`
+erneut erstellt. Die bekannte Tauri-Warnung zu `__TAURI_BUNDLE_TYPE` bleibt.
+
+## Live-Rollenwechsel (2026-09-26)
+
+Ein gesperrter Champion konnte bisher nicht direkt von Jungle auf Mid
+umgestellt werden: Der erste Klick hob nur die Sperre auf; der LCU-Poll setzte
+die automatisch zugewiesene Rolle anschliessend wieder ein. Die Pick-Karte
+zeigt jetzt alle fuenf Rollen und erlaubt einen direkten Wechsel. Manuelle
+Vorgaben bleiben fuer denselben Champion und Slot waehrend der laufenden
+Champ Select erhalten. Bei Champion- oder Sessionwechsel verfallen sie.
+Gezielte Tests pruefen wiederholte LCU-Zuweisungen, Entsperren und Wechsel.
+In der gebauten Weboberflaeche wurde Ekko in R1 von Jungle auf Mid geklickt.
+Die vollstaendige Frontend-Suite meldete danach 97 erfolgreiche Tests; der
+Windows-Installer wurde fuer Version 3.2.11 unter
+`RiftTheory/apps/frontend/src-tauri/target/release/bundle/nsis/RiftTheory_3.2.11_x64-setup.exe`
+erstellt.

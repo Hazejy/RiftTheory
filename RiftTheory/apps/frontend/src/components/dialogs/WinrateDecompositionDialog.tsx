@@ -1,7 +1,7 @@
 import { Component } from "solid-js";
 import { SummaryCard } from "../views/analysis/SummaryCards";
 import { hashtag, presentationChartLine } from "../icons/RiftIcons";
-import { winrateToRating } from "@draftgap/core/src/rating/ratings";
+import { winrateToRating } from "@rifttheory/core/src/rating/ratings";
 import { DialogContent, DialogHeader, DialogTitle } from "../common/Dialog";
 
 type Props = {
@@ -24,11 +24,11 @@ export const WinrateDecompositionDialog: Component<Props> = (props) => {
                 <SummaryCard
                     class="py-2!"
                     icon={presentationChartLine}
-                    title="Draftgap winrate"
+                    title="RiftTheory winrate"
                     rating={props.data.rating}
                     tooltip={
                         <>
-                            Winrate draftgap uses in the model, more
+                            Winrate used by the statistical model, more
                             conservative than the real winrate. This winrate
                             will heavily change depending on the risk level.
                         </>

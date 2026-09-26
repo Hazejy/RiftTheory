@@ -1,16 +1,16 @@
-import type { ChampionData } from "@draftgap/core/src/models/dataset/ChampionData";
-import type { ChampionSynergyData } from "@draftgap/core/src/models/dataset/ChampionSynergyData";
-import type { ChampionMatchupData } from "@draftgap/core/src/models/dataset/ChampionMatchupData";
-import { getRoleFromString, Role } from "@draftgap/core/src/models/Role";
+import type { ChampionData } from "@rifttheory/core/src/models/dataset/ChampionData";
+import type { ChampionSynergyData } from "@rifttheory/core/src/models/dataset/ChampionSynergyData";
+import type { ChampionMatchupData } from "@rifttheory/core/src/models/dataset/ChampionMatchupData";
+import { getRoleFromString, Role } from "@rifttheory/core/src/models/Role";
 import {
     type ChampionRoleData,
     defaultChampionRoleData,
-} from "@draftgap/core/src/models/dataset/ChampionRoleData";
+} from "@rifttheory/core/src/models/dataset/ChampionRoleData";
 import { LOLALYTICS_ROLES, type LolalyticsRole } from "./roles";
 import { getLolalyticsQwikChampion } from "./qwik";
 import { getLolalyticsQwikChampion2 } from "./qwik-champion2";
 import type { RiotChampion } from "../riot";
-import type { RankBracket } from "@draftgap/core/src/models/user/Config";
+import type { RankBracket } from "@rifttheory/core/src/models/user/Config";
 
 export async function getChampionDataFromLolalytics(
     version: string,

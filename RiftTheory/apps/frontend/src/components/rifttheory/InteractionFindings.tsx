@@ -1,4 +1,4 @@
-import type { InteractionFinding } from "@draftgap/core/src/interaction/interaction-engine";
+import type { InteractionFinding } from "@rifttheory/core/src/interaction/interaction-engine";
 import { For, Show } from "solid-js";
 import { useRiftTheoryKnowledge } from "../../contexts/RiftTheoryKnowledgeContext";
 import { useUser } from "../../contexts/UserContext";

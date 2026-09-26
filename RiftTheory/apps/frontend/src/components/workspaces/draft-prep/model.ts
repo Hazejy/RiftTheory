@@ -1,4 +1,4 @@
-import { Role, ROLES } from "@draftgap/core/src/models/Role";
+import { Role, ROLES } from "@rifttheory/core/src/models/Role";
 
 export type PrepSection = "board" | "rosters" | "pools" | "calendar";
 export type PrepSide = "blue" | "either" | "red";

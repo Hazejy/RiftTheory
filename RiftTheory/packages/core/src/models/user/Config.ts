@@ -16,7 +16,7 @@ export const DraftTablePlacement = {
 type DraftTablePlacement =
     (typeof DraftTablePlacement)[keyof typeof DraftTablePlacement];
 
-export type DraftGapConfig = {
+export type RiftTheoryConfig = {
     // DRAFT ANALYSIS
     ignoreChampionWinrates: boolean;
     riskLevel: RiskLevel;

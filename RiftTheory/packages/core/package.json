@@ -1,5 +1,5 @@
 {
-    "name": "@draftgap/core",
+    "name": "@rifttheory/core",
     "version": "3.2.1",
     "scripts": {
         "typecheck": "tsc --noEmit",

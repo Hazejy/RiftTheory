@@ -7,6 +7,15 @@ persönliche Meinung von LS aus und imitiert ihn nicht. Die vorhandenen Bilder
 belegen Themen wie Farben, Kohärenz, Optionswert, Antworten und probabilistisches
 Denken; ein vollständiger, überprüfter Videotext liegt nicht vor.
 
+Eine direkt lesbare [LS-Interviewantwort](https://www.invenglobal.com/articles/13666/part-2-of-talking-with-ls-riot-saved-my-life-with-this-game-i-was-homeless-i-was-struggling-i-didnt-have-anywhere-to-go-back-to)
+nennt Lane-Matchups, Level-/Item-Schwellen, Ressourcenbedarf, Spielerpools und
+die Fähigkeit, nach einer gegnerischen Festlegung noch zu pivotieren. Das sind
+Prüffragen für den Coach, keine zeitlosen Champion-Urteile. Die offizielle
+[MTG-Draft-Erklärung zu Farben und Signalen](https://magic.wizards.com/en/news/feature/signals-booster-draft-2015-01-19)
+veranschaulicht den Wert offener Optionen. Sie liefert keine automatische
+Farben-Gegenmatrix für League; Champion-Kits, Rollen, Bans und Spielausführung
+müssen getrennt geprüft werden.
+
 ## Die Fragen, die die App beantworten muss
 
 1. **Fertiger Draft:** Wie gewinnen Blue und Red jeweils? Welche Bedingungen,

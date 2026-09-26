@@ -2,11 +2,11 @@
 import {
     ratingToWinrate,
     winrateToRating,
-} from "@draftgap/core/src/rating/ratings";
+} from "@rifttheory/core/src/rating/ratings";
 import { getChampions, getVersions } from "./riot";
 import { getDataset, storeDataset } from "./storage/storage";
 import { Browser, chromium } from "playwright";
-import { defaultChampionRoleData } from "@draftgap/core/src/models/dataset/ChampionRoleData";
+import { defaultChampionRoleData } from "@rifttheory/core/src/models/dataset/ChampionRoleData";
 
 // TO REVERT: DELETE THIS FILE
 // SET PACKAGE JSON start back to index.ts

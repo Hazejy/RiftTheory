@@ -585,6 +585,20 @@
     color: var(--color-neutral-400, #a3aab6);
     line-height: 1.5;
 }
+.strategy-pressure-branch {
+    min-width: 0;
+    padding: 11px 12px;
+    border: 1px solid var(--color-neutral-700, #363d49);
+    border-radius: 8px;
+}
+.strategy-pressure-branch small,
+.strategy-pressure-comparison > small {
+    display: block;
+    margin-top: 6px;
+}
+.strategy-pressure-comparison > small {
+    margin-top: 12px;
+}
 .strategy-choice-card {
     min-width: 0;
     padding: 15px;

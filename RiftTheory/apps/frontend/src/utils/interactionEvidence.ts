@@ -1,7 +1,7 @@
-import type { InteractionRule } from "@draftgap/core/src/interaction/interaction-engine";
-import type { InteractionTeam } from "@draftgap/core/src/interaction/interaction-engine";
-import type { Role } from "@draftgap/core/src/models/Role";
-import type { SuggestionEvidenceChampion } from "@draftgap/core/src/draft/suggestion-evidence";
+import type { InteractionRule } from "@rifttheory/core/src/interaction/interaction-engine";
+import type { InteractionTeam } from "@rifttheory/core/src/interaction/interaction-engine";
+import type { Role } from "@rifttheory/core/src/models/Role";
+import type { SuggestionEvidenceChampion } from "@rifttheory/core/src/draft/suggestion-evidence";
 import type {
     KnowledgeChampion,
     KnowledgeInteractionRule,

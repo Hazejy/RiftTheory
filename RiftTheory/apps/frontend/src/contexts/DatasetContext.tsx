@@ -8,8 +8,8 @@ import {
 import {
     DATASET_VERSION,
     Dataset,
-} from "@draftgap/core/src/models/dataset/Dataset";
-import { RankBracket } from "@draftgap/core/src/models/user/Config";
+} from "@rifttheory/core/src/models/dataset/Dataset";
+import { RankBracket } from "@rifttheory/core/src/models/user/Config";
 import { useUser } from "./UserContext";
 import { fetchDatasetJson } from "../api/dataset-api";
 
@@ -136,11 +136,11 @@ function createDatasetContext() {
     };
 
     createEffect(() => {
-        (window as any).DRAFTGAP_DEBUG = (window as any).DRAFTGAP_DEBUG || {};
+        (window as any).RIFTTHEORY_DEBUG = (window as any).RIFTTHEORY_DEBUG || {};
         // eslint-disable-next-line solid/reactivity
-        (window as any).DRAFTGAP_DEBUG.dataset = dataset;
+        (window as any).RIFTTHEORY_DEBUG.dataset = dataset;
         // eslint-disable-next-line solid/reactivity
-        (window as any).DRAFTGAP_DEBUG.dataset30Days = dataset30Days;
+        (window as any).RIFTTHEORY_DEBUG.dataset30Days = dataset30Days;
     });
 
     return {

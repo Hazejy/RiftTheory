@@ -2,7 +2,7 @@ import type {
     DraftSequenceStep,
     LiveDraftAction,
     LiveDraftSide,
-} from "@draftgap/core/src/live-draft/series";
+} from "@rifttheory/core/src/live-draft/series";
 import { For, Show } from "solid-js";
 import { useDataset } from "../../../contexts/DatasetContext";
 import { useUser } from "../../../contexts/UserContext";

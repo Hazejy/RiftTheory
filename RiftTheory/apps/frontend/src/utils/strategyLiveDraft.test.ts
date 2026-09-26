@@ -5,7 +5,7 @@ import {
     type LiveDraftSeriesConfig,
     type SeriesTeamId,
     nextDraftStep,
-} from "@draftgap/core/src/live-draft/series";
+} from "@rifttheory/core/src/live-draft/series";
 import { captureStrategyGame, LIVE_STRATEGY_ORDER } from "./strategyLiveDraft";
 import { DRAFT_PICK_ORDER, draftResponseWindow } from "./draftOrder";
 

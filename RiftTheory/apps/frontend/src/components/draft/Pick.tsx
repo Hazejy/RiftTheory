@@ -4,7 +4,8 @@ import { useDraft } from "../../contexts/DraftContext";
 import { RoleIcon } from "../icons/roles/RoleIcon";
 import { PickResetButton } from "./PickResetButton";
 import { PickOptions } from "./PickOptions";
-import { Role } from "@draftgap/core/src/models/Role";
+import { Role, ROLES } from "@rifttheory/core/src/models/Role";
+import { useLolClient } from "../../contexts/LolClientContext";
 import { formatPercentage } from "../../utils/rating";
 import { tooltip } from "../../directives/tooltip";
 import { useTooltip } from "../../contexts/TooltipContext";
@@ -23,6 +24,7 @@ type Props = {
 export function Pick(props: Props) {
     const { t, roleName } = useI18n();
     const { config } = useUser();
+    const { setManualRoleOverride } = useLolClient();
     const { allyTeam, opponentTeam, selection, select, pickChampion } =
         useDraft();
 
@@ -63,6 +65,9 @@ export function Pick(props: Props) {
     };
 
     function setRole(role: Role | undefined) {
+        if (pick().championKey) {
+            setManualRoleOverride(props.team, props.index, pick().championKey!, role);
+        }
         pickChampion(props.team, props.index, pick().championKey, role, {
             updateSelection: false,
             updateView: false,
@@ -123,34 +128,30 @@ export function Pick(props: Props) {
                             "bottom-1": pick().role !== undefined,
                         }}
                     >
-                        <For
-                            each={[
-                                ...(champion()?.probabilityByRole.entries() ??
-                                    []),
-                            ]
-                                .filter(([, prob]) => prob > 0.05)
-                                .sort(([, probA], [, probB]) => probB - probA)}
-                        >
-                            {([role, probability]) => (
-                                <div
+                        <For each={ROLES}>
+                            {(role) => {
+                                const probability = () =>
+                                    champion()?.probabilityByRole.get(role) ?? 0;
+                                return <button
+                                    type="button"
                                     title={roleName(role)}
-                                    class="flex flex-col items-center relative group mx-[0.4rem]"
+                                    aria-label={`${roleName(role)}${pick().role === role ? ", locked" : ", choose role"}`}
+                                    aria-pressed={pick().role === role}
+                                    class="flex flex-col items-center relative group mx-[0.2rem]"
                                     onClick={(event) => {
                                         event.stopPropagation();
                                         setPopoverVisible(false);
                                         setRole(
-                                            pick().role === undefined
-                                                ? role
-                                                : undefined,
+                                            pick().role === role ? undefined : role,
                                         );
                                     }}
                                     // @ts-ignore
                                     use:tooltip={{
                                         content: (
                                             <>
-                                                {pick().role !== undefined
-                                                    ? "The champion is locked in this position, to choose an other position, click to unlock"
-                                                    : "Click to lock the champion in this position, the current estimated position is highlighted"}
+                                                {pick().role === role
+                                                    ? "Click to unlock this role"
+                                                    : "Click to assign this role. All five roles are available even when the statistical sample is small or missing."}
                                             </>
                                         ),
                                     }}
@@ -161,11 +162,11 @@ export function Pick(props: Props) {
                                             class="h-8 lg:h-10"
                                             classList={{
                                                 "opacity-50":
-                                                    teamCompRole() !== role,
+                                                    teamCompRole() !== role && pick().role !== role,
                                             }}
                                         />
                                     </div>
-                                    <Show when={pick().role === undefined}>
+                                    <Show when={pick().role === undefined && probability() > 0}>
                                         <div
                                             class="text-md"
                                             classList={{
@@ -183,29 +184,29 @@ export function Pick(props: Props) {
                                                 ),
                                             }}
                                         >
-                                            {formatPercentage(probability, 1)}
+                                            {formatPercentage(probability(), 1)}
                                         </div>
                                     </Show>
                                     <Icon
                                         path={
-                                            pick().role === undefined
-                                                ? lockOpen
-                                                : lockClosed
+                                            pick().role === role
+                                                ? lockClosed
+                                                : lockOpen
                                         }
                                         class="absolute -top-1 -right-1 w-[20px]"
                                         classList={{
                                             "opacity-0 group-hover:opacity-100 group-hover:text-neutral-300":
-                                                pick().role === undefined,
+                                                pick().role !== role,
                                         }}
                                         style={{
                                             filter:
-                                                pick().role !== undefined
+                                                pick().role === role
                                                     ? "drop-shadow(2px 0 0 #191919) drop-shadow(-2px 0 0 #191919) drop-shadow(0 2px 0 #191919) drop-shadow(0 -2px 0 #191919)"
                                                     : undefined,
                                         }}
                                     />
-                                </div>
-                            )}
+                                </button>;
+                            }}
                         </For>
                     </div>
                 </>

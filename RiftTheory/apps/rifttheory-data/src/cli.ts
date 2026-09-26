@@ -11,7 +11,7 @@ import {
 } from "./paths";
 import { checkPatchStatus } from "./patch";
 import { importObservedRoles } from "./observedRoles";
-import { syncDraftGapRoleSamples } from "./providers/draftGap";
+import { syncUpstreamRoleSamples } from "./providers/upstreamRoleSamples";
 import { importInteractionEvidence } from "./interactions";
 import { importColorBaselines } from "./colorBaselines";
 
@@ -97,8 +97,8 @@ try {
       );
       break;
     }
-    case "sync-draftgap-roles": {
-      const result = await syncDraftGapRoleSamples(database, process.argv[3]);
+    case "sync-upstream-roles": {
+      const result = await syncUpstreamRoleSamples(database, process.argv[3]);
       const output = await exportWebData(database);
       verifyDatabase(database);
       console.log(
@@ -144,7 +144,7 @@ try {
       break;
     default:
       throw new Error(
-        `Unknown command: ${command}. Use init, check-patch, refresh, sync-riot, sync-draftgap-roles, import-curated, import-color-baselines, import-roles, import-interactions, export, build, status or verify.`,
+        `Unknown command: ${command}. Use init, check-patch, refresh, sync-riot, sync-upstream-roles, import-curated, import-color-baselines, import-roles, import-interactions, export, build, status or verify.`,
       );
   }
 } catch (error) {

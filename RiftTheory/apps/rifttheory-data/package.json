@@ -10,7 +10,7 @@
     "check:patch": "bun run src/cli.ts check-patch",
     "refresh": "bun run src/cli.ts refresh",
     "sync:riot": "bun run src/cli.ts sync-riot",
-    "sync:draftgap-roles": "bun run src/cli.ts sync-draftgap-roles",
+    "sync:upstream-roles": "bun run src/cli.ts sync-upstream-roles",
     "import:curated": "bun run src/cli.ts import-curated",
     "import:color-baselines": "bun run src/cli.ts import-color-baselines",
     "import:interactions": "bun run src/cli.ts import-interactions",

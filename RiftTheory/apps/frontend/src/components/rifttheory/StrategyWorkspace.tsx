@@ -6,9 +6,9 @@ import {
     Show,
     untrack,
 } from "solid-js";
-import { assessObservedRoles } from "@draftgap/core/src/role/flex-evidence";
-import { analyzeDraft } from "@draftgap/core/src/draft/analysis";
-import type { Role } from "@draftgap/core/src/models/Role";
+import { assessObservedRoles } from "@rifttheory/core/src/role/flex-evidence";
+import { analyzeDraft } from "@rifttheory/core/src/draft/analysis";
+import type { Role } from "@rifttheory/core/src/models/Role";
 import { useDraft } from "../../contexts/DraftContext";
 import { useDataset } from "../../contexts/DatasetContext";
 import { useUser } from "../../contexts/UserContext";
@@ -26,9 +26,15 @@ import {
     type StrategySlot,
 } from "../../utils/strategyLiveDraft";
 import { draftResponseWindow, pickLabel } from "../../utils/draftOrder";
-import { draftCoachWindow, sameSlotAlternative } from "../../utils/draftCoach";
-import { draftGapPickEvidence, type DraftGapPickEvidence } from "../../utils/draftGapPickEvidence";
-import { screenDraftGapReplacements } from "../../utils/draftGapReplacementScreen";
+import {
+    compareScreenedDraftLines,
+    draftBanStress,
+    draftCoachWindow,
+    sameSlotAlternative,
+    screenDraftChoice,
+} from "../../utils/draftCoach";
+import { riftTheoryPickEvidence, type RiftTheoryPickEvidence } from "../../utils/riftTheoryPickEvidence";
+import { screenRiftTheoryReplacements } from "../../utils/riftTheoryReplacementScreen";
 import { ChampionIcon } from "../icons/ChampionIcon";
 import { RoleIcon } from "../icons/roles/RoleIcon";
 import StrategicColorChips from "./StrategicColorChips";
@@ -178,7 +184,7 @@ function TeamPlan(props: { team: TeamStrategy; side: "Blue" | "Red" }) {
 function ChoiceSummary(props: {
     label: string;
     option: StrategyOption;
-    samples?: DraftGapPickEvidence[];
+    samples?: RiftTheoryPickEvidence[];
 }) {
     const costs = () => [...new Set([
         ...props.option.newNeeds,
@@ -210,7 +216,7 @@ function ChoiceSummary(props: {
             </dl>
             <Show when={props.samples?.length}>
                 <div class="strategy-choice-samples">
-                    <strong>DraftGap role samples · current patch</strong>
+                    <strong>RiftTheory role samples · current patch</strong>
                     <For each={props.samples}>
                         {(sample) => (
                             <p>
@@ -499,6 +505,44 @@ export default function StrategyWorkspace() {
             selected.picks.length > 1 ? shortlist.pairs : shortlist.singles,
         );
     });
+    const screenedChoiceComparison = createMemo(() => {
+        const selected = activePreview();
+        const alternative = sameSlotChoice();
+        const window = coachWindow();
+        if (!selected || !alternative || !window?.chronological ||
+            !window.replyPicks.length || window.bansBeforeReply.length)
+            return undefined;
+        const current = planning();
+        const ownConstraints = {
+            bans: bans(),
+            unavailable: live()?.unavailable[current.isBlue ? "ally" : "opponent"] ?? [],
+            owned: live() ? undefined : draft.ownedChampions(),
+        };
+        const enemyConstraints = {
+            bans: bans(),
+            unavailable: live()?.unavailable[current.isBlue ? "opponent" : "ally"] ?? [],
+        };
+        const screen = (choice: StrategyOption) => screenDraftChoice(
+            current.own,
+            current.enemy,
+            choice,
+            roleCandidates(),
+            ownConstraints,
+            enemyConstraints,
+            window.replyPicks.length,
+            window.nextOwnPicks.length,
+        );
+        const first = screen(selected);
+        const second = screen(alternative);
+        return {
+            selected: first,
+            alternative: second,
+            preference: first.supported && second.supported
+                ? compareScreenedDraftLines(first.worst, second.worst)
+                : "unresolved",
+            stopsAtBans: window.opponentBansBeforeOwn.length > 0,
+        };
+    });
     createEffect(() => {
         if (preview() && preview()!.fingerprint !== fingerprint())
             setPreview(undefined);
@@ -561,15 +605,41 @@ export default function StrategyWorkspace() {
             return fallback ? [[replyKey(reply), fallback] as const] : [];
         }));
     });
+    const previewBanStress = createMemo(() => {
+        const window = coachWindow();
+        const option = activePreview();
+        if (!option || !window?.chronological || !window.nextOwnAfterBans.length ||
+            !window.opponentBansBeforeOwn.length || !previewRead()?.after)
+            return [];
+        const current = planning();
+        const branches = window.replyPicks.length
+            ? previewReplies().map((reply) => ({ reply }))
+            : [{ reply: undefined }];
+        return branches.map(({ reply }) => ({
+            reply,
+            scenario: draftBanStress(
+                [...current.own, ...option.picks],
+                [...current.enemy, ...(reply?.picks ?? [])],
+                roleCandidates(),
+                {
+                    bans: bans(),
+                    unavailable: live()?.unavailable[current.isBlue ? "ally" : "opponent"] ?? [],
+                    owned: live() ? undefined : draft.ownedChampions(),
+                },
+                window.nextOwnAfterBans.length,
+                window.opponentBansBeforeOwn.length,
+            ),
+        }));
+    });
     const previewReplyEvidence = createMemo(() => {
         const activeDataset = dataset();
         const fullDataset = dataset30Days();
         const option = activePreview();
         if (!option || !activeDataset || !fullDataset || !rankStatus().available)
-            return new Map<string, DraftGapPickEvidence[]>();
+            return new Map<string, RiftTheoryPickEvidence[]>();
         const current = planning();
         return new Map(previewReplies().map((reply) => {
-            const entries = draftGapPickEvidence(
+            const entries = riftTheoryPickEvidence(
                 activeDataset,
                 fullDataset,
                 reply.picks,
@@ -580,7 +650,7 @@ export default function StrategyWorkspace() {
             return [replyKey(reply), entries] as const;
         }));
     });
-    const draftGapForOption = (option: Pick<StrategyOption, "picks"> | undefined) => {
+    const riftTheoryForOption = (option: Pick<StrategyOption, "picks"> | undefined) => {
         const activeDataset = dataset();
         const fullDataset = dataset30Days();
         if (
@@ -612,20 +682,20 @@ export default function StrategyWorkspace() {
         });
         return Number.isFinite(rating.winrate) ? rating : undefined;
     };
-    const previewDraftGap = createMemo(() => draftGapForOption(activePreview()));
-    const alternativeDraftGap = createMemo(() => draftGapForOption(sameSlotChoice()));
-    const currentDraftGap = createMemo(() => {
+    const previewRiftTheory = createMemo(() => riftTheoryForOption(activePreview()));
+    const alternativeRiftTheory = createMemo(() => riftTheoryForOption(sameSlotChoice()));
+    const currentRiftTheory = createMemo(() => {
         const current = planning();
         const original = current.current.find((pick) => pick.key === current.outgoing);
-        return original ? draftGapForOption({ picks: [original] }) : undefined;
+        return original ? riftTheoryForOption({ picks: [original] }) : undefined;
     });
-    const previewDraftGapPicks = createMemo(() => {
+    const previewRiftTheoryPicks = createMemo(() => {
         const option = activePreview();
         const activeDataset = dataset();
         const fullDataset = dataset30Days();
         if (!option || !activeDataset || !fullDataset || !rankStatus().available)
             return undefined;
-        return draftGapPickEvidence(
+        return riftTheoryPickEvidence(
             activeDataset,
             fullDataset,
             option.picks,
@@ -634,13 +704,13 @@ export default function StrategyWorkspace() {
             userConfig.minGames,
         );
     });
-    const alternativeDraftGapPicks = createMemo(() => {
+    const alternativeRiftTheoryPicks = createMemo(() => {
         const option = sameSlotChoice();
         const activeDataset = dataset();
         const fullDataset = dataset30Days();
         if (!option || !activeDataset || !fullDataset || !rankStatus().available)
             return undefined;
-        return draftGapPickEvidence(
+        return riftTheoryPickEvidence(
             activeDataset,
             fullDataset,
             option.picks,
@@ -656,7 +726,7 @@ export default function StrategyWorkspace() {
         if (live() || !current.outgoing || windowSteps().length !== 1 ||
             !rankStatus().available || !activeDataset || !fullDataset)
             return undefined;
-        return screenDraftGapReplacements(
+        return screenRiftTheoryReplacements(
             current.own,
             current.enemy,
             roleCandidates(),
@@ -1346,11 +1416,11 @@ export default function StrategyWorkspace() {
                     <Show when={replacementScreen()?.top.length}>
                         <details class="strategy-method">
                             <summary>
-                                DraftGap model screen · {replacementScreen()?.evaluated} legal
+                                RiftTheory model screen · {replacementScreen()?.evaluated} legal
                                 {" "}{replacementScreen()?.role} replacements
                             </summary>
                             <p class="strategy-explanation">
-                                Fixed other nine picks and one role assignment. Highest DraftGap
+                                Fixed other nine picks and one role assignment. Highest RiftTheory
                                 rating indices in the screened legal pool are shown below.
                                 The pool follows current bans, established role samples
                                 and your available champions.
@@ -1358,12 +1428,12 @@ export default function StrategyWorkspace() {
                                 pick order, future opponent responses or player comfort.
                                 The index is not a calibrated win chance.
                             </p>
-                            <Show when={currentDraftGap()}>
+                            <Show when={currentRiftTheory()}>
                                 {(rating) => (
                                     <p class="strategy-explanation">
                                         Current pick in this completed draft:{" "}
                                         <strong>{(rating().winrate * 100).toFixed(1)} / 100</strong>
-                                        {" "}DraftGap rating index for the choosing team.
+                                        {" "}RiftTheory rating index for the choosing team.
                                     </p>
                                 )}
                             </Show>
@@ -1384,7 +1454,7 @@ export default function StrategyWorkspace() {
                                         >
                                             <strong>{entry.pick.name} · {entry.pick.role}</strong>
                                             <span>{(entry.modelIndex * 100).toFixed(1)} / 100 rating index · {entry.roleGames.toLocaleString()} role games</span>
-                                            <Show when={currentDraftGap()}>
+                                            <Show when={currentRiftTheory()}>
                                                 {(rating) => (
                                                     <small>
                                                         {((entry.modelIndex - rating().winrate) * 100) >= 0 ? "+" : ""}
@@ -1581,27 +1651,67 @@ export default function StrategyWorkspace() {
                                             </div>
                                             <p class="strategy-explanation">Both choices use the same visible draft state and legal slot window. This shortlist compares supported changes; it does not prove either pick wins more games.</p>
                                             <div class="strategy-choice-grid">
-                                                <ChoiceSummary label="SELECTED CHOICE" option={option()} samples={previewDraftGapPicks()} />
-                                                <ChoiceSummary label="SHORTLIST ALTERNATIVE" option={alternative()} samples={alternativeDraftGapPicks()} />
+                                                <ChoiceSummary label="SELECTED CHOICE" option={option()} samples={previewRiftTheoryPicks()} />
+                                                <ChoiceSummary label="SHORTLIST ALTERNATIVE" option={alternative()} samples={alternativeRiftTheoryPicks()} />
                                             </div>
-                                            <Show when={previewDraftGapPicks()?.length && alternativeDraftGapPicks()?.length}>
+                                            <Show when={screenedChoiceComparison()}>
+                                                {(screen) => (
+                                                    <div class="strategy-choice-rating strategy-pressure-comparison" aria-label="Screened response comparison">
+                                                        <strong>After a screened opponent reply</strong>
+                                                        <p>{screen().preference === "selected"
+                                                            ? "The selected choice has a structural edge in these sampled adverse lines."
+                                                            : screen().preference === "alternative"
+                                                              ? "The alternative has a structural edge in these sampled adverse lines."
+                                                              : "Neither choice clearly dominates in these sampled adverse lines."}</p>
+                                                        <div class="strategy-choice-grid">
+                                                            <For each={[
+                                                                ["SELECTED", screen().selected],
+                                                                ["ALTERNATIVE", screen().alternative],
+                                                            ] as const}>
+                                                                {([label, result]) => (
+                                                                    <div class="strategy-pressure-branch">
+                                                                        <span class="strategy-eyebrow">{label} · {result.lines.length} replies screened</span>
+                                                                        <Show when={result.worst} fallback={<p>No supported reply surfaced; no robust comparison is possible.</p>}>
+                                                                            {(line) => (
+                                                                                <>
+                                                                                    <p>Adverse reply: {line().reply.picks.map((pick) => pick.name).join(" + ")}</p>
+                                                                                    <Show when={line().fallback}>
+                                                                                        {(fallback) => <small>Own next choice: {fallback().picks.map((pick) => pick.name).join(" + ")}</small>}
+                                                                                    </Show>
+                                                                                    <small>Own needs left: {line().ownNeeds.join("; ") || "none established"}</small>
+                                                                                    <small>Own plans: {line().ownPlans.join("; ") || "none established"}</small>
+                                                                                    <small>Opponent needs left: {line().enemyNeeds.join("; ") || "none established"}</small>
+                                                                                </>
+                                                                            )}
+                                                                        </Show>
+                                                                    </div>
+                                                                )}
+                                                            </For>
+                                                        </div>
+                                                        <small>These two choices and up to three heuristic replies are screened. {screen().stopsAtBans
+                                                            ? "This comparison stops before the next bans. "
+                                                            : "The next own choice is a heuristic fallback. "}Missing evidence or trade-offs keep the verdict unresolved. This is not a solved game tree or a win probability.</small>
+                                                    </div>
+                                                )}
+                                            </Show>
+                                            <Show when={previewRiftTheoryPicks()?.length && alternativeRiftTheoryPicks()?.length}>
                                                 <small class="strategy-choice-sample-note">
-                                                    DraftGap rates are rank-adjusted estimates; game
+                                                    RiftTheory rates are rank-adjusted estimates; game
                                                     counts are samples. They do not predict this
                                                     unfinished draft or isolate a pick's effect.
                                                 </small>
                                             </Show>
-                                            <Show when={previewDraftGap() && alternativeDraftGap()}>
-                                                <div class="strategy-choice-rating" aria-label="DraftGap same-slot rating comparison">
+                                            <Show when={previewRiftTheory() && alternativeRiftTheory()}>
+                                                <div class="strategy-choice-rating" aria-label="RiftTheory same-slot rating comparison">
                                                     <strong>Complete-draft rating index</strong>
                                                     <p>
-                                                        Selected {(previewDraftGap()!.winrate * 100).toFixed(1)} / 100
-                                                        {" · "}Alternative {(alternativeDraftGap()!.winrate * 100).toFixed(1)} / 100
+                                                        Selected {(previewRiftTheory()!.winrate * 100).toFixed(1)} / 100
+                                                        {" · "}Alternative {(alternativeRiftTheory()!.winrate * 100).toFixed(1)} / 100
                                                     </p>
                                                     <small>
                                                         Same opponents and pick window, with the candidate
                                                         choice changed.
-                                                        This is a DraftGap model comparison, not a calibrated
+                                                        This is a RiftTheory model comparison, not a calibrated
                                                         win chance or a proven effect of the pick.
                                                     </small>
                                                 </div>
@@ -1613,7 +1723,7 @@ export default function StrategyWorkspace() {
                                     <section class="strategy-replies" aria-label="Possible opponent replies">
                                         <span class="strategy-eyebrow">NEXT OPPONENT {coachWindow()!.replyPicks.length > 1 ? "PICKS" : "PICK"} · {coachWindow()?.replyPicks.join(" + ")}</span>
                                         <h4>Replies to stress-test</h4>
-                                        <p class="strategy-explanation">Legal options screened from recorded capability tags for pressure on your plan. DraftGap role samples use the current patch; matchups use 30 days. Their rates are rank-adjusted estimates, and these scenarios do not predict the opponent's choice.</p>
+                                        <p class="strategy-explanation">Legal options screened from recorded capability tags for pressure on your plan. RiftTheory role samples use the current patch; matchups use 30 days. Their rates are rank-adjusted estimates, and these scenarios do not predict the opponent's choice.</p>
                                         <div class="strategy-reply-list">
                                             <For each={previewReplies()} fallback={<p>No supported reply surfaced in this bounded screen. Counterplay may still exist.</p>}>
                                                 {(reply) => (
@@ -1623,7 +1733,7 @@ export default function StrategyWorkspace() {
                                                         <For each={previewReplyEvidence().get(replyKey(reply)) ?? []}>
                                                             {(sample) => (
                                                                 <small>
-                                                                    DraftGap {sample.champion}: {sample.roleGames.toLocaleString()} role games
+                                                                    RiftTheory {sample.champion}: {sample.roleGames.toLocaleString()} role games
                                                                     {sample.roleRate === undefined
                                                                         ? " · rate unavailable"
                                                                         : ` · ${(sample.roleRate * 100).toFixed(1)}% rank-adjusted rate`}
@@ -1664,6 +1774,35 @@ export default function StrategyWorkspace() {
                                 </Show>
                                 <Show when={coachWindow()?.chronological && coachWindow()?.bansBeforeReply.length && !coachWindow()?.nextOpponentPick}>
                                     <p class="strategy-explanation">The second ban phase comes before another opponent pick. Recheck the reply set after those bans; the current pool cannot establish a final counterpick.</p>
+                                </Show>
+                                <Show when={coachWindow()?.chronological && coachWindow()?.nextOwnAfterBans.length && coachWindow()?.opponentBansBeforeOwn.length}>
+                                    <section class="strategy-replies" aria-label="Ban phase stress test">
+                                        <span class="strategy-eyebrow">SECOND BAN PHASE · {coachWindow()?.opponentBansBeforeOwn.join(" + ")}</span>
+                                        <h4>Next pick after target bans</h4>
+                                        <p class="strategy-explanation">A bounded scenario targets the first champion in the leading screened choice at each opponent ban, then screens again for {coachWindow()?.nextOwnAfterBans.join(" + ")}. Your intervening bans and the opponent's real choices may change the pool. These are possible continuations, not optimal bans or guaranteed picks.</p>
+                                        <div class="strategy-reply-list">
+                                            <For each={previewBanStress()} fallback={<p>No supported continuation surfaced before the bans. Recheck when they are known.</p>}>
+                                                {(branch) => (
+                                                    <article>
+                                                        <Show when={branch.reply}>
+                                                            {(reply) => <strong>After {reply().picks.map((pick) => pick.name).join(" + ")}</strong>}
+                                                        </Show>
+                                                        <Show when={branch.scenario} fallback={<p>No supported next choice surfaced in this bounded screen.</p>}>
+                                                            {(scenario) => (
+                                                                <>
+                                                                    <p>First screened choice: {scenario().initial.picks.map((pick) => `${pick.name} · ${pick.role}`).join(" + ")}</p>
+                                                                    <p>Target-ban scenario: {scenario().targets.map((pick) => pick.name).join(" → ")}</p>
+                                                                    <small>{scenario().fallback
+                                                                        ? `Possible choice after those bans: ${scenario().fallback!.picks.map((pick) => `${pick.name} · ${pick.role}`).join(" + ")}`
+                                                                        : "No supported choice remains in this bounded screen after those bans; other legal picks may exist."}</small>
+                                                                </>
+                                                            )}
+                                                        </Show>
+                                                    </article>
+                                                )}
+                                            </For>
+                                        </div>
+                                    </section>
                                 </Show>
                                 <Show when={previewRead()}>
                                     {(comparison) => (
@@ -1709,10 +1848,10 @@ export default function StrategyWorkspace() {
                                         </div>
                                     )}
                                 </Show>
-                                <Show when={previewDraftGap()}>
+                                <Show when={previewRiftTheory()}>
                                     {(rating) => (
-                                        <section class="strategy-coach-stats" aria-label="DraftGap statistical baseline">
-                                            <h4>DraftGap statistical baseline</h4>
+                                        <section class="strategy-coach-stats" aria-label="RiftTheory statistical baseline">
+                                            <h4>RiftTheory statistical baseline</h4>
                                             <p>
                                                 Complete-draft rating index for the choosing team:
                                                 {" "}{(rating().winrate * 100).toFixed(1)} / 100.
@@ -1731,12 +1870,12 @@ export default function StrategyWorkspace() {
                                         </section>
                                     )}
                                 </Show>
-                                <Show when={previewDraftGapPicks()?.length}>
-                                    <section class="strategy-coach-stats" aria-label="DraftGap pick samples">
-                                        <h4>DraftGap pick samples</h4>
+                                <Show when={previewRiftTheoryPicks()?.length}>
+                                    <section class="strategy-coach-stats" aria-label="RiftTheory pick samples">
+                                        <h4>RiftTheory pick samples</h4>
                                         <p class="strategy-explanation">
                                             Current-patch role sample; duo and matchup samples use the
-                                            30-day dataset. The percentages are DraftGap's rank-adjusted
+                                            30-day dataset. The percentages are RiftTheory's rank-adjusted
                                             rates; game counts show sample size. They are not raw win
                                             rates, a pick's isolated value or an unfinished-draft forecast.
                                         </p>
@@ -1746,7 +1885,7 @@ export default function StrategyWorkspace() {
                                                 ? new Date(dataset()!.date).toLocaleDateString()
                                                 : "date unknown"}
                                         </small>
-                                        <For each={previewDraftGapPicks()}>
+                                        <For each={previewRiftTheoryPicks()}>
                                             {(entry) => (
                                                 <div class="strategy-sample-pick">
                                                     <strong>{entry.champion} · {entry.role}</strong>

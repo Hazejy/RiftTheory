@@ -1,5 +1,5 @@
-import type { InteractionFinding } from "@draftgap/core/src/interaction/interaction-engine";
-import type { Role } from "@draftgap/core/src/models/Role";
+import type { InteractionFinding } from "@rifttheory/core/src/interaction/interaction-engine";
+import type { Role } from "@rifttheory/core/src/models/Role";
 import { For, Show } from "solid-js";
 import type { RiftTheorySuggestionEvidence } from "../../contexts/DraftSuggestionsContext";
 import { useDataset } from "../../contexts/DatasetContext";

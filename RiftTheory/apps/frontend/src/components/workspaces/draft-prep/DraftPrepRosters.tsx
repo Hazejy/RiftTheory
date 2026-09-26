@@ -1,4 +1,4 @@
-import { ROLES, Role } from "@draftgap/core/src/models/Role";
+import { ROLES, Role } from "@rifttheory/core/src/models/Role";
 import { For, Setter } from "solid-js";
 import { useI18n } from "../../../utils/i18n";
 import { RoleIcon } from "../../icons/roles/RoleIcon";

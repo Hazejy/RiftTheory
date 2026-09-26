@@ -4,12 +4,12 @@ import {
     deleteDatasetMatchupSynergyData,
     type Dataset,
     removeRankBias,
-} from "@draftgap/core/src/models/dataset/Dataset";
-import type { ItemData } from "@draftgap/core/src/models/dataset/ItemData";
+} from "@rifttheory/core/src/models/dataset/Dataset";
+import type { ItemData } from "@rifttheory/core/src/models/dataset/ItemData";
 import type {
     RuneData,
     RunePathData,
-} from "@draftgap/core/src/models/dataset/RuneData";
+} from "@rifttheory/core/src/models/dataset/RuneData";
 import { storeDataset } from "./storage/storage";
 import {
     getVersions,
@@ -22,11 +22,11 @@ import {
     getSummonerSpells,
     type RiotSummonerSpell,
 } from "./riot";
-import type { SummonerSpellData } from "@draftgap/core/src/models/dataset/SummonerSpellData";
+import type { SummonerSpellData } from "@rifttheory/core/src/models/dataset/SummonerSpellData";
 import {
     RankBracket,
     RankBrackets,
-} from "@draftgap/core/src/models/user/Config";
+} from "@rifttheory/core/src/models/user/Config";
 
 const BATCH_SIZE = 10;
 const requestedRank = process.env.DATASET_RANK_BRACKET ?? "emerald_plus";

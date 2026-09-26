@@ -1,11 +1,11 @@
-import { SkillOrder } from "@draftgap/core/src/models/build/BuildDataset";
+import { SkillOrder } from "@rifttheory/core/src/models/build/BuildDataset";
 import { useBuild } from "../../../contexts/BuildContext";
 import { Panel, PanelHeader } from "../../common/Panel";
 import { VerticalEntityStats } from "./EntityStats";
 import { For, Show } from "solid-js";
 import { Icon, chevronRight } from "../../icons/RiftIcons";
 import { formatPercentage, getRatingClass } from "../../../utils/rating";
-import { ratingToWinrate } from "@draftgap/core/src/rating/ratings";
+import { ratingToWinrate } from "@rifttheory/core/src/rating/ratings";
 
 export function SkillStats() {
     const { buildAnalysisResult, partialBuildDataset, setSelectedEntity } =

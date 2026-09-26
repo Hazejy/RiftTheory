@@ -1,7 +1,7 @@
 import { invoke, isTauri } from "@tauri-apps/api/core";
 
 export async function fetchDatasetJson<T>(url: string): Promise<T> {
-    // The DraftGap bucket supports browser requests and this is the path used by
+    // The RiftTheory bucket supports browser requests and this is the path used by
     // the known-good desktop releases. Keep it in the WebView: the native HTTP
     // client does not inherit every user's proxy/network configuration.
     // GitHub release assets still need the native bridge to avoid WebView CORS.

@@ -1,7 +1,23 @@
-# DraftGap
-DraftGap.com is a site and desktop application which helps you pick and draft your League of Legends team. It suggests champions based on the meta, their matchups with every opponent champion and every ally duo. Its a unopinionated tool using only statistics to make suggestions.
+# RiftTheory
 
-If you ever wondered what champion to pick, which is the best champion you could have picked, or if the game was truly lost in draft, DraftGap is for you.
+RiftTheory is a League of Legends draft analysis desktop app. It combines
+statistical pick and matchup estimates with a Strategy workspace for draft
+order, team plans, champion capabilities and alternative picks.
 
-Find it at [draftgap.com](https://draftgap.com), or download the app, which integrates with the League client to automatically synchronize with the current draft in champ select.
+The statistical ratings are estimates, not calibrated win probabilities. The
+Strategy workspace screens a bounded set of legal lines; it does not solve the
+complete draft game tree.
 
+## Develop
+
+```sh
+bun install
+bun run dev
+bun run typecheck
+```
+
+The Windows desktop app uses Tauri. Releases are published at
+[RiftTheory releases](https://github.com/Hazejy/RiftTheory/releases).
+
+See the repository's `THIRD_PARTY_NOTICES.md` for upstream code and data
+attribution.

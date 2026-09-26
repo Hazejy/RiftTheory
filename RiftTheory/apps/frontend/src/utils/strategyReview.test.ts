@@ -496,6 +496,26 @@ describe("candidate legality and response windows", () => {
         ).toBe("top");
     });
 
+    test("pair shortlist keeps a legal second role beyond the global top twelve", () => {
+        const own = [
+            pick("Top", "top", ["frontline"]),
+            pick("Jungle", "jungle", ["engage"]),
+            pick("Mid", "mid", ["wave_clear"]),
+        ];
+        const candidates = [
+            ...Array.from({ length: 14 }, (_, index) =>
+                pick(`Support${String(index).padStart(2, "0")}`, "support", ["peel"]),
+            ),
+            pick("ZBot", "bot", ["poke"]),
+        ];
+        const result = strategyOptions(own, [], candidates, { bans: [] }, 2);
+        expect(result.pairs.length).toBeGreaterThan(0);
+        expect(result.pairs[0].picks.map((entry) => entry.role).sort()).toEqual([
+            "bot", "support",
+        ]);
+        expect(result.pairs[0].scenarios).toBeGreaterThan(0);
+    });
+
     test("resolving a teammate is not capability evidence for an unknown candidate", () => {
         const flex = pick("Flex", "top", ["dive"]);
         flex.role = undefined;

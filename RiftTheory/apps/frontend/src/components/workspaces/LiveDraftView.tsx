@@ -13,7 +13,7 @@ import {
     SeriesTeamId,
     sidesFromBlueTeam,
     STANDARD_DRAFT_SEQUENCE,
-} from "@draftgap/core/src/live-draft/series";
+} from "@rifttheory/core/src/live-draft/series";
 import { createEffect, createMemo, createSignal, For, Show } from "solid-js";
 import { useDataset } from "../../contexts/DatasetContext";
 import { useDraftView } from "../../contexts/DraftViewContext";

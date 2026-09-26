@@ -6,8 +6,8 @@ import {
     user,
 } from "../icons/RiftIcons";
 import { useDraft } from "../../contexts/DraftContext";
-import { Team } from "@draftgap/core/src/models/Team";
-import { ROLES, Role } from "@draftgap/core/src/models/Role";
+import { Team } from "@rifttheory/core/src/models/Team";
+import { ROLES, Role } from "@rifttheory/core/src/models/Role";
 import {
     displayNameByStatsSite,
     linkByStatsSite,

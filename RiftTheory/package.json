@@ -1,6 +1,6 @@
 {
-  "name": "draftgap",
-  "version": "3.2.10",
+  "name": "rifttheory",
+  "version": "3.2.11",
   "workspaces": [
     "packages/*",
     "apps/*"
@@ -14,12 +14,12 @@
     "data:import:roles": "bun run --filter @rifttheory/data import:roles",
     "data:import:interactions": "bun run --filter @rifttheory/data import:interactions",
     "data:import:color-baselines": "bun run --filter @rifttheory/data import:color-baselines",
-    "data:sync:draftgap-roles": "bun run --filter @rifttheory/data sync:draftgap-roles",
+    "data:sync:upstream-roles": "bun run --filter @rifttheory/data sync:upstream-roles",
     "data:status": "bun run --filter @rifttheory/data status",
     "bump-version": "bun run typecheck && bun scripts/bump-version.ts",
     "typecheck": "turbo typecheck",
-    "dev": "bun run --filter @draftgap/frontend dev",
-    "tauri": "bun run --filter @draftgap/frontend tauri"
+    "dev": "bun run --filter @rifttheory/frontend dev",
+    "tauri": "bun run --filter @rifttheory/frontend tauri"
   },
   "devDependencies": {
     "@types/bun": "latest"

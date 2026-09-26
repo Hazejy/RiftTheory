@@ -1,4 +1,4 @@
-# DraftGap Contribution Guide
+# RiftTheory Contribution Guide
 
 RiftTheory is a League of Legends draft analyzer built as a Tauri desktop app and web app.
 

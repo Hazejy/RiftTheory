@@ -6,14 +6,14 @@ import {
     useContext,
 } from "solid-js";
 import { createStore } from "solid-js/store";
-import { Role } from "@draftgap/core/src/models/Role";
-import { DraftGapConfig } from "@draftgap/core/src/models/user/Config";
+import { Role } from "@rifttheory/core/src/models/Role";
+import { RiftTheoryConfig as BaseRiftTheoryConfig } from "@rifttheory/core/src/models/user/Config";
 import {
     AppearancePreferences,
     normalizeAppearance,
 } from "../utils/appearance";
 
-type RiftTheoryConfig = DraftGapConfig & AppearancePreferences;
+type RiftTheoryConfig = BaseRiftTheoryConfig & AppearancePreferences;
 import { DEFAULT_CUSTOM_COLORS } from "../utils/customTheme";
 
 type FavouritePick = `${string}:${Role}`;

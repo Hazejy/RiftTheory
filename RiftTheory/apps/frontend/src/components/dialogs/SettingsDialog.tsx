@@ -1,7 +1,7 @@
 import { Show } from "solid-js";
 import { ButtonGroup, ButtonGroupOption } from "../common/ButtonGroup";
 import { Switch } from "../common/Switch";
-import { RiskLevel } from "@draftgap/core/src/risk/risk-level";
+import { RiskLevel } from "@rifttheory/core/src/risk/risk-level";
 import { useUser } from "../../contexts/UserContext";
 import { useMedia } from "../../hooks/useMedia";
 import {
@@ -9,7 +9,7 @@ import {
     RankBracket,
     RankBrackets,
     StatsSite,
-} from "@draftgap/core/src/models/user/Config";
+} from "@rifttheory/core/src/models/user/Config";
 import { DialogContent, DialogHeader, DialogTitle } from "../common/Dialog";
 import { AppearanceSettings } from "../AppearanceSettings";
 import { useI18n } from "../../utils/i18n";

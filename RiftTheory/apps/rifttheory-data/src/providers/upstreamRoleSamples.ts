@@ -5,7 +5,7 @@ import {
   type RoleObservationInput,
 } from "../observedRoles";
 
-export const DRAFTGAP_CURRENT_PATCH_URL =
+export const UPSTREAM_CURRENT_PATCH_URL =
   "https://bucket.draftgap.com/datasets/v5/current-patch.json";
 
 const ROLE_BY_INDEX = {
@@ -16,21 +16,21 @@ const ROLE_BY_INDEX = {
   4: "support",
 } as const;
 
-type DraftGapRole = { games?: unknown; wins?: unknown };
-type DraftGapChampion = {
+type UpstreamRole = { games?: unknown; wins?: unknown };
+type UpstreamChampion = {
   key?: unknown;
-  statsByRole?: Record<string, DraftGapRole>;
+  statsByRole?: Record<string, UpstreamRole>;
 };
-type DraftGapDataset = {
+type UpstreamDataset = {
   version?: unknown;
   date?: unknown;
-  championData?: Record<string, DraftGapChampion>;
+  championData?: Record<string, UpstreamChampion>;
 };
 
 function requireDataset(raw: unknown) {
   if (!raw || typeof raw !== "object")
     throw new Error("DraftGap returned no dataset object");
-  const dataset = raw as DraftGapDataset;
+  const dataset = raw as UpstreamDataset;
   if (
     typeof dataset.version !== "string" ||
     !/^\d+\.\d+\.\d+$/.test(dataset.version)
@@ -50,7 +50,7 @@ function requireDataset(raw: unknown) {
   };
 }
 
-function extractObservations(champions: Record<string, DraftGapChampion>) {
+function extractObservations(champions: Record<string, UpstreamChampion>) {
   const observations: RoleObservationInput[] = [];
   for (const [mapKey, champion] of Object.entries(champions)) {
     const riotKey =
@@ -79,9 +79,9 @@ function extractObservations(champions: Record<string, DraftGapChampion>) {
   return observations;
 }
 
-export async function syncDraftGapRoleSamples(
+export async function syncUpstreamRoleSamples(
   database: Database,
-  url = DRAFTGAP_CURRENT_PATCH_URL,
+  url = UPSTREAM_CURRENT_PATCH_URL,
 ) {
   const response = await fetch(url, { signal: AbortSignal.timeout(60_000) });
   if (!response.ok)

@@ -1,5 +1,5 @@
 import { createMemo, createSignal, For, Show } from "solid-js";
-import { ChampionData } from "@draftgap/core/src/models/dataset/ChampionData";
+import { ChampionData } from "@rifttheory/core/src/models/dataset/ChampionData";
 import { useDataset } from "../../contexts/DatasetContext";
 import { useUser } from "../../contexts/UserContext";
 import { useDraft } from "../../contexts/DraftContext";

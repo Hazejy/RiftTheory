@@ -6,7 +6,7 @@ import {
     presentationChartLine,
 } from "../../icons/RiftIcons";
 import { JSX } from "solid-js/jsx-runtime";
-import { Team } from "@draftgap/core/src/models/Team";
+import { Team } from "@rifttheory/core/src/models/Team";
 import { tooltip } from "../../../directives/tooltip";
 import { RatingText } from "../../common/RatingText";
 import { Component, Show } from "solid-js";

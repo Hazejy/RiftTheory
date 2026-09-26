@@ -1,8 +1,8 @@
-import type { Dataset } from "@draftgap/core/src/models/dataset/Dataset";
-import type { Role } from "@draftgap/core/src/models/Role";
+import type { Dataset } from "@rifttheory/core/src/models/dataset/Dataset";
+import type { Role } from "@rifttheory/core/src/models/Role";
 import { STRATEGY_ROLES, type StrategyPick } from "./strategyReview";
 
-export type DraftGapPickEvidence = {
+export type RiftTheoryPickEvidence = {
     champion: string;
     role: string;
     roleGames: number;
@@ -15,15 +15,15 @@ export type DraftGapPickEvidence = {
 const fixedRole = (pick: StrategyPick) =>
     pick.role === undefined ? undefined : STRATEGY_ROLES.indexOf(pick.role) as Role;
 
-/** DraftGap sample counts and rank-adjusted rates, not a pick's causal effect. */
-export function draftGapPickEvidence(
+/** RiftTheory sample counts and rank-adjusted rates, not a pick's causal effect. */
+export function riftTheoryPickEvidence(
     currentPatch: Dataset,
     thirtyDays: Dataset,
     additions: readonly StrategyPick[],
     own: readonly StrategyPick[],
     enemy: readonly StrategyPick[],
     minGames: number,
-): DraftGapPickEvidence[] {
+): RiftTheoryPickEvidence[] {
     const teammates = [...own, ...additions];
     const links = (
         candidate: StrategyPick,

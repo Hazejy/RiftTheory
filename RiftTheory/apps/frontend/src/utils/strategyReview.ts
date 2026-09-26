@@ -762,14 +762,21 @@ export function strategyOptions(
     if (windowSize >= 2 && own.length <= 3) {
         // Search anchors the pair; its partner need not match the query.
         // Retain all legal role variants within each bounded champion pool.
+        const base = query
+            ? [
+                  ...matching.slice(0, 12),
+                  ...distinct.filter((o) => !matches(o)).slice(0, 12),
+              ]
+            : distinct.slice(0, 12);
+        // A global top twelve can all occupy one role, leaving an apparently
+        // empty two-pick continuation even when another role has legal picks.
+        const roleCoverage = STRATEGY_ROLES.flatMap((role) =>
+            distinct.filter((o) =>
+                o.picks[0].role === role && (!query || !matches(o)),
+            ).slice(0, 4),
+        );
         const shortlist = new Set(
-            (query
-                ? [
-                      ...matching.slice(0, 12),
-                      ...distinct.filter((o) => !matches(o)).slice(0, 12),
-                  ]
-                : distinct.slice(0, 12)
-            ).map((o) => o.picks[0].key),
+            [...base, ...roleCoverage].map((o) => o.picks[0].key),
         );
         const pool = options.filter((o) => shortlist.has(o.picks[0].key));
         for (let i = 0; i < pool.length; i++)

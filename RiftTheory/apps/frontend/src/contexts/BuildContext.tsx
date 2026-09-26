@@ -7,15 +7,15 @@ import {
     createSignal,
     useContext,
 } from "solid-js";
-import { analyzeBuild } from "@draftgap/core/src/builds/analysis";
-import { fetchBuildData } from "@draftgap/core/src/builds/data";
+import { analyzeBuild } from "@rifttheory/core/src/builds/analysis";
+import { fetchBuildData } from "@rifttheory/core/src/builds/data";
 import {
     PartialBuildDataset,
     FullBuildDataset,
-} from "@draftgap/core/src/models/build/BuildDataset";
+} from "@rifttheory/core/src/models/build/BuildDataset";
 import { useDraft } from "./DraftContext";
-import { Team } from "@draftgap/core/src/models/Team";
-import { BuildEntity } from "@draftgap/core/src/models/build/BuildEntity";
+import { Team } from "@rifttheory/core/src/models/Team";
+import { BuildEntity } from "@rifttheory/core/src/models/build/BuildEntity";
 import { useDraftAnalysis } from "./DraftAnalysisContext";
 import { useDataset } from "./DatasetContext";
 import { useDraftView } from "./DraftViewContext";
@@ -151,9 +151,9 @@ export function createBuildContext() {
     const partialBuildDataset = () => query.data?.[0];
     const fullBuildDataset = () => query.data?.[1];
 
-    (window as any).DRAFTGAP_DEBUG.fullBuildDataset = fullBuildDataset;
+    (window as any).RIFTTHEORY_DEBUG.fullBuildDataset = fullBuildDataset;
 
-    (window as any).DRAFTGAP_DEBUG.partialBuildDataset = partialBuildDataset;
+    (window as any).RIFTTHEORY_DEBUG.partialBuildDataset = partialBuildDataset;
 
     const buildAnalysisResult = createMemo(() => {
         if (!query.data || !dataset() || !dataset30Days()) {

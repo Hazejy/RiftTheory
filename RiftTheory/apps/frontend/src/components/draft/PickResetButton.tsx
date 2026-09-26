@@ -1,5 +1,5 @@
 import { Icon, trash } from "../icons/RiftIcons";
-import { Team } from "@draftgap/core/src/models/Team";
+import { Team } from "@rifttheory/core/src/models/Team";
 import { useDraft } from "../../contexts/DraftContext";
 import { useI18n } from "../../utils/i18n";
 import { pickLabel } from "../../utils/draftOrder";

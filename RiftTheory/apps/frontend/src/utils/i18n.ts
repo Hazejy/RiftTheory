@@ -1,8 +1,8 @@
-import { ChampionData } from "@draftgap/core/src/models/dataset/ChampionData";
-import { DraftGapConfig } from "@draftgap/core/src/models/user/Config";
+import { ChampionData } from "@rifttheory/core/src/models/dataset/ChampionData";
+import { RiftTheoryConfig } from "@rifttheory/core/src/models/user/Config";
 import { useUser } from "../contexts/UserContext";
 import { en, ko, zh, MessageKey } from "../locales/messages";
-import { Role } from "@draftgap/core/src/models/Role";
+import { Role } from "@rifttheory/core/src/models/Role";
 
 export const SUPPORTED_LANGUAGES = ["en_US", "ko_KR", "zh_CN"] as const;
 
@@ -48,7 +48,7 @@ export const normalizeChampionSearch = (value: string) =>
         .replaceAll(/[^\p{L}\p{N}]/gu, "")
         .toLowerCase();
 
-export function championName(champion: ChampionData, config: DraftGapConfig) {
+export function championName(champion: ChampionData, config: RiftTheoryConfig) {
     if (config.language === "en_US") {
         return champion.name;
     }

@@ -1,13 +1,13 @@
 import { expect, test } from "bun:test";
-import type { Dataset } from "@draftgap/core/src/models/dataset/Dataset";
+import type { Dataset } from "@rifttheory/core/src/models/dataset/Dataset";
 import type { StrategyPick } from "./strategyReview";
-import { draftGapPickEvidence } from "./draftGapPickEvidence";
+import { riftTheoryPickEvidence } from "./riftTheoryPickEvidence";
 
 const pick = (key: string, role: StrategyPick["role"]): StrategyPick => ({
     key, name: key, role, possibleRoles: role ? [role] : [],
 });
 
-test("uses existing DraftGap role and pair samples without inventing missing rates", () => {
+test("uses existing RiftTheory role and pair samples without inventing missing rates", () => {
     const current = {
         championData: {
             Pick: { statsByRole: { 2: { games: 200, wins: 108 } } },
@@ -24,7 +24,7 @@ test("uses existing DraftGap role and pair samples without inventing missing rat
             } } },
         },
     } as unknown as Dataset;
-    const result = draftGapPickEvidence(
+    const result = riftTheoryPickEvidence(
         current, thirtyDays,
         [pick("Pick", "mid")],
         [pick("Ally", "jungle")],
@@ -39,11 +39,11 @@ test("uses existing DraftGap role and pair samples without inventing missing rat
             { label: "vs OtherEnemy · top", games: 300, rate: 0.5, thin: false },
         ],
     }]);
-    expect(draftGapPickEvidence(
+    expect(riftTheoryPickEvidence(
         { championData: {} } as Dataset, thirtyDays,
         [pick("Pick", "mid")], [], [], 100,
     )[0].roleRate).toBeUndefined();
-    expect(draftGapPickEvidence(
+    expect(riftTheoryPickEvidence(
         { championData: { Pick: { statsByRole: { 2: { games: 10, wins: 12 } } } } } as unknown as Dataset,
         thirtyDays,
         [pick("Pick", "mid")], [], [], 100,

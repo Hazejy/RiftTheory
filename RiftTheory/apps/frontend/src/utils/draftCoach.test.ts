@@ -1,6 +1,12 @@
 import { describe, expect, test } from "bun:test";
 import { DRAFT_PICK_ORDER } from "./draftOrder";
-import { draftCoachWindow, sameSlotAlternative } from "./draftCoach";
+import {
+    compareScreenedDraftLines,
+    draftBanStress,
+    draftCoachWindow,
+    sameSlotAlternative,
+    screenDraftChoice,
+} from "./draftCoach";
 import { roleScenarios, strategyOptions, type StrategyPick, type StrategyRole } from "./strategyReview";
 import type { KnowledgeChampion } from "../types/RiftTheoryKnowledge";
 import shippedKnowledge from "../../public/data/rifttheory-knowledge.json";
@@ -42,6 +48,14 @@ describe("all-slot draft coach window", () => {
             .toEqual(["R3"]);
         expect(draftCoachWindow(DRAFT_PICK_ORDER[4], [DRAFT_PICK_ORDER[4]], slots())?.nextOwnPicks)
             .toEqual([]);
+        expect(draftCoachWindow(DRAFT_PICK_ORDER[4], [DRAFT_PICK_ORDER[4]], slots())?.nextOwnAfterBans)
+            .toEqual(["B4", "B5"]);
+        expect(draftCoachWindow(DRAFT_PICK_ORDER[4], [DRAFT_PICK_ORDER[4]], slots())?.opponentBansBeforeOwn)
+            .toEqual(["Red ban 4", "Red ban 5"]);
+        expect(draftCoachWindow(DRAFT_PICK_ORDER[5], [DRAFT_PICK_ORDER[5]], slots())?.nextOwnAfterBans)
+            .toEqual(["R4"]);
+        expect(draftCoachWindow(DRAFT_PICK_ORDER[5], [DRAFT_PICK_ORDER[5]], slots())?.opponentBansBeforeOwn)
+            .toEqual(["Blue ban 4", "Blue ban 5"]);
         expect(draftCoachWindow(DRAFT_PICK_ORDER[6], [DRAFT_PICK_ORDER[6]], slots())?.replyPicks)
             .toEqual(["B4", "B5"]);
         expect(draftCoachWindow(DRAFT_PICK_ORDER[6], [DRAFT_PICK_ORDER[6]], slots())?.nextOwnPicks)
@@ -91,4 +105,54 @@ test("B1 reply pair and next own pair remain legal against the fixed branch", ()
     expect(roleScenarios([first, ...fallback.picks])).not.toHaveLength(0);
     expect(new Set([first, ...reply.picks, ...fallback.picks].map((pick) => pick.key)).size)
         .toBe(5);
+    const banStress = draftBanStress([first], reply.picks, candidates, { bans: [] }, 2, 2);
+    expect(banStress?.initial.picks).toHaveLength(2);
+    expect(banStress?.targets).toHaveLength(2);
+    expect(banStress?.fallback?.picks).toHaveLength(2);
+    expect(roleScenarios([first, ...banStress!.fallback!.picks])).not.toHaveLength(0);
+    expect(banStress!.fallback!.picks.every((pick) =>
+        !banStress!.targets.some((target) => target.key === pick.key),
+    )).toBe(true);
+    const firstChoice = strategyOptions([], [], candidates, { bans: [] }, 1).singles[0];
+    const screened = screenDraftChoice(
+        [], [], firstChoice, candidates, { bans: [] }, { bans: [] }, 2, 2,
+    );
+    expect(screened.lines.length).toBeGreaterThan(0);
+    for (const line of screened.lines) {
+        expect(line.reply.picks).toHaveLength(2);
+        expect(roleScenarios(line.reply.picks)).not.toHaveLength(0);
+        if (line.fallback) {
+            expect(line.fallback.picks).toHaveLength(2);
+            expect(roleScenarios([...firstChoice.picks, ...line.fallback.picks]))
+                .not.toHaveLength(0);
+            expect(new Set([
+                ...firstChoice.picks, ...line.reply.picks, ...line.fallback.picks,
+            ].map((pick) => pick.key)).size).toBe(5);
+        }
+    }
+    const baseline = screened.worst!;
+    const stronger = {
+        ...baseline,
+        covered: true,
+        ownNeeds: [],
+        ownPlans: ["A supported plan"],
+        enemyNeeds: ["An unanswered need"],
+        enemyPlans: [],
+    };
+    const weaker = { ...stronger, ownNeeds: ["Unanswered protection"] };
+    expect(compareScreenedDraftLines(stronger, weaker)).toBe("selected");
+    expect(compareScreenedDraftLines(weaker, stronger)).toBe("alternative");
+    expect(compareScreenedDraftLines(stronger, stronger)).toBe("unresolved");
+    expect(compareScreenedDraftLines(
+        { ...stronger, ownNeeds: ["Wave control"] },
+        { ...stronger, ownNeeds: ["Protection"] },
+    )).toBe("unresolved");
+    expect(compareScreenedDraftLines(
+        { ...stronger, ownNeeds: ["One need"], enemyNeeds: ["Two needs", "Three needs"] },
+        stronger,
+    )).toBe("unresolved");
+    expect(compareScreenedDraftLines({ ...stronger, covered: false }, weaker))
+        .toBe("unresolved");
+    expect(screenDraftChoice([], [], firstChoice, [], { bans: [] }, { bans: [] }, 1, 0).supported)
+        .toBe(false);
 });

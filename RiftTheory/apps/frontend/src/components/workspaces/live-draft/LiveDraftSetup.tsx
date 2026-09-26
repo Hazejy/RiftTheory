@@ -3,7 +3,7 @@ import {
     LIVE_DRAFT_MODES,
     LiveDraftGameCount,
     LiveDraftMode,
-} from "@draftgap/core/src/live-draft/series";
+} from "@rifttheory/core/src/live-draft/series";
 import { For, Show } from "solid-js";
 import { useI18n } from "../../../utils/i18n";
 import { Button } from "../../common/Button";

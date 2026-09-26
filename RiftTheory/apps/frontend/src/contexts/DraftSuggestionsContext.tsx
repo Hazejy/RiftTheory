@@ -1,14 +1,14 @@
 import { JSXElement, createContext, createMemo, useContext } from "solid-js";
-import { getSuggestions } from "@draftgap/core/src/draft/suggestions";
+import { getSuggestions } from "@rifttheory/core/src/draft/suggestions";
 import { useDraftAnalysis } from "./DraftAnalysisContext";
 import { useDataset } from "./DatasetContext";
 import { useDraft } from "./DraftContext";
-import { Team } from "@draftgap/core/src/models/Team";
-import { Role, ROLES } from "@draftgap/core/src/models/Role";
+import { Team } from "@rifttheory/core/src/models/Team";
+import { Role, ROLES } from "@rifttheory/core/src/models/Role";
 import {
     assessSuggestionEvidence,
     SuggestionEvidence,
-} from "@draftgap/core/src/draft/suggestion-evidence";
+} from "@rifttheory/core/src/draft/suggestion-evidence";
 import { useRiftTheoryKnowledge } from "./RiftTheoryKnowledgeContext";
 import {
     suggestionEvidenceKey,

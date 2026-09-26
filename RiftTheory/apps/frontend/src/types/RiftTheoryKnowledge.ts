@@ -4,7 +4,7 @@ import type {
     InteractionSeverity,
     InteractionTrait,
     TraitLevel,
-} from "@draftgap/core/src/interaction/interaction-engine";
+} from "@rifttheory/core/src/interaction/interaction-engine";
 
 export const RIFT_THEORY_COLORS = [
     "white",

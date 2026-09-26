@@ -1,5 +1,5 @@
 import { createMemo, For, Show } from "solid-js";
-import { evaluateDraftInteractions } from "@draftgap/core/src/interaction/interaction-engine";
+import { evaluateDraftInteractions } from "@rifttheory/core/src/interaction/interaction-engine";
 import { useDraft } from "../../contexts/DraftContext";
 import { useDataset } from "../../contexts/DatasetContext";
 import { useDraftAnalysis } from "../../contexts/DraftAnalysisContext";

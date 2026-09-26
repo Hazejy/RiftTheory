@@ -1,6 +1,6 @@
 import { Icon, trash } from "../icons/RiftIcons";
 import { useDraft } from "../../contexts/DraftContext";
-import { Team } from "@draftgap/core/src/models/Team";
+import { Team } from "@rifttheory/core/src/models/Team";
 import { cn } from "../../utils/style";
 import { buttonVariants } from "../common/Button";
 import { useI18n } from "../../utils/i18n";

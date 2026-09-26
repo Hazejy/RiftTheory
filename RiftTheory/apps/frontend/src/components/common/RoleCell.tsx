@@ -1,4 +1,4 @@
-import { Role } from "@draftgap/core/src/models/Role";
+import { Role } from "@rifttheory/core/src/models/Role";
 import { RoleIcon } from "../icons/roles/RoleIcon";
 import { useI18n } from "../../utils/i18n";
 

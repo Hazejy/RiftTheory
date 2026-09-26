@@ -1,4 +1,4 @@
-import { Role, ROLES } from "@draftgap/core/src/models/Role";
+import { Role, ROLES } from "@rifttheory/core/src/models/Role";
 import { createEffect, createMemo, createSignal, For, Show } from "solid-js";
 import { useDataset } from "../../contexts/DatasetContext";
 import { useRiftTheoryKnowledge } from "../../contexts/RiftTheoryKnowledgeContext";

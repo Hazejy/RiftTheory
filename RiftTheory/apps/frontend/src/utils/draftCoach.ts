@@ -1,6 +1,13 @@
-import { STANDARD_DRAFT_SEQUENCE } from "@draftgap/core/src/live-draft/series";
-import type { Team } from "@draftgap/core/src/models/Team";
+import { STANDARD_DRAFT_SEQUENCE } from "@rifttheory/core/src/live-draft/series";
+import type { Team } from "@rifttheory/core/src/models/Team";
 import { DRAFT_PICK_ORDER, pickLabel } from "./draftOrder";
+import {
+    reviewStrategy,
+    strategyOptions,
+    type StrategyConstraints,
+    type StrategyOption,
+    type StrategyPick,
+} from "./strategyReview";
 
 type Slot = { team: Team; index: number };
 type Filled = { championKey?: string };
@@ -57,6 +64,9 @@ export function draftCoachWindow(
     const nextOwnSequence = nextOwn < 0 || firstBan >= 0
         ? []
         : following.slice(nextOwn);
+    const afterBansSequence = nextOwn < 0 || firstBan < 0
+        ? []
+        : following.slice(nextOwn);
     const nextOwnEnd = nextOwnSequence.findIndex(
         (action) => action.kind !== "pick" ||
             action.side !== (selected.team === "ally" ? "blue" : "red"),
@@ -64,6 +74,14 @@ export function draftCoachWindow(
     const nextOwnPicks = nextOwnSequence.slice(
         0,
         nextOwnEnd < 0 ? undefined : nextOwnEnd,
+    );
+    const afterBansEnd = afterBansSequence.findIndex(
+        (action) => action.kind !== "pick" ||
+            action.side !== (selected.team === "ally" ? "blue" : "red"),
+    );
+    const nextOwnAfterBans = afterBansSequence.slice(
+        0,
+        afterBansEnd < 0 ? undefined : afterBansEnd,
     );
     const replyIndex = immediate.findIndex(
         (action) => action.kind === "pick" && action.side === opponentSide,
@@ -84,6 +102,10 @@ export function draftCoachWindow(
         nextOpponentPick: reply?.kind === "pick" ? actionLabel(reply) : undefined,
         replyPicks: replyPicks.map(actionLabel),
         nextOwnPicks: nextOwnPicks.map(actionLabel),
+        nextOwnAfterBans: nextOwnAfterBans.map(actionLabel),
+        opponentBansBeforeOwn: beforeOwn
+            .filter((action) => action.kind === "ban" && action.side === opponentSide)
+            .map(actionLabel),
         bansBeforeReply: immediate
             .slice(0, replyIndex < 0 ? undefined : replyIndex)
             .filter((action) => action.kind === "ban")
@@ -91,6 +113,135 @@ export function draftCoachWindow(
         chronological,
         picksRemaining: DRAFT_PICK_ORDER.length - end - 1,
     };
+}
+
+/** A bounded target-ban scenario for the next own pick window, not a ban recommendation. */
+export function draftBanStress(
+    own: StrategyPick[],
+    enemy: StrategyPick[],
+    candidates: StrategyPick[],
+    constraints: StrategyConstraints,
+    windowSize: number,
+    opponentBanCount: number,
+) {
+    if (!windowSize || !opponentBanCount) return undefined;
+    const bans = [...constraints.bans];
+    const screen = () => {
+        const options = strategyOptions(
+            own, enemy, candidates, { ...constraints, bans }, windowSize,
+        );
+        return windowSize > 1 ? options.pairs[0] : options.singles[0];
+    };
+    const initial = screen();
+    if (!initial) return undefined;
+    const targets: StrategyPick[] = [];
+    let fallback: typeof initial | undefined = initial;
+    for (let index = 0; index < opponentBanCount; index++) {
+        const target = fallback?.picks[0];
+        if (!target) break;
+        targets.push(target);
+        bans.push(target.key);
+        fallback = screen();
+    }
+    return { initial, targets, fallback };
+}
+
+export type ScreenedDraftLine = {
+    reply: StrategyOption;
+    fallback?: StrategyOption;
+    ownNeeds: string[];
+    ownPlans: string[];
+    enemyNeeds: string[];
+    enemyPlans: string[];
+    covered: boolean;
+};
+
+/** Screen a choice against a small set of legal replies and one own continuation. */
+export function screenDraftChoice(
+    own: StrategyPick[],
+    enemy: StrategyPick[],
+    choice: StrategyOption,
+    candidates: StrategyPick[],
+    ownConstraints: StrategyConstraints,
+    enemyConstraints: StrategyConstraints,
+    replySize: number,
+    followSize: number,
+) {
+    if (!replySize) return {
+        lines: [] as ScreenedDraftLine[],
+        worst: undefined,
+        supported: false,
+    };
+    const ownAfter = [...own, ...choice.picks];
+    const responses = strategyOptions(
+        enemy, ownAfter, candidates, enemyConstraints, replySize,
+        "", enemy, "pressure",
+    );
+    const replies = replySize > 1 ? responses.pairs : responses.singles.slice(0, 3);
+    const lines = replies.flatMap((reply): ScreenedDraftLine[] => {
+        const enemyAfter = [...enemy, ...reply.picks];
+        const options = followSize
+            ? strategyOptions(ownAfter, enemyAfter, candidates, ownConstraints, followSize)
+            : undefined;
+        const fallback = followSize > 1 ? options?.pairs[0] : options?.singles[0];
+        const ownFinal = [...ownAfter, ...(fallback?.picks ?? [])];
+        const read = reviewStrategy(ownFinal, enemyAfter);
+        if (read.issues.length) return [];
+        return [{
+            reply,
+            fallback,
+            ownNeeds: read.blue.needs.map((need) => need.title),
+            ownPlans: read.blue.plans.map((plan) => plan.title),
+            enemyNeeds: read.red.needs.map((need) => need.title),
+            enemyPlans: read.red.plans.map((plan) => plan.title),
+            covered: read.blue.covered === ownFinal.length &&
+                read.red.covered === enemyAfter.length &&
+                (!followSize || Boolean(fallback)),
+        }];
+    });
+    // This ordering selects an adverse *screened* branch. It is structural,
+    // not a win-probability utility or an exhaustive opponent policy.
+    const worst = [...lines].sort((a, b) =>
+        b.ownNeeds.length - a.ownNeeds.length ||
+        a.ownPlans.length - b.ownPlans.length ||
+        a.enemyNeeds.length - b.enemyNeeds.length ||
+        b.enemyPlans.length - a.enemyPlans.length ||
+        a.reply.picks.map((pick) => pick.name).join().localeCompare(
+            b.reply.picks.map((pick) => pick.name).join(),
+        ),
+    )[0];
+    return {
+        lines,
+        worst,
+        supported: lines.length > 0 && lines.every((line) => line.covered),
+    };
+}
+
+/** Report only Pareto dominance of the two screened adverse branches. */
+export function compareScreenedDraftLines(
+    selected: ScreenedDraftLine | undefined,
+    alternative: ScreenedDraftLine | undefined,
+): "selected" | "alternative" | "unresolved" {
+    if (!selected?.covered || !alternative?.covered) return "unresolved";
+    const dominates = (left: ScreenedDraftLine, right: ScreenedDraftLine) => {
+        const included = (subset: string[], superset: string[]) =>
+            subset.every((entry) => superset.includes(entry));
+        const noWorse = [
+            included(left.ownNeeds, right.ownNeeds),
+            included(right.ownPlans, left.ownPlans),
+            included(right.enemyNeeds, left.enemyNeeds),
+            included(left.enemyPlans, right.enemyPlans),
+        ];
+        return noWorse.every(Boolean) && [
+            left.ownNeeds.length < right.ownNeeds.length,
+            left.ownPlans.length > right.ownPlans.length,
+            left.enemyNeeds.length > right.enemyNeeds.length,
+            left.enemyPlans.length < right.enemyPlans.length,
+        ].some(Boolean);
+    };
+    if (dominates(selected, alternative)) return "selected";
+    if (dominates(alternative, selected)) return "alternative";
+    return "unresolved";
 }
 
 type PickChoice = { picks: readonly { key: string; role?: string }[] };
