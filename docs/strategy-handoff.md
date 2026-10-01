@@ -1529,3 +1529,16 @@ Ein aktiver LCU-Champ-Select ist auf Nutzerwunsch ungeprüft. Der frühere
 leere Draft bleibt in seiner Ursache ungeklärt; die neue Wiederherstellung
 reduziert das Datenverlustrisiko. Keine historische Pick-/Ban-Reihenfolge wird
 aus Match-V5-Endaufstellungen erfunden.
+
+### GitHub-Abgleich nach Veröffentlichung
+
+Commit `4cbc126a13c3ff242bdfe5766eada2c8e078af55` wurde auf
+`feature/draft-coach-2026-09-24` gepusht. Der öffentliche Release
+`v3.2.14` zeigt genau auf diesen Commit und enthält Installer, `.sig` und
+`latest.json`. GitHub meldet für den Installer dieselben 6.287.437 Bytes und
+denselben SHA-256 wie lokal. `repos/Hazejy/RiftTheory/releases/latest`
+liefert `v3.2.14`. Danach meldete die Updateprüfung der installierten App in
+den Einstellungen „RiftTheory is up to date.“ Diese Prüfung bestätigt den
+erreichbaren Kanal und Versionsabgleich, nicht den Download und Einbau eines
+zukünftigen Updates. Release-URL:
+`https://github.com/Hazejy/RiftTheory/releases/tag/v3.2.14`.
