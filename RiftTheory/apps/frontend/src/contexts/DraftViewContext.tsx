@@ -3,6 +3,7 @@ import { JSXElement, createContext, createSignal, useContext } from "solid-js";
 type DraftView =
     | { type: "colors" }
     | { type: "strategy" }
+    | { type: "draftSimulator" }
     | { type: "draftPrep" }
     | { type: "riftPlanner" }
     | { type: "liveDraft" }

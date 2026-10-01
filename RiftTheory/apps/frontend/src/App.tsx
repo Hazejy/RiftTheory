@@ -54,6 +54,7 @@ import { LolClientStatusBadge } from "./components/draft/LolClientStatusBadge";
 import { deferredView } from "./components/common/DeferredView";
 
 const RiftTheoryStrategy = deferredView("Strategy", () => import("./components/rifttheory/StrategyWorkspace"));
+const DraftSimulatorView = deferredView("Draft Simulator", () => import("./components/workspaces/DraftSimulatorView"));
 const DraftTable = deferredView("Draft table", () => import("./components/draft/DraftTable"));
 const SettingsDialog = deferredView("settings", () => import("./components/dialogs/SettingsDialog"));
 const DraftPrepView = deferredView("Draft Prep", () => import("./components/workspaces/DraftPrepView"));
@@ -191,6 +192,11 @@ const App: Component = () => {
                                             icon: strategy,
                                         },
                                         {
+                                            label: "Draft Simulator",
+                                            value: "draftSimulator",
+                                            icon: draftBoard,
+                                        },
+                                        {
                                             label: t("champColors"),
                                             value: "colors",
                                             icon: colorLayers,
@@ -277,6 +283,9 @@ const App: Component = () => {
                                 >
                                     <RiftTheoryStrategy />
                                 </Match>
+                                <Match when={currentDraftView().type === "draftSimulator"}>
+                                    <DraftSimulatorView />
+                                </Match>
                                 <Match
                                     when={currentDraftView().type == "draft"}
                                 >
@@ -335,6 +344,7 @@ const App: Component = () => {
     const isFullWidthWorkspace = () =>
         loadState() === "error" ||
         currentDraftView().type === "strategy" ||
+        currentDraftView().type === "draftSimulator" ||
         currentDraftView().type === "colors" ||
         currentDraftView().type === "draftPrep" ||
         currentDraftView().type === "riftPlanner" ||
