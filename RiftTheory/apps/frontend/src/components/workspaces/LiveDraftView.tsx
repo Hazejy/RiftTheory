@@ -3,7 +3,6 @@ import {
     championLockReason,
     CompletedLiveDraftGame,
     FearlessScope,
-    LIVE_DRAFT_MODES,
     LiveDraftAction,
     LiveDraftGameCount,
     LiveDraftMode,
@@ -17,10 +16,7 @@ import {
 import { createEffect, createMemo, createSignal, For, Show } from "solid-js";
 import { useDataset } from "../../contexts/DatasetContext";
 import { useDraftView } from "../../contexts/DraftViewContext";
-import {
-    setStrategyLiveSnapshot,
-    setStrategySource,
-} from "../../contexts/StrategySession";
+import { useStrategySession } from "../../contexts/StrategySession";
 import { captureStrategyGame } from "../../utils/strategyLiveDraft";
 import { useUser } from "../../contexts/UserContext";
 import {
@@ -36,6 +32,7 @@ import LiveDraftSetup, {
     liveDraftModeLabel,
 } from "./live-draft/LiveDraftSetup";
 import LiveDraftTeamPanel from "./live-draft/LiveDraftTeamPanel";
+import { isUsableLiveDraftConfig, isUsableLiveDraftGames, type EditableLiveDraftGame } from "./liveDraftStorage";
 
 type StoredLiveDraft = {
     config: LiveDraftSeriesConfig;
@@ -44,17 +41,10 @@ type StoredLiveDraft = {
     layout?: LiveDraftLayout;
 };
 
-type EditableLiveDraftGame = {
-    gameNumber: number;
-    blueTeam: SeriesTeamId;
-    actions: LiveDraftAction[];
-};
-
 type LiveDraftLayout = "classic" | "broadcast";
 
 const STORAGE_KEY = "rifttheory.live-draft.local-series.v2";
 const LEGACY_STORAGE_KEY = "rifttheory.live-draft.local-series.v1";
-const GAME_COUNTS: readonly LiveDraftGameCount[] = [1, 2, 3, 4, 5];
 
 function createGameDrafts(gameCount: LiveDraftGameCount) {
     return Array.from({ length: gameCount }, (_, index) => ({
@@ -70,11 +60,10 @@ function loadStoredDraft(): StoredLiveDraft | undefined {
         if (
             current &&
             typeof current === "object" &&
-            current.config &&
-            LIVE_DRAFT_MODES.includes(current.config.mode) &&
-            GAME_COUNTS.includes(current.config.gameCount) &&
-            Array.isArray(current.games) &&
+            isUsableLiveDraftConfig(current.config) &&
+            isUsableLiveDraftGames(current.games, current.config.gameCount) &&
             Number.isInteger(current.activeGameNumber)
+            && current.activeGameNumber >= 1 && current.activeGameNumber <= current.config.gameCount
         ) {
             return current as StoredLiveDraft;
         }
@@ -86,8 +75,7 @@ function loadStoredDraft(): StoredLiveDraft | undefined {
             !value ||
             typeof value !== "object" ||
             !value.config ||
-            !LIVE_DRAFT_MODES.includes(value.config.mode) ||
-            !GAME_COUNTS.includes(value.config.gameCount) ||
+            !isUsableLiveDraftConfig(value.config) ||
             !Array.isArray(value.completedGames) ||
             !Array.isArray(value.currentActions) ||
             !["team1", "team2"].includes(value.blueTeam)
@@ -112,6 +100,7 @@ function loadStoredDraft(): StoredLiveDraft | undefined {
             }
             return game;
         });
+        if (!isUsableLiveDraftGames(games, value.config.gameCount)) return undefined;
         return {
             config: value.config,
             games,
@@ -127,11 +116,15 @@ function loadStoredDraft(): StoredLiveDraft | undefined {
 }
 
 export default function LiveDraftView() {
+    const { setStrategyLiveSnapshot, setStrategySource } = useStrategySession();
     const { setCurrentDraftView } = useDraftView();
     const { t } = useI18n();
     const { dataset } = useDataset();
     const { config: userConfig } = useUser();
     const stored = loadStoredDraft();
+    // Keep malformed saved bytes available for recovery until a new series
+    // intentionally replaces them. Only remove a series that this view owned.
+    let hadUsableSeries = Boolean(stored);
     const [team1Name, setTeam1Name] = createSignal("Blue Team");
     const [team2Name, setTeam2Name] = createSignal("Red Team");
     const [mode, setMode] = createSignal<LiveDraftMode>("normal");
@@ -151,22 +144,29 @@ export default function LiveDraftView() {
     const [layout, setLayout] = createSignal<LiveDraftLayout>(
         stored?.layout === "broadcast" ? "broadcast" : "classic",
     );
+    const [saveError, setSaveError] = createSignal(false);
 
     createEffect(() => {
-        const activeConfig = seriesConfig();
-        if (!activeConfig) {
-            localStorage.removeItem(STORAGE_KEY);
-            return;
+        try {
+            const activeConfig = seriesConfig();
+            if (!activeConfig) {
+                if (hadUsableSeries) localStorage.removeItem(STORAGE_KEY);
+            } else {
+                hadUsableSeries = true;
+                localStorage.setItem(
+                    STORAGE_KEY,
+                    JSON.stringify({
+                        config: activeConfig,
+                        games: games(),
+                        activeGameNumber: activeGameNumber(),
+                        layout: layout(),
+                    } satisfies StoredLiveDraft),
+                );
+            }
+            setSaveError(false);
+        } catch {
+            setSaveError(true);
         }
-        localStorage.setItem(
-            STORAGE_KEY,
-            JSON.stringify({
-                config: activeConfig,
-                games: games(),
-                activeGameNumber: activeGameNumber(),
-                layout: layout(),
-            } satisfies StoredLiveDraft),
-        );
     });
 
     const activeGame = () =>
@@ -372,6 +372,7 @@ export default function LiveDraftView() {
 
     return (
         <div class="h-full overflow-y-auto px-4 py-3 xl:px-8">
+            <Show when={saveError()}><p role="alert" class="mb-3 text-sm text-red-400">Could not save the live draft locally.</p></Show>
             <div class="mx-auto max-w-[1500px]">
                 <header
                     class="flex flex-wrap items-end justify-between gap-4"

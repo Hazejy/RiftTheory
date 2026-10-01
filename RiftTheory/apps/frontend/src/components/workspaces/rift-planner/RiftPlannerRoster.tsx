@@ -175,11 +175,10 @@ export default function RiftPlannerRoster(props: {
                 <div class="mt-3 grid grid-cols-5 gap-2">
                     <For each={entries()}>
                         {(entry) => {
-                            const name = () =>
-                                championName(
-                                    dataset()!.championData[entry.championKey],
-                                    config,
-                                );
+                            const name = () => {
+                                const champion = dataset()?.championData[entry.championKey];
+                                return champion ? championName(champion, config) : entry.championKey;
+                            };
                             return (
                                 <div class="group relative">
                                     <button

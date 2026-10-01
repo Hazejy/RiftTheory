@@ -77,9 +77,15 @@ export default function TierListView() {
     const [copied, setCopied] = createSignal(false);
     const [exporting, setExporting] = createSignal(false);
     const [exportError, setExportError] = createSignal(false);
+    const [saveError, setSaveError] = createSignal(false);
 
     createEffect(() => {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(document()));
+        try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(document()));
+            setSaveError(false);
+        } catch {
+            setSaveError(true);
+        }
     });
 
     const placedChampionKeys = createMemo(
@@ -313,6 +319,7 @@ export default function TierListView() {
 
     return (
         <div class="h-full overflow-y-auto px-4 py-5 xl:px-8">
+            <Show when={saveError()}><p role="alert" class="mb-3 text-sm text-red-400">Could not save the tier list locally.</p></Show>
             <div class="mx-auto max-w-[1500px]">
                 <header class="mb-5 flex flex-wrap items-end justify-between gap-4">
                     <div>

@@ -8,7 +8,7 @@ import {
     useContext,
 } from "solid-js";
 import { analyzeBuild } from "@rifttheory/core/src/builds/analysis";
-import { fetchBuildData } from "@rifttheory/core/src/builds/data";
+import { fetchBuildData } from "../api/build-data";
 import {
     PartialBuildDataset,
     FullBuildDataset,
@@ -131,6 +131,7 @@ export function createBuildContext() {
                 championKey()!,
                 championRole()!,
                 theirTeamComp()!,
+                ctx.signal,
             );
         },
         refetchInterval: false,
@@ -150,10 +151,6 @@ export function createBuildContext() {
 
     const partialBuildDataset = () => query.data?.[0];
     const fullBuildDataset = () => query.data?.[1];
-
-    (window as any).RIFTTHEORY_DEBUG.fullBuildDataset = fullBuildDataset;
-
-    (window as any).RIFTTHEORY_DEBUG.partialBuildDataset = partialBuildDataset;
 
     const buildAnalysisResult = createMemo(() => {
         if (!query.data || !dataset() || !dataset30Days()) {

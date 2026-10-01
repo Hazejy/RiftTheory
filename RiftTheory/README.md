@@ -21,3 +21,6 @@ The Windows desktop app uses Tauri. Releases are published at
 
 See the repository's `THIRD_PARTY_NOTICES.md` for upstream code and data
 attribution.
+
+The runtime map and dependency rules are in
+[`../docs/rifttheory-architecture.md`](../docs/rifttheory-architecture.md).

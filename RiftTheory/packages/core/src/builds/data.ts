@@ -1,16 +1,4 @@
-import {
-    FetchQueryOptions,
-    QueryClient,
-    QueryOptions,
-} from "@tanstack/query-core";
-import {
-    LolalyticsChampionResponse,
-    getLolalyticsChampion,
-} from "../../../../apps/dataset/src/lolalytics/champion";
-import {
-    LOLALYTICS_ROLES,
-    LolalyticsRole,
-} from "../../../../apps/dataset/src/lolalytics/roles";
+import type { LolalyticsChampionResponse } from "../models/build/LolalyticsChampionResponse";
 import { Role } from "../models/Role";
 import {
     FullBuildDataset,
@@ -227,7 +215,7 @@ function getSkillsBuildData(championData: LolalyticsChampionResponse) {
     return skills;
 }
 
-function partialDatasetFromLolalyticsData(
+export function partialDatasetFromLolalyticsData(
     dataset: Dataset,
     championKey: string,
     role: Role,
@@ -249,7 +237,7 @@ function partialDatasetFromLolalyticsData(
     return partialDataset;
 }
 
-function fullDatasetFromLolalyticsData(
+export function fullDatasetFromLolalyticsData(
     dataset: Dataset,
     championKey: string,
     role: Role,
@@ -286,100 +274,4 @@ function fullDatasetFromLolalyticsData(
     };
 
     return fullDataset;
-}
-
-function getLolalyticsChampionOptions(
-    patch: string,
-    championKey: string,
-    role: LolalyticsRole | "default" = "default",
-    matchup?: string,
-    matchupRole?: LolalyticsRole,
-) {
-    return {
-        queryKey: [
-            "lolalytics",
-            "champion",
-            patch,
-            championKey,
-            role,
-            matchup,
-            matchupRole,
-        ],
-        queryFn: () =>
-            getLolalyticsChampion(
-                patch,
-                championKey,
-                role,
-                matchup,
-                matchupRole,
-            ),
-        staleTime: 1000 * 60 * 60, // 1 hour
-    } satisfies FetchQueryOptions;
-}
-
-export async function fetchBuildData(
-    queryClient: QueryClient,
-    dataset: Dataset,
-    championKey: string,
-    role: Role,
-    opponentTeamComp: Map<Role, string>,
-) {
-    // convert patch from 13.7.1 to 13.7
-    const patch = dataset.version.split(".").slice(0, 2).join(".");
-
-    const championPatchDataPromises = queryClient.fetchQuery(
-        getLolalyticsChampionOptions(
-            patch,
-            championKey,
-            LOLALYTICS_ROLES[role],
-        ),
-    );
-
-    const champion30DaysDataPromises = queryClient.fetchQuery(
-        getLolalyticsChampionOptions("30", championKey, LOLALYTICS_ROLES[role]),
-    );
-
-    const matchup30DaysDataPromises = [...opponentTeamComp.entries()].map(
-        ([opponentRole, opponentChampionKey]) =>
-            queryClient
-                .fetchQuery(
-                    getLolalyticsChampionOptions(
-                        "30",
-                        championKey,
-                        LOLALYTICS_ROLES[role],
-                        opponentChampionKey,
-                        LOLALYTICS_ROLES[opponentRole],
-                    ),
-                )
-                .then((championData) => ({
-                    championKey: opponentChampionKey,
-                    role: opponentRole,
-                    championData,
-                })),
-    );
-
-    const results = await Promise.all([
-        championPatchDataPromises,
-        champion30DaysDataPromises,
-        ...matchup30DaysDataPromises,
-    ]);
-    const [championPatchData, champion30DaysData, ...matchup30DaysData] =
-        results;
-
-    const partialDataset = partialDatasetFromLolalyticsData(
-        dataset,
-        championKey,
-        role,
-        championPatchData,
-    );
-
-    const fullDataset = fullDatasetFromLolalyticsData(
-        dataset,
-        championKey,
-        role,
-        champion30DaysData,
-        matchup30DaysData,
-    );
-
-    return [partialDataset, fullDataset] as const;
 }

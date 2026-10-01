@@ -1,4 +1,5 @@
 import type { Role } from "@rifttheory/core/src/models/Role";
+import { canAssignPlayerPicks } from "@rifttheory/core/src/draft/player-pool";
 import {
     roleScenarios,
     STRATEGY_ROLES,
@@ -49,7 +50,8 @@ export function screenRiftTheoryReplacements(
     const seen = new Set<string>();
     for (const pick of candidates) {
         if (pick.role !== missing || blocked.has(pick.key) || seen.has(pick.key) ||
-            (constraints.owned?.size && !constraints.owned.has(pick.key))) continue;
+            (constraints.owned?.size && !constraints.owned.has(pick.key)) ||
+            !canAssignPlayerPicks([...own, pick], constraints.playerPools ?? [])) continue;
         seen.add(pick.key);
         const team = new Map(ownRoles);
         team.set(STRATEGY_ROLES.indexOf(missing) as Role, pick.key);

@@ -21,26 +21,20 @@ import {
     Show,
     Switch,
 } from "solid-js";
-import DraftTable from "./components/draft/DraftTable";
 import { RoleFilter } from "./components/draft/RoleFilter";
 import { Search } from "./components/draft/Search";
 import { TeamSelector } from "./components/draft/TeamSelector";
 import { TeamSidebar } from "./components/draft/TeamSidebar";
-import AnalysisView from "./components/views/analysis/AnalysisView";
 import { useLolClient } from "./contexts/LolClientContext";
 import { Badge } from "./components/common/Badge";
 import { FilterMenu } from "./components/draft/FilterMenu";
 import { formatDistance } from "date-fns";
 import { ViewTabs } from "./components/common/ViewTabs";
-import { BuildsView } from "./components/views/builds/BuildsView";
 import { useDraftView } from "./contexts/DraftViewContext";
 import { useUser } from "./contexts/UserContext";
 import { useDataset } from "./contexts/DatasetContext";
 import { LoadingIcon } from "./components/icons/LoadingIcon";
 import { DialogTrigger, Dialog } from "./components/common/Dialog";
-import SettingsDialog from "./components/dialogs/SettingsDialog";
-import RiftTheoryStrategy from "./components/rifttheory/StrategyWorkspace";
-import ChampColors from "./components/rifttheory/ChampColors";
 import { DraftSequence } from "./components/draft/DraftSequence";
 import { useI18n } from "./utils/i18n";
 import { enUS, ko, zhCN } from "date-fns/locale";
@@ -56,17 +50,25 @@ import { LanguageDropdownMenu } from "./components/LanguageMenu";
 import { FONT_PRESETS, THEME_PRESETS } from "./utils/appearance";
 import { customThemeVariables } from "./utils/customTheme";
 import { DraftSnapshotButton } from "./components/rifttheory/DraftSnapshotButton";
-import DraftPrepView from "./components/workspaces/DraftPrepView";
-import RiftPlannerView from "./components/workspaces/RiftPlannerView";
-import LiveDraftView from "./components/workspaces/LiveDraftView";
-import TierListView from "./components/workspaces/TierListView";
 import { LolClientStatusBadge } from "./components/draft/LolClientStatusBadge";
+import { deferredView } from "./components/common/DeferredView";
+
+const RiftTheoryStrategy = deferredView("Strategy", () => import("./components/rifttheory/StrategyWorkspace"));
+const DraftTable = deferredView("Draft table", () => import("./components/draft/DraftTable"));
+const SettingsDialog = deferredView("settings", () => import("./components/dialogs/SettingsDialog"));
+const DraftPrepView = deferredView("Draft Prep", () => import("./components/workspaces/DraftPrepView"));
+const RiftPlannerView = deferredView("Rift Planner", () => import("./components/workspaces/RiftPlannerView"));
+const LiveDraftView = deferredView("Live Draft", () => import("./components/workspaces/LiveDraftView"));
+const TierListView = deferredView("Tier List", () => import("./components/workspaces/TierListView"));
+const ChampColors = deferredView("Champ Colors", () => import("./components/rifttheory/ChampColors"));
+const AnalysisView = deferredView("analysis", () => import("./components/views/analysis/AnalysisView"));
+const BuildsView = deferredView("builds", () => import("./components/views/builds/BuildsView").then((module) => ({ default: module.BuildsView })));
 
 const App: Component = () => {
     const { t } = useI18n();
-    const { config } = useUser();
+    const { config, storageError } = useUser();
     const { currentDraftView, setCurrentDraftView } = useDraftView();
-    const { dataset, dataset30Days, isLoaded, rankStatus } = useDataset();
+    const { dataset, isLoaded, loadState, retryDatasets } = useDataset();
     const { analysisPick, setAnalysisPick, showAnalysisPick } =
         useDraftAnalysis();
     const { startLolClientIntegration, stopLolClientIntegration } =
@@ -82,6 +84,7 @@ const App: Component = () => {
     });
 
     const [showSettings, setShowSettings] = createSignal(false);
+    const [offlineView, setOfflineView] = createSignal<"draftPrep" | "riftPlanner" | "tierList">("draftPrep");
     createEffect(() => {
         document.documentElement.lang = config.language.replace("_", "-");
         document.documentElement.dataset.font = config.fontPreset;
@@ -129,16 +132,25 @@ const App: Component = () => {
                 <Switch>
                     <Match
                         when={
-                            !rankStatus().loading &&
-                            (dataset() === undefined ||
-                                dataset30Days() === undefined)
+                            loadState() === "error"
                         }
                     >
-                        <div class="flex justify-center items-center h-full text-2xl text-red-500">
-                            {t("dataError")}
+                        <div class="flex h-full flex-col">
+                            <p role="alert" class="px-4 py-4 text-center text-red-400">{t("dataError")}</p>
+                            <button type="button" class="mx-auto mb-3 rounded border border-accent px-4 py-2 text-accent" onClick={retryDatasets}>Retry statistics</button>
+                            <div class="flex flex-wrap justify-center gap-2 border-y border-neutral-700 px-4 py-3">
+                                <button type="button" aria-pressed={offlineView() === "draftPrep"} class="rounded border border-neutral-600 px-3 py-2" onClick={() => setOfflineView("draftPrep")}>{t("draftPrep")}</button>
+                                <button type="button" aria-pressed={offlineView() === "riftPlanner"} class="rounded border border-neutral-600 px-3 py-2" onClick={() => setOfflineView("riftPlanner")}>{t("riftPlanner")}</button>
+                                <button type="button" aria-pressed={offlineView() === "tierList"} class="rounded border border-neutral-600 px-3 py-2" onClick={() => setOfflineView("tierList")}>{t("tierListMaker")}</button>
+                            </div>
+                            <Switch>
+                                <Match when={offlineView() === "draftPrep"}><DraftPrepView /></Match>
+                                <Match when={offlineView() === "riftPlanner"}><RiftPlannerView /></Match>
+                                <Match when={offlineView() === "tierList"}><TierListView /></Match>
+                            </Switch>
                         </div>
                     </Match>
-                    <Match when={!isLoaded()}>
+                    <Match when={loadState() === "loading"}>
                         <div class="flex justify-center items-center h-full text-2xl">
                             <LoadingIcon class="animate-spin h-10 w-10" />
                         </div>
@@ -312,6 +324,7 @@ const App: Component = () => {
     };
 
     const mobileTab = () => {
+        if (loadState() === "error") return undefined;
         const current = currentDraftView();
         if (current.type === "draft") {
             return current.subType;
@@ -320,6 +333,7 @@ const App: Component = () => {
     };
 
     const isFullWidthWorkspace = () =>
+        loadState() === "error" ||
         currentDraftView().type === "strategy" ||
         currentDraftView().type === "colors" ||
         currentDraftView().type === "draftPrep" ||
@@ -334,7 +348,6 @@ const App: Component = () => {
                 height: "calc(var(--vh, 1vh) * 100)",
             }}
         >
-            {/* Upstream update checks are disabled for this independent fork. */}
             <header class="rt-header bg-primary border-b border-neutral-700">
                 <div class="rt-data-status text-xs text-neutral-400 flex flex-col">
                     <span>
@@ -343,6 +356,9 @@ const App: Component = () => {
                     <span>
                         {t("updated")} {timeAgo()}
                     </span>
+                    <Show when={storageError()}>
+                        <span role="alert" class="text-red-400">Local preferences cannot be saved.</span>
+                    </Show>
                 </div>
                 <h1 class="rt-brand">
                     <Icon path={riftMark} class="rt-brand-mark" />
@@ -373,7 +389,7 @@ const App: Component = () => {
                         >
                             <Icon path={cog_6Tooth} class="w-7" />
                         </DialogTrigger>
-                        <SettingsDialog />
+                        <Show when={showSettings()}><SettingsDialog /></Show>
                     </Dialog>
                     <LeagueOfItemsLink />
                 </div>

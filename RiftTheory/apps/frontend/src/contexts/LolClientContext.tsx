@@ -26,8 +26,9 @@ import {
 import { useDraft } from "./DraftContext";
 import { useMedia } from "../hooks/useMedia";
 import { useUser } from "./UserContext";
-import { LolalyticsRole } from "../../../dataset/src/lolalytics/roles";
+import type { LolalyticsRole } from "@rifttheory/core/src/models/LolalyticsRole";
 import { createLiveRoleOverrides } from "../utils/liveRoleOverrides";
+import { completedLcuBans } from "../utils/lcuDraft";
 
 const createChampSelectSession = (): LolChampSelectChampSelectSession => ({
     actions: [],
@@ -92,6 +93,8 @@ export const createLolClientContext = () => {
         hoverChampion,
         select,
         resetAll,
+        discardManualHistory,
+        setClientDraftActive,
         allyTeam,
         opponentTeam,
         bans,
@@ -170,6 +173,7 @@ export const createLolClientContext = () => {
                     resetFilters,
                     updateView: false,
                     reportEvent: false,
+                    trackHistory: false,
                 });
 
                 return true;
@@ -222,24 +226,7 @@ export const createLolClientContext = () => {
             }
 
             // Handle bans
-            const bannedChampions = [
-                ...new Set([
-                    ...((session.actions ?? [])
-                        .flat()
-                        .map((a) =>
-                            a.completed && a.type === "ban" && a.championId > 0
-                                ? String(a.championId)
-                                : null,
-                        )
-                        .filter(Boolean) as string[]),
-                    ...(session.bans?.myTeamBans ?? [])
-                        .filter((id) => id > 0)
-                        .map(String),
-                    ...(session.bans?.theirTeamBans ?? [])
-                        .filter((id) => id > 0)
-                        .map(String),
-                ]),
-            ];
+            const bannedChampions = completedLcuBans(session);
             if (
                 bannedChampions.length !== bans.length ||
                 bannedChampions.some((b, i) => b !== bans[i])
@@ -350,6 +337,7 @@ export const createLolClientContext = () => {
                 const session = await getChampSelectSession();
                 if (!active()) return;
                 if (session == null) {
+                    setClientDraftActive(false);
                     manualRoleOverrides.clear();
                     const phase = await getGameflowPhase();
                     if (!active()) return;
@@ -370,9 +358,11 @@ export const createLolClientContext = () => {
                         throw new Error("Unsupported champion-select response");
                     batch(() => {
                         if (clientState() !== ClientState.InChampSelect) {
+                            setClientDraftActive(true);
+                            discardManualHistory();
                             void updateUnownedChampions(active).catch(() => {});
                             void checkImportFavourites().catch(() => {});
-                            resetAll();
+                            resetAll(false);
                             setBans([]);
                         }
 
@@ -386,6 +376,7 @@ export const createLolClientContext = () => {
                 setClientError(undefined);
             } catch (e) {
                 if (!active()) return;
+                setClientDraftActive(false);
                 setClientState(ClientState.NotFound);
                 setOwnedChampions(new Set<string>());
                 setClientError(String(e));
@@ -406,6 +397,7 @@ export const createLolClientContext = () => {
     };
 
     const stopLolClientIntegration = () => {
+        setClientDraftActive(false);
         manualRoleOverrides.clear();
         running = false;
         generation++;

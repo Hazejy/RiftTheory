@@ -1,6 +1,7 @@
 import {
     batch,
     createContext,
+    createEffect,
     createSignal,
     JSXElement,
     useContext,
@@ -13,6 +14,8 @@ import { DRAFT_PICK_ORDER } from "../utils/draftOrder";
 import { useDataset } from "./DatasetContext";
 import { useDraftFilters } from "./DraftFiltersContext";
 import { useUser } from "./UserContext";
+import { MANUAL_DRAFT_BACKUP_KEY, MANUAL_DRAFT_KEY, ManualDraft, hasSavedPicks, nextManualDraftStep, parseManualDraft, serializeManualDraft } from "../utils/manualDraftStorage";
+import { readStoredValue, writeStoredValue } from "../utils/safeStorage";
 
 type TeamPick = {
     championKey: string | undefined;
@@ -47,6 +50,86 @@ export function createDraftContext() {
         { championKey: undefined, role: undefined, hoverKey: undefined },
         { championKey: undefined, role: undefined, hoverKey: undefined },
     ]);
+
+    const [undoStack, setUndoStack] = createSignal<ManualDraft[]>([]);
+    const [redoStack, setRedoStack] = createSignal<ManualDraft[]>([]);
+    const [draftStorageError, setDraftStorageError] = createSignal(false);
+    const [backupAvailable, setBackupAvailable] = createSignal(!!parseManualDraft(readStoredValue(MANUAL_DRAFT_BACKUP_KEY)));
+    const [selection, setSelection] = createStore<Selection>({ team: "ally", index: 0 });
+    let clientDraftActive = false;
+    let restored = false;
+    const setClientDraftActive = (active: boolean) => {
+        clientDraftActive = active;
+        if (active) restored = true;
+    };
+    const board = (): ManualDraft => ({
+        ally: allyTeam.map(({ championKey, role }) => ({ championKey, role })),
+        opponent: opponentTeam.map(({ championKey, role }) => ({ championKey, role })),
+    });
+    const applyBoard = (saved: ManualDraft) => batch(() => {
+        saved.ally.forEach((pick, index) => setAllyTeam(index, { ...pick, hoverKey: undefined }));
+        saved.opponent.forEach((pick, index) => setOpponentTeam(index, { ...pick, hoverKey: undefined }));
+        const next = nextManualDraftStep(saved);
+        setSelection("team", next?.team);
+        setSelection("index", next?.index ?? 0);
+    });
+    const saveBoard = (backupSaved = true) => setDraftStorageError(!writeStoredValue(MANUAL_DRAFT_KEY, serializeManualDraft(board())) || !backupSaved);
+    const saveBackup = (previous: ManualDraft) => {
+        if (!hasSavedPicks(previous)) return true;
+        const written = writeStoredValue(MANUAL_DRAFT_BACKUP_KEY, serializeManualDraft(previous));
+        if (written) setBackupAvailable(true);
+        return written;
+    };
+    const recordChange = (before: ManualDraft) => {
+        if (serializeManualDraft(before) === serializeManualDraft(board())) return;
+        const backupSaved = saveBackup(before);
+        setUndoStack((stack) => [...stack.slice(-29), before]);
+        setRedoStack([]);
+        saveBoard(backupSaved);
+    };
+    const undoManualDraft = () => {
+        const previous = undoStack().at(-1);
+        if (!previous) return;
+        const current = board();
+        const backupSaved = saveBackup(current);
+        setUndoStack((stack) => stack.slice(0, -1));
+        setRedoStack((stack) => [...stack, current]);
+        applyBoard(previous);
+        saveBoard(backupSaved);
+    };
+    const redoManualDraft = () => {
+        const next = redoStack().at(-1);
+        if (!next) return;
+        const current = board();
+        const backupSaved = saveBackup(current);
+        setRedoStack((stack) => stack.slice(0, -1));
+        setUndoStack((stack) => [...stack, current]);
+        applyBoard(next);
+        saveBoard(backupSaved);
+    };
+    const discardManualHistory = () => {
+        setUndoStack([]);
+        setRedoStack([]);
+    };
+    const restorePreviousManualDraft = () => {
+        const saved = parseManualDraft(readStoredValue(MANUAL_DRAFT_BACKUP_KEY));
+        const current = dataset();
+        if (!saved || !current || clientDraftActive || [...saved.ally, ...saved.opponent].some((pick) =>
+            pick.championKey && !current.championData[pick.championKey])) return;
+        const before = board();
+        applyBoard(saved);
+        recordChange(before);
+    };
+    createEffect(() => {
+        const current = dataset();
+        if (!current || restored) return;
+        restored = true;
+        const saved = parseManualDraft(readStoredValue(MANUAL_DRAFT_KEY));
+        if (!saved) return;
+        if ([...saved.ally, ...saved.opponent].some((pick) =>
+            pick.championKey && !current.championData[pick.championKey])) return;
+        applyBoard(saved);
+    });
 
     const [bans, setBans] = createStore<string[]>([]);
     // If empty, assume all champions are owned
@@ -125,9 +208,11 @@ export function createDraftContext() {
             resetFilters = true,
             reportEvent = true,
             updateView = true,
+            trackHistory = true,
         } = {},
     ) {
         if (!Number.isInteger(index) || index < 0 || index >= 5) return;
+        const before = trackHistory && !clientDraftActive ? board() : undefined;
         batch(() => {
             if (
                 championKey &&
@@ -208,6 +293,7 @@ export function createDraftContext() {
                 });
             }
         });
+        if (before) recordChange(before);
     }
 
     function hoverChampion(
@@ -246,10 +332,12 @@ export function createDraftContext() {
         pickChampion(team, index, undefined, undefined, {
             updateSelection: false,
             resetFilters: false,
+            trackHistory: false,
         });
     };
 
-    const resetTeam = (team: "ally" | "opponent") => {
+    const resetTeam = (team: "ally" | "opponent", trackHistory = true) => {
+        const before = trackHistory && !clientDraftActive ? board() : undefined;
         batch(() => {
             const setTeam = team === "ally" ? setAllyTeam : setOpponentTeam;
             for (let i = 0; i < 5; i++) {
@@ -264,19 +352,17 @@ export function createDraftContext() {
             select(next?.team, next?.index, false, false);
             resetDraftFilters();
         });
+        if (before) recordChange(before);
     };
 
-    const resetAll = () => {
+    const resetAll = (trackHistory = true) => {
+        const before = trackHistory && !clientDraftActive ? board() : undefined;
         batch(() => {
-            resetTeam("ally");
-            resetTeam("opponent");
+            resetTeam("ally", false);
+            resetTeam("opponent", false);
         });
+        if (before) recordChange(before);
     };
-
-    const [selection, setSelection] = createStore<Selection>({
-        team: "ally",
-        index: 0,
-    });
 
     // Selection is the next click target, whether automatic or explicitly chosen.
     const activeDraftPick = () =>
@@ -337,6 +423,15 @@ export function createDraftContext() {
         selection,
         select,
         draftFinished,
+        canUndoManualDraft: () => undoStack().length > 0,
+        canRedoManualDraft: () => redoStack().length > 0,
+        undoManualDraft,
+        redoManualDraft,
+        discardManualHistory,
+        draftStorageError,
+        backupAvailable,
+        restorePreviousManualDraft,
+        setClientDraftActive,
     };
 }
 
@@ -344,24 +439,6 @@ const DraftContext = createContext<ReturnType<typeof createDraftContext>>();
 
 export function DraftProvider(props: { children: JSXElement }) {
     const ctx = createDraftContext();
-
-    const RIFTTHEORY_DEBUG = ((window as any).RIFTTHEORY_DEBUG = ctx) as any;
-    RIFTTHEORY_DEBUG.test = () => {
-        batch(() => {
-            RIFTTHEORY_DEBUG.pickChampion("ally", 0, "57", 0);
-            RIFTTHEORY_DEBUG.pickChampion("ally", 1, "234", 1);
-            RIFTTHEORY_DEBUG.pickChampion("ally", 2, "30", 2);
-            RIFTTHEORY_DEBUG.pickChampion("ally", 3, "429", 3);
-            RIFTTHEORY_DEBUG.pickChampion("ally", 4, "412", 4);
-
-            RIFTTHEORY_DEBUG.pickChampion("opponent", 0, "164", 0);
-            RIFTTHEORY_DEBUG.pickChampion("opponent", 1, "64", 1);
-            RIFTTHEORY_DEBUG.pickChampion("opponent", 2, "147", 2);
-            RIFTTHEORY_DEBUG.pickChampion("opponent", 3, "145", 3);
-            RIFTTHEORY_DEBUG.pickChampion("opponent", 4, "16", 4);
-        });
-    };
-
     return (
         <DraftContext.Provider value={ctx}>
             {props.children}

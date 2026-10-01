@@ -14,6 +14,7 @@ import { DialogContent, DialogHeader, DialogTitle } from "../common/Dialog";
 import { AppearanceSettings } from "../AppearanceSettings";
 import { useI18n } from "../../utils/i18n";
 import { useDataset } from "../../contexts/DatasetContext";
+import { UpdateDialog } from "./UpdateDialog";
 
 export default function SettingsDialog() {
     const { t } = useI18n();
@@ -246,6 +247,7 @@ export default function SettingsDialog() {
             </div>
 
             <Show when={isDesktop}>
+                <UpdateDialog />
                 <div>
                     <h3 class="text-3xl uppercase">{t("leagueClient")}</h3>
                     <div class="flex space-x-16 items-center justify-between mt-2">

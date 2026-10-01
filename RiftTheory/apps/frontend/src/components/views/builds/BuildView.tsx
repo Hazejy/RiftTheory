@@ -19,8 +19,11 @@ export const BuildView: Component = () => {
                     </div>
                 </Match>
                 <Match when={query.isError}>
-                    <div class="text-red-500 text-2xl text-center grid place-items-center h-full">
-                        Error while fetching build data
+                    <div class="text-red-500 text-2xl text-center grid place-items-center h-full gap-3">
+                        <span>Error while fetching build data</span>
+                        <button type="button" class="text-base underline" onClick={() => void query.refetch()}>
+                            Retry
+                        </button>
                     </div>
                 </Match>
                 <Match when={query.isSuccess && buildAnalysisResult}>

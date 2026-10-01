@@ -1,7 +1,6 @@
 import {
     JSXElement,
     createContext,
-    createEffect,
     createMemo,
     createResource,
     useContext,
@@ -56,13 +55,6 @@ function createRiftTheoryKnowledgeContext() {
         const champion = championForKey(riotKey);
         return champion?.localizations[locale]?.name ?? champion?.name;
     };
-
-    createEffect(() => {
-        (window as any).RIFTTHEORY_DEBUG =
-            (window as any).RIFTTHEORY_DEBUG || {};
-        // eslint-disable-next-line solid/reactivity
-        (window as any).RIFTTHEORY_DEBUG.knowledge = knowledge;
-    });
 
     return {
         knowledge,

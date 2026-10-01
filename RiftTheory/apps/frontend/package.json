@@ -1,6 +1,6 @@
 {
     "name": "@rifttheory/frontend",
-    "version": "3.2.11",
+    "version": "3.2.14",
     "type": "module",
     "scripts": {
         "start": "bunx --bun vite",
@@ -10,7 +10,7 @@
         "lint": "eslint .",
         "typecheck": "tsc --noEmit",
         "update-data": "bun run scripts/update-data.ts",
-        "publish-tauri-update": "bun scripts/publish-tauri-update.ts",
+        "create-update-manifest": "bun scripts/update-manifest.ts",
         "tauri-dev": "tauri dev",
         "format": "bunx prettier . --write"
     },

@@ -1,55 +1,57 @@
-import { Component, createSignal, onMount } from "solid-js";
-import { check, Update } from "@tauri-apps/plugin-updater";
+import { createSignal, onMount, Show } from "solid-js";
+import { check, type Update } from "@tauri-apps/plugin-updater";
 import { relaunch } from "@tauri-apps/plugin-process";
-import { Button } from "../common/Button";
-import { useMedia } from "../../hooks/useMedia";
-import {
-    Dialog,
-    DialogContent,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from "../common/Dialog";
 
-export const UpdateDialog: Component = () => {
-    const { isDesktop } = useMedia();
-    const [isOpen, setIsOpen] = createSignal(false);
+export function UpdateDialog() {
     const [update, setUpdate] = createSignal<Update | null>(null);
+    const [status, setStatus] = createSignal("Update status has not been checked.");
+    const [busy, setBusy] = createSignal(false);
 
-    onMount(async () => {
-        if (isDesktop) {
-            const update = await check();
-            if (update) {
-                setIsOpen(true);
-                console.log("Update available:", update);
-                setUpdate(update);
-            }
+    const checkForUpdate = async () => {
+        if (busy()) return;
+        setBusy(true);
+        setStatus("Checking for updates…");
+        try {
+            const available = await check();
+            setUpdate(available);
+            setStatus(available ? `Version ${available.version} is available.` : "RiftTheory is up to date.");
+        } catch {
+            setUpdate(null);
+            setStatus("Update check failed. Check your connection and try again.");
+        } finally {
+            setBusy(false);
         }
-    });
-
-    const doUpdate = async () => {
-        setIsOpen(false);
-        // display dialog
-        await update()?.downloadAndInstall();
-        // install complete, restart the app
-        await relaunch();
     };
 
+    const installUpdate = async () => {
+        const available = update();
+        if (!available || busy()) return;
+        setBusy(true);
+        setStatus(`Downloading version ${available.version}…`);
+        try {
+            await available.downloadAndInstall((event) => {
+                if (event.event === "Finished") setStatus("Installing update…");
+            });
+            setStatus("Restarting RiftTheory…");
+            await relaunch();
+        } catch {
+            setStatus("Update failed. Your current version remains installed. Try again later.");
+            setBusy(false);
+        }
+    };
+
+    onMount(() => { void checkForUpdate(); });
+
     return (
-        <Dialog open={isOpen()}>
-            <DialogContent canClose={false}>
-                <DialogHeader>
-                    <DialogTitle>Update available!</DialogTitle>
-                </DialogHeader>
-                <p class="text-xl uppercase text-neutral-300">
-                    A new version of RiftTheory is available.
-                </p>
-                <DialogFooter>
-                    <Button variant="primary" onClick={doUpdate}>
-                        Update
-                    </Button>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
+        <section aria-label="App updates">
+            <h3 class="text-3xl uppercase">App updates</h3>
+            <p role="status" class="mt-2 text-sm text-neutral-300">{status()}</p>
+            <div class="mt-3 flex flex-wrap gap-2">
+                <button type="button" class="rounded border border-neutral-600 px-3 py-2 disabled:opacity-50" disabled={busy()} onClick={checkForUpdate}>Check again</button>
+                <Show when={update()}>
+                    <button type="button" class="rounded bg-white px-3 py-2 text-primary disabled:opacity-50" disabled={busy()} onClick={installUpdate}>Download and install</button>
+                </Show>
+            </div>
+        </section>
     );
-};
+}

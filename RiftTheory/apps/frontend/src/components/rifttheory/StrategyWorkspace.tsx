@@ -1,44 +1,50 @@
 import {
     createEffect,
     createMemo,
+    createResource,
     createSignal,
     For,
+    onCleanup,
     Show,
     untrack,
 } from "solid-js";
-import { assessObservedRoles } from "@rifttheory/core/src/role/flex-evidence";
 import { analyzeDraft } from "@rifttheory/core/src/draft/analysis";
+import { playerComfort } from "@rifttheory/core/src/draft/player-pool";
 import type { Role } from "@rifttheory/core/src/models/Role";
 import { useDraft } from "../../contexts/DraftContext";
+import { ClientState, useLolClient } from "../../contexts/LolClientContext";
 import { useDataset } from "../../contexts/DatasetContext";
 import { useUser } from "../../contexts/UserContext";
 import { useDraftAnalysis } from "../../contexts/DraftAnalysisContext";
 import { useDraftView } from "../../contexts/DraftViewContext";
 import { useRiftTheoryKnowledge } from "../../contexts/RiftTheoryKnowledgeContext";
-import {
-    strategyLiveSnapshot,
-    setStrategyLiveSnapshot,
-    strategySource,
-    setStrategySource,
-} from "../../contexts/StrategySession";
+import { useStrategySession } from "../../contexts/StrategySession";
 import {
     LIVE_STRATEGY_ORDER,
     type StrategySlot,
 } from "../../utils/strategyLiveDraft";
 import { draftResponseWindow, pickLabel } from "../../utils/draftOrder";
 import {
-    compareScreenedDraftLines,
     draftBanStress,
     draftCoachWindow,
     sameSlotAlternative,
-    screenDraftChoice,
 } from "../../utils/draftCoach";
 import { riftTheoryPickEvidence, type RiftTheoryPickEvidence } from "../../utils/riftTheoryPickEvidence";
+import { buildStrategyPool, strategyRoleCandidates, toStrategyPicks } from "../../utils/strategyPool";
+import { rateStrategyOption } from "../../utils/strategyRating";
+import { readStrategyPlayerPools, writeStrategyPlayerPools } from "../../utils/strategyPlayerPools";
+import { responseLineStatusText, summarizeResponseLine, type SearchConfig } from "../../utils/draftResponseTree";
+import { isCurrentPendingBan, isCurrentResponse, pendingBanRequestId,
+    responseTreeRequestId } from "../../utils/draftResponseWorker";
+import { createPendingBanRunner, createResponseTreeRunner } from "../../utils/draftResponseWorkerClient";
+import { formatResponseChoice, pendingBanDraftState, responseDraftState } from "../../utils/strategyResponseState";
 import { screenRiftTheoryReplacements } from "../../utils/riftTheoryReplacementScreen";
 import { ChampionIcon } from "../icons/ChampionIcon";
 import { RoleIcon } from "../icons/roles/RoleIcon";
 import StrategicColorChips from "./StrategicColorChips";
 import StrategyMechanicsPanel from "./StrategyMechanicsPanel";
+import StrategyDeckComparison from "./StrategyDeckComparison";
+import StrategyPlayerPoolPanel from "./StrategyPlayerPoolPanel";
 import { assessStrategyOutcome } from "../../utils/strategyOutcome";
 import { reviewStrategyMechanics } from "../../utils/strategyMechanics";
 import {
@@ -51,7 +57,6 @@ import {
     STRATEGY_ROLES,
     type StrategyClaim,
     type StrategyOption,
-    type StrategyPick,
     type TeamStrategy,
 } from "../../utils/strategyReview";
 import "./strategyWorkspace.css";
@@ -304,6 +309,8 @@ function ComparisonTeam(props: {
 
 export default function StrategyWorkspace() {
     const draft = useDraft();
+    const { clientState } = useLolClient();
+    const { strategyLiveSnapshot, setStrategyLiveSnapshot, strategySource, setStrategySource } = useStrategySession();
     const { config: userConfig } = useUser();
     const { dataset, dataset30Days, rankStatus } = useDataset();
     const { allyDraftAnalysis } = useDraftAnalysis();
@@ -320,6 +327,11 @@ export default function StrategyWorkspace() {
         option: StrategyOption;
     }>();
     const [candidateSearch, setCandidateSearch] = createSignal("");
+    const [playerPools, setPlayerPools] = createSignal(readStrategyPlayerPools());
+    const updatePlayerPools = (next: ReturnType<typeof readStrategyPlayerPools>) => {
+        setPlayerPools(next);
+        writeStrategyPlayerPools(next);
+    };
     let previewPanel: HTMLElement | undefined;
     let previewTrigger: HTMLButtonElement | undefined;
     let searchInput: HTMLInputElement | undefined;
@@ -333,6 +345,8 @@ export default function StrategyWorkspace() {
         live()?.teams[team] ??
         (team === "ally" ? draft.allyTeam : draft.opponentTeam);
     const bans = () => live()?.bans ?? draft.bans;
+    const poolsFor = (team: "ally" | "opponent") =>
+        live() ? [] : playerPools()[team === "ally" ? "blue" : "red"];
     const editSource = () =>
         setCurrentDraftView(
             live()
@@ -340,58 +354,10 @@ export default function StrategyWorkspace() {
                 : { type: "draft", subType: "draft" },
         );
 
-    // Use the active statistical dataset, not historical role observations from
-    // the knowledge snapshot, when determining which flexes are credible.
-    const pool = createMemo(() =>
-        Object.values(dataset()?.championData ?? {}).map((champion) => {
-            const samples = STRATEGY_ROLES.map((role, index) => ({
-                role,
-                games: champion.statsByRole[index as Role]?.games ?? 0,
-            }));
-            const total = samples.reduce(
-                (sum, sample) => sum + sample.games,
-                0,
-            );
-            const roles = assessObservedRoles(
-                samples.map((sample) => ({
-                    ...sample,
-                    sampleTotal: total,
-                    roleShare: total ? sample.games / total : 0,
-                })),
-            ).roles;
-            const possibleRoles = roles
-                .filter((r) => r.tier === "primary" || r.tier === "established")
-                .map((r) => r.role);
-            return {
-                key: champion.key,
-                name: champion.name,
-                possibleRoles,
-                knowledge: championForKey(champion.key),
-            } satisfies StrategyPick;
-        }),
-    );
-    const poolByKey = createMemo(() => new Map(pool().map((p) => [p.key, p])));
-    const roleCandidates = createMemo(() => pool().flatMap((pick) =>
-        pick.possibleRoles.map((role) => ({ ...pick, role })),
-    ));
-    const toPicks = (team: readonly StrategySlot[]): StrategyPick[] =>
-        team.flatMap((p) => {
-            if (!p.championKey) return [];
-            const source = poolByKey().get(p.championKey);
-            return [
-                {
-                    ...(source ?? {
-                        key: p.championKey,
-                        name: p.championKey,
-                        possibleRoles: [],
-                    }),
-                    role:
-                        p.role === undefined
-                            ? undefined
-                            : STRATEGY_ROLES[p.role],
-                },
-            ];
-        });
+    const pool = createMemo(() => buildStrategyPool(dataset(), championForKey));
+    const poolByKey = createMemo(() => new Map(pool().map((pick) => [pick.key, pick])));
+    const roleCandidates = createMemo(() => strategyRoleCandidates(pool()));
+    const toPicks = (team: readonly StrategySlot[]) => toStrategyPicks(team, poolByKey());
     const blue = createMemo(() => toPicks(teamSlots("ally")));
     const red = createMemo(() => toPicks(teamSlots("opponent")));
     const review = createMemo(() => reviewStrategy(blue(), red()));
@@ -453,6 +419,7 @@ export default function StrategyWorkspace() {
                 bans: bans(),
                 unavailable,
                 owned: live() ? undefined : draft.ownedChampions(),
+                playerPools: poolsFor(current.isBlue ? "ally" : "opponent"),
             },
             windowSteps().length,
             candidateSearch(),
@@ -469,6 +436,7 @@ export default function StrategyWorkspace() {
             selectedStep(),
             bans(),
             [...draft.ownedChampions()].sort(),
+            playerPools(),
             dataset()?.date,
             dataset()?.version,
             rankStatus().active,
@@ -494,6 +462,7 @@ export default function StrategyWorkspace() {
                           ...(current.outgoing ? [current.outgoing] : []),
                       ],
                       owned: live() ? undefined : draft.ownedChampions(),
+                      playerPools: poolsFor(current.isBlue ? "ally" : "opponent"),
                   },
                   windowSteps().length,
                   "",
@@ -505,44 +474,77 @@ export default function StrategyWorkspace() {
             selected.picks.length > 1 ? shortlist.pairs : shortlist.singles,
         );
     });
-    const screenedChoiceComparison = createMemo(() => {
-        const selected = activePreview();
-        const alternative = sameSlotChoice();
-        const window = coachWindow();
-        if (!selected || !alternative || !window?.chronological ||
-            !window.replyPicks.length || window.bansBeforeReply.length)
-            return undefined;
-        const current = planning();
-        const ownConstraints = {
-            bans: bans(),
-            unavailable: live()?.unavailable[current.isBlue ? "ally" : "opponent"] ?? [],
-            owned: live() ? undefined : draft.ownedChampions(),
-        };
-        const enemyConstraints = {
-            bans: bans(),
-            unavailable: live()?.unavailable[current.isBlue ? "opponent" : "ally"] ?? [],
-        };
-        const screen = (choice: StrategyOption) => screenDraftChoice(
-            current.own,
-            current.enemy,
-            choice,
-            roleCandidates(),
-            ownConstraints,
-            enemyConstraints,
-            window.replyPicks.length,
-            window.nextOwnPicks.length,
-        );
-        const first = screen(selected);
-        const second = screen(alternative);
+    const leadingChoice = createMemo(() => windowSteps().length > 1
+        ? options().pairs[0] : options().singles[0]);
+    const responseStateInput = createMemo(() => {
+        const step = selectedStep();
+        if (!step || !coachWindow()?.chronological || !windowSteps().length) return undefined;
         return {
-            selected: first,
-            alternative: second,
-            preference: first.supported && second.supported
-                ? compareScreenedDraftLines(first.worst, second.worst)
-                : "unresolved",
-            stopsAtBans: window.opponentBansBeforeOwn.length > 0,
+            selected: step,
+            own: planning().own, enemy: planning().enemy,
+            bans: [...bans()], pool: roleCandidates(),
+            live: live(), owned: draft.ownedChampions(), playerPools: playerPools(),
+            patch: dataset()?.version ?? "unknown",
+            datasetId: `${dataset()?.version ?? "unknown"}:${dataset()?.date ?? "unknown"}`,
+            rank: String(rankStatus().active), region: "unknown",
         };
     });
+    const pendingBanRequest = createMemo(() => {
+        const input = responseStateInput();
+        const state = input && pendingBanDraftState(input);
+        if (!state) return undefined;
+        const config: SearchConfig = { pickBeam: 2, banBeam: 2, maxNodes: 64 };
+        return { kind: "pending_bans" as const, id: pendingBanRequestId(state, config),
+            state, config };
+    });
+    const pendingBanRunner = createPendingBanRunner();
+    onCleanup(() => pendingBanRunner.dispose());
+    createEffect(() => { if (!pendingBanRequest()) pendingBanRunner.dispose(); });
+    const [pendingBanFailure, setPendingBanFailure] = createSignal(false);
+    const [pendingBanResult] = createResource(pendingBanRequest, (request) => {
+        setPendingBanFailure(false);
+        return pendingBanRunner.search(request).catch((error: Error) => {
+            if (error.message !== "Search superseded" &&
+                error.message !== "Search disposed" &&
+                request.id === untrack(() => pendingBanRequest()?.id)) setPendingBanFailure(true);
+            return undefined;
+        });
+    });
+    const pendingBanTree = () => {
+        const result = pendingBanResult();
+        return isCurrentPendingBan(result, pendingBanRequest()?.id) ? result?.tree : undefined;
+    };
+    const responseRequest = createMemo(() => {
+        const selected = activePreview() ?? leadingChoice();
+        const alternative = sameSlotChoice() ?? (selected
+            ? sameSlotAlternative(selected,
+                selected.picks.length > 1 ? options().pairs : options().singles)
+            : undefined);
+        const input = responseStateInput();
+        if (!selected || !input) return undefined;
+        const state = responseDraftState(input);
+        if (!state) return undefined;
+        const config: SearchConfig = { pickBeam: 2, banBeam: 2, maxNodes: 256 };
+        return { id: responseTreeRequestId(state, selected, alternative, config),
+            state, selected, alternative, config };
+    });
+    const responseRunner = createResponseTreeRunner();
+    onCleanup(() => responseRunner.dispose());
+    createEffect(() => { if (!responseRequest()) responseRunner.dispose(); });
+    const [responseFailure, setResponseFailure] = createSignal(false);
+    const [responseTreeResult] = createResource(responseRequest, (request) => {
+        setResponseFailure(false);
+        return responseRunner.search(request).catch((error: Error) => {
+            if (error.message !== "Search superseded" &&
+                error.message !== "Search disposed" &&
+                request.id === untrack(() => responseRequest()?.id)) setResponseFailure(true);
+            return undefined;
+        });
+    });
+    const responseTree = () => {
+        const result = responseTreeResult();
+        return isCurrentResponse(result, responseRequest()?.id) ? result : undefined;
+    };
     createEffect(() => {
         if (preview() && preview()!.fingerprint !== fingerprint())
             setPreview(undefined);
@@ -569,6 +571,7 @@ export default function StrategyWorkspace() {
             {
                 bans: bans(),
                 unavailable: live()?.unavailable[current.isBlue ? "opponent" : "ally"] ?? [],
+                playerPools: poolsFor(current.isBlue ? "opponent" : "ally"),
             },
             window.replyPicks.length,
             "",
@@ -596,6 +599,7 @@ export default function StrategyWorkspace() {
                     bans: bans(),
                     unavailable: live()?.unavailable[current.isBlue ? "ally" : "opponent"] ?? [],
                     owned: live() ? undefined : draft.ownedChampions(),
+                    playerPools: poolsFor(current.isBlue ? "ally" : "opponent"),
                 },
                 window.nextOwnPicks.length,
             );
@@ -625,6 +629,7 @@ export default function StrategyWorkspace() {
                     bans: bans(),
                     unavailable: live()?.unavailable[current.isBlue ? "ally" : "opponent"] ?? [],
                     owned: live() ? undefined : draft.ownedChampions(),
+                    playerPools: poolsFor(current.isBlue ? "ally" : "opponent"),
                 },
                 window.nextOwnAfterBans.length,
                 window.opponentBansBeforeOwn.length,
@@ -651,36 +656,13 @@ export default function StrategyWorkspace() {
         }));
     });
     const riftTheoryForOption = (option: Pick<StrategyOption, "picks"> | undefined) => {
-        const activeDataset = dataset();
-        const fullDataset = dataset30Days();
-        if (
-            !option || live() || !rankStatus().available ||
-            !activeDataset || !fullDataset
-        ) return undefined;
-        const after = reviewStrategy(
-            [...planning().own, ...option.picks],
-            planning().enemy,
-        );
-        if (!after.complete || after.issues.length) return undefined;
-        const roleMap = (picks: typeof after.blue.picks) => {
-            if (picks.length !== 5 || picks.some((pick) => pick.roles.length !== 1))
-                return undefined;
-            return new Map(picks.map((pick) => [
-                STRATEGY_ROLES.indexOf(pick.roles[0]) as Role,
-                pick.key,
-            ]));
-        };
-        const own = roleMap(after.blue.picks);
-        const enemy = roleMap(after.red.picks);
-        if (!own || !enemy || own.size !== 5 || enemy.size !== 5) return undefined;
-        if ([...own, ...enemy].some(([role, key]) =>
-            !activeDataset.championData[key]?.statsByRole[role])) return undefined;
-        const rating = analyzeDraft(activeDataset, fullDataset, own, enemy, {
+        if (live() || !rankStatus().available) return undefined;
+        return rateStrategyOption(option, planning().own, planning().enemy,
+            dataset(), dataset30Days(), {
             ignoreChampionWinrates: userConfig.ignoreChampionWinrates,
             riskLevel: userConfig.riskLevel,
             minGames: userConfig.minGames,
         });
-        return Number.isFinite(rating.winrate) ? rating : undefined;
     };
     const previewRiftTheory = createMemo(() => riftTheoryForOption(activePreview()));
     const alternativeRiftTheory = createMemo(() => riftTheoryForOption(sameSlotChoice()));
@@ -734,6 +716,7 @@ export default function StrategyWorkspace() {
                 bans: bans(),
                 unavailable: [current.outgoing],
                 owned: draft.ownedChampions(),
+                playerPools: poolsFor(current.isBlue ? "ally" : "opponent"),
             },
             (team, enemy, pick) => {
                 if ([...team, ...enemy].some(([role, key]) =>
@@ -877,10 +860,20 @@ export default function StrategyWorkspace() {
                     <h1>Strategy</h1>
                     <p>Understand the fight. Build the response.</p>
                 </div>
-                <button class="strategy-button" onClick={editSource}>
-                    {live() ? "Back to Live Draft →" : "Edit draft →"}
-                </button>
+                <div class="strategy-header-actions">
+                    <Show when={!live()}>
+                        <button class="strategy-button" type="button" disabled={!draft.canUndoManualDraft() || clientState() === ClientState.InChampSelect} onClick={draft.undoManualDraft}>Undo</button>
+                        <button class="strategy-button" type="button" disabled={!draft.canRedoManualDraft() || clientState() === ClientState.InChampSelect} onClick={draft.redoManualDraft}>Redo</button>
+                        <Show when={draft.backupAvailable()}><button class="strategy-button" type="button" disabled={clientState() === ClientState.InChampSelect} onClick={draft.restorePreviousManualDraft}>Restore previous board</button></Show>
+                    </Show>
+                    <button class="strategy-button" onClick={editSource}>
+                        {live() ? "Back to Live Draft →" : "Edit draft →"}
+                    </button>
+                </div>
             </header>
+            <Show when={!live() && draft.draftStorageError()}>
+                <p role="alert" class="strategy-evidence-caveat">This draft could not be saved locally. Keep the app open until storage is available.</p>
+            </Show>
             <Show when={strategyLiveSnapshot()}>
                 <div class="strategy-segment" aria-label="Draft source">
                     <button
@@ -912,6 +905,10 @@ export default function StrategyWorkspace() {
                             : ""}
                     </p>
                 )}
+            </Show>
+            <Show when={!live()}>
+                <StrategyPlayerPoolPanel pools={playerPools()} champions={pool()}
+                    onChange={updatePlayerPools} />
             </Show>
             <Show when={knowledge.loading}>
                 <p role="status">Loading champion knowledge…</p>
@@ -1054,6 +1051,100 @@ export default function StrategyWorkspace() {
                     )}
                 </For>
             </div>
+            <Show when={live()?.pendingBans}>
+                <section class="strategy-decision" aria-label="Pending ban scenarios">
+                    <span class="strategy-eyebrow">SECOND BAN PHASE · CONDITIONAL PICK SCREEN</span>
+                    <h3>What remains after the next bans?</h3>
+                    <p role="status">These are bounded ban scenarios. Refresh the Live Draft snapshot after real bans; current pick options remain provisional.</p>
+                    <Show when={pendingBanTree()} fallback={<p role="status">{pendingBanFailure()
+                        ? "Ban scenario search is unavailable for this state."
+                        : pendingBanRequest()
+                          ? "Checking legal ban scenarios…"
+                          : "The next ban action is unavailable in this snapshot. Refresh it from Live Draft to screen legal continuations."}</p>}>
+                        {(tree) => <>
+                            <div class="strategy-reply-list">
+                                <For each={tree().lines}>{(line) => <article>
+                                    <strong>{line.actions.map((action) =>
+                                        `${action.side === "blue" ? "Blue" : "Red"} ban ${poolByKey().get(action.championKey)?.name ?? action.championKey}`,
+                                    ).join(" → ") || "No ban action screened"}</strong>
+                                    <p>{line.status === "screened"
+                                        ? `Next ${tree().nextPick.side === "blue" ? "B" : "R"}${tree().nextPick.slot + 1}: ${line.choices.map((choice) => choice.picks.map((pick) => `${pick.name} · ${pick.role ?? "role open"}`).join(" + ")).join(" or ")}`
+                                        : line.status === "node_cap" ? "Node cap reached before the next pick."
+                                            : "No supported continuation found in this screened pool."}</p>
+                                    <small>{line.supportedChoices} supported champions after this ban line. Unscreened choices remain possible.</small>
+                                </article>}</For>
+                            </div>
+                            <details><summary>Ban search method and uncertainty</summary>
+                                <p>Opponent ban beam 2 · own ban beam 1 · node cap 64 · visited {tree().nodes} · screened {tree().screenedActions}/{tree().supportedActions} supported ban targets · omitted {tree().pruned}. {tree().truncated ? "Search truncated." : "Reached the next pick in screened branches."} Search ID {tree().fingerprint}. These are heuristic targets, not a solved opponent policy.</p>
+                            </details>
+                        </>}
+                    </Show>
+                </section>
+            </Show>
+            <Show when={responseRequest()}>
+                {(request) => (
+                    <section class="strategy-decision" aria-label="Current draft decision">
+                        <span class="strategy-eyebrow">CURRENT SLOT · BOUNDED RESPONSE SEARCH</span>
+                        <h3>{(responseTree()?.verdict === "alternative" && request().alternative
+                            ? request().alternative!.picks : request().selected.picks)
+                            .map((pick) => `${pick.name} · ${pick.role ?? "role open"}`).join(" + ")}</h3>
+                        <div class="strategy-decision-actions" aria-label="Compare this slot">
+                            <button class="strategy-button" type="button" onClick={(event) => choosePreview(request().selected, event.currentTarget)}>
+                                Inspect {request().selected.picks.map((pick) => pick.name).join(" + ")}
+                            </button>
+                            <Show when={request().alternative}>
+                                {(alternative) => <button class="strategy-button" type="button" onClick={(event) => choosePreview(alternative(), event.currentTarget)}>
+                                    Try {alternative().picks.map((pick) => pick.name).join(" + ")}
+                                </button>}
+                            </Show>
+                        </div>
+                        <p class="strategy-decision-evidence">
+                            Role profiles: {request().selected.unassessedPicks.length
+                                ? `missing for ${request().selected.unassessedPicks.join(", ")}`
+                                : "recorded for this choice"} · Dataset: {rankStatus().available ? `patch ${dataset()?.version}` : "rank data unavailable"} · Search: {responseTree() ? "screened branches only" : "pending"}.
+                        </p>
+                        <Show when={responseTree()} fallback={<p role="status">{responseFailure() ? "Response search is unavailable for this state." : "Checking opponent replies and legal continuations…"}</p>}>
+                            {(tree) => (
+                                <>
+                                    <p>{tree().verdict === "selected"
+                                        ? "This line structurally dominates the compared shortlist alternative in the searched branches."
+                                        : tree().verdict === "alternative"
+                                          ? "The compared alternative has a structural edge in the searched branches."
+                                          : tree().second
+                                            ? "No supported choice clearly dominates the compared alternative; the trade-off remains open."
+                                            : "No second supported choice is available in this shortlist; the verdict remains open."}</p>
+                                    <Show when={request().alternative}>
+                                        {(alternative) => <p><strong>Compared with: </strong>{formatResponseChoice(alternative().picks)}</p>}
+                                    </Show>
+                                    <Show when={tree().verdict === "alternative" ? tree().second : tree().first}>
+                                        {(line) => (
+                                            <>
+                                                <p><strong>Opponent response: </strong>{summarizeResponseLine(line(), request().selected.picks.length).opponent.map((action) =>
+                                                    `${action.kind === "ban" ? "Ban" : "Pick"} ${poolByKey().get(action.championKey)?.name ?? action.championKey}`,
+                                                ).join(" → ") || "No opponent action before this window ends."}</p>
+                                                <p><strong>Own continuation: </strong>{summarizeResponseLine(line(), request().selected.picks.length).ownFollowup.map((action) =>
+                                                    `${action.kind === "ban" ? "Ban" : "Pick"} ${poolByKey().get(action.championKey)?.name ?? action.championKey}`,
+                                                ).join(" → ") || "No further own action in this searched window."}</p>
+                                                <p><strong>Open costs: </strong>{line().evaluation.ownNeeds.join("; ") || "No recorded unmet need"}. {line().evaluation.ownResources}.</p>
+                                                <p><strong>Screened continuation: </strong>{line().actions.map((action) =>
+                                                    `${action.kind === "pick" ? `${action.side === "blue" ? "B" : "R"}${action.slot + 1}` : `${action.side} ban ${action.slot + 1}`} ${poolByKey().get(action.championKey)?.name ?? action.championKey}`,
+                                                ).join(" → ")}</p>
+                                                <small>{responseLineStatusText(line())} · kit coverage {line().evaluation.ownCoverage}/{line().evaluation.ownPicks} · search ID {line().fingerprint}. Not solved or outcome calibrated.</small>
+                                            </>
+                                        )}
+                                    </Show>
+                                </>
+                            )}
+                        </Show>
+                        <details class="strategy-decision-detail"><summary>Why this line and what remains uncertain</summary>
+                            <p>Supported differences and future replies are screened from a bounded shortlist. They are scenarios, not an outcome probability.</p>
+                            <Show when={responseTree()?.reasons.length}>
+                                <ul><For each={responseTree()?.reasons.slice(0, 3)}>{(reason) => <li>{reason.label}: {reason.selected} versus {reason.alternative}</li>}</For></ul>
+                            </Show>
+                        </details>
+                    </section>
+                )}
+            </Show>
             <div class="strategy-overview">
             <div class="strategy-verdict">
                 <span class="strategy-eyebrow">
@@ -1101,6 +1192,7 @@ export default function StrategyWorkspace() {
                 <TeamPlan side="Blue" team={review().blue} />
                 <TeamPlan side="Red" team={review().red} />
             </div>
+            <StrategyDeckComparison blue={review().blue} red={review().red} />
             <details class="strategy-deep-dive">
                 <summary>
                     <span>Explore mechanics, timing and source evidence</span>
@@ -1591,6 +1683,9 @@ export default function StrategyWorkspace() {
                                     . Both teams are reassessed; these are
                                     conditional routes, not a predicted winner.
                                 </p>
+                                <small>Player comfort: {option().picks.map((pick) =>
+                                    `${pick.name}: ${playerComfort(pick, poolsFor(planning().isBlue ? "ally" : "opponent")) === "reported" ? "reported comfortable" : "unknown"}`,
+                                ).join(" · ")}. Comfort is descriptive and does not alter the ranking.</small>
                                 <Show when={option().unassessedPicks.length}>
                                     <p class="strategy-evidence-caveat">
                                         No role capability profile for {option().unassessedPicks.join(", ")}.
@@ -1654,33 +1749,55 @@ export default function StrategyWorkspace() {
                                                 <ChoiceSummary label="SELECTED CHOICE" option={option()} samples={previewRiftTheoryPicks()} />
                                                 <ChoiceSummary label="SHORTLIST ALTERNATIVE" option={alternative()} samples={alternativeRiftTheoryPicks()} />
                                             </div>
-                                            <Show when={screenedChoiceComparison()}>
-                                                {(screen) => (
-                                                    <div class="strategy-choice-rating strategy-pressure-comparison" aria-label="Screened response comparison">
-                                                        <strong>After a screened opponent reply</strong>
-                                                        <p>{screen().preference === "selected"
-                                                            ? "The selected choice has a structural edge in these sampled adverse lines."
-                                                            : screen().preference === "alternative"
-                                                              ? "The alternative has a structural edge in these sampled adverse lines."
-                                                              : "Neither choice clearly dominates in these sampled adverse lines."}</p>
+                                            <Show when={responseRequest() && !responseTree() && !responseFailure()}>
+                                                <p role="status">Searching legal responses…</p>
+                                            </Show>
+                                            <Show when={responseFailure()}>
+                                                <p role="alert">Response search is unavailable. Check this draft state and retry the preview.</p>
+                                            </Show>
+                                            <Show when={responseTree()}>
+                                                {(tree) => (
+                                                    <section class="strategy-choice-rating strategy-pressure-comparison" aria-label="Response tree">
+                                                        <strong>Response tree v1 · {tree().verdict === "unresolved" ? "trade-off unresolved" : tree().verdict === "selected" ? "selected line structurally dominates" : "alternative line structurally dominates"}</strong>
+                                                        <p>Both choices start from the same picks, bans, roles and available pool. The displayed reply is a screened adverse branch. When branches trade strengths, its choice is only a stable display tie-break; future picks and bans are scenarios.</p>
+                                                        <Show when={tree().reasons.length}>
+                                                            <div class="strategy-response-reasons">
+                                                                <strong>Why this line · why not {alternative().picks.map((pick) => pick.name).join(" + ")}</strong>
+                                                                <p>Only dimensions that differ between the two stored search paths appear here.</p>
+                                                                <dl>
+                                                                    <For each={tree().reasons.slice(0, 4)}>{(reason) => <div>
+                                                                        <dt>{reason.label}</dt>
+                                                                        <dd>Selected: {reason.selected} · Alternative: {reason.alternative}</dd>
+                                                                    </div>}</For>
+                                                                </dl>
+                                                                <Show when={tree().reasons.length > 4}>
+                                                                    <details><summary>More calculated differences ({tree().reasons.length - 4})</summary>
+                                                                        <dl><For each={tree().reasons.slice(4)}>{(reason) => <div>
+                                                                            <dt>{reason.label}</dt>
+                                                                            <dd>Selected: {reason.selected} · Alternative: {reason.alternative}</dd>
+                                                                        </div>}</For></dl>
+                                                                    </details>
+                                                                </Show>
+                                                            </div>
+                                                        </Show>
+                                                        <Show when={!tree().reasons.length}>
+                                                            <p>No recorded dimension separates these paths; search limits or branch trade-offs may still leave the verdict open.</p>
+                                                        </Show>
+                                                        <Show when={tree().first?.status !== "screened" || tree().second?.status !== "screened"}>
+                                                            <p>A continuation stopped early or its screened branches have unresolved trade-offs. It cannot support a why-now verdict; inspect the method below.</p>
+                                                        </Show>
                                                         <div class="strategy-choice-grid">
-                                                            <For each={[
-                                                                ["SELECTED", screen().selected],
-                                                                ["ALTERNATIVE", screen().alternative],
-                                                            ] as const}>
-                                                                {([label, result]) => (
+                                                            <For each={[["SELECTED", tree().first], ["ALTERNATIVE", tree().second]] as const}>
+                                                                {([label, line]) => (
                                                                     <div class="strategy-pressure-branch">
-                                                                        <span class="strategy-eyebrow">{label} · {result.lines.length} replies screened</span>
-                                                                        <Show when={result.worst} fallback={<p>No supported reply surfaced; no robust comparison is possible.</p>}>
-                                                                            {(line) => (
+                                                                        <span class="strategy-eyebrow">{label}</span>
+                                                                        <Show when={line} fallback={<p>No legal supported continuation found.</p>}>
+                                                                            {(variation) => (
                                                                                 <>
-                                                                                    <p>Adverse reply: {line().reply.picks.map((pick) => pick.name).join(" + ")}</p>
-                                                                                    <Show when={line().fallback}>
-                                                                                        {(fallback) => <small>Own next choice: {fallback().picks.map((pick) => pick.name).join(" + ")}</small>}
-                                                                                    </Show>
-                                                                                    <small>Own needs left: {line().ownNeeds.join("; ") || "none established"}</small>
-                                                                                    <small>Own plans: {line().ownPlans.join("; ") || "none established"}</small>
-                                                                                    <small>Opponent needs left: {line().enemyNeeds.join("; ") || "none established"}</small>
+                                                                                    <p>{variation().actions.map((action) => `${action.kind === "pick" ? `${action.side === "blue" ? "B" : "R"}${action.slot + 1}` : `${action.side} ban ${action.slot + 1}`} ${poolByKey().get(action.championKey)?.name ?? action.championKey}`).join(" → ")}</p>
+                                                                                    <small>Own needs: {variation().evaluation.ownNeeds.join("; ") || "none established"}. Own plans: {variation().evaluation.ownPlans.join("; ") || "none established"}. Damage: {variation().evaluation.ownDamage}. Resources: {variation().evaluation.ownResources}.</small>
+                                                                                    <small>Opponent needs: {variation().evaluation.enemyNeeds.join("; ") || "none established"}. Opponent plans: {variation().evaluation.enemyPlans.join("; ") || "none established"}.</small>
+                                                                                    <small>Kit coverage: {variation().evaluation.ownCoverage}/{variation().evaluation.ownPicks} own, {variation().evaluation.enemyCoverage}/{variation().evaluation.enemyPicks} opponent · {variation().status}</small>
                                                                                 </>
                                                                             )}
                                                                         </Show>
@@ -1688,10 +1805,12 @@ export default function StrategyWorkspace() {
                                                                 )}
                                                             </For>
                                                         </div>
-                                                        <small>These two choices and up to three heuristic replies are screened. {screen().stopsAtBans
-                                                            ? "This comparison stops before the next bans. "
-                                                            : "The next own choice is a heuristic fallback. "}Missing evidence or trade-offs keep the verdict unresolved. This is not a solved game tree or a win probability.</small>
-                                                    </div>
+                                                        <details>
+                                                            <summary>Search method and uncertainty</summary>
+                                                            <p>Bounded alternating search · pick beam {tree().config.pickBeam} · opponent ban beam {tree().config.banBeam} · own ban beam 1 · node cap {tree().config.maxNodes}. Target bans use the leading screened future pick. This is not solved or calibrated.</p>
+                                                        <For each={[tree().first, tree().second]}>{(line) => <Show when={line}>{(variation) => <small>Depth {variation().depth} · visited {variation().nodes} · screened {variation().screenedActions}/{variation().supportedActions} supported action opportunities · omitted {variation().pruned} · stop: {variation().stopReason.replaceAll("_", " ")} · branch trade-offs: {variation().branchTradeoffs.join(", ") || "none recorded"} · search ID {variation().fingerprint} · {variation().evaluation.uncertainty.join("; ") || "No recorded kit coverage gap in this line"}</small>}</Show>}</For>
+                                                        </details>
+                                                    </section>
                                                 )}
                                             </Show>
                                             <Show when={previewRiftTheoryPicks()?.length && alternativeRiftTheoryPicks()?.length}>

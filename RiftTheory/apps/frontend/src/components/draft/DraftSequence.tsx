@@ -5,6 +5,7 @@ import { useI18n } from "../../utils/i18n";
 import { Icon, resetDraft } from "../icons/RiftIcons";
 import { Switch } from "../common/Switch";
 import { useUser } from "../../contexts/UserContext";
+import { ClientState, useLolClient } from "../../contexts/LolClientContext";
 
 export function DraftSequence() {
     const {
@@ -14,18 +15,29 @@ export function DraftSequence() {
         nextDraftPick,
         select,
         resetAll,
+        canUndoManualDraft,
+        canRedoManualDraft,
+        undoManualDraft,
+        redoManualDraft,
+        draftStorageError,
+        backupAvailable,
+        restorePreviousManualDraft,
     } = useDraft();
+    const { clientState } = useLolClient();
     const { t } = useI18n();
     const { config, setConfig } = useUser();
     return (
         <section class="mb-4 font-body text-sm" aria-label={t("pickOrder")}>
-            <div class="flex justify-between items-center gap-3 mb-2">
+            <div class="flex flex-wrap justify-between items-center gap-3 mb-2">
                 <p role="status" aria-live="polite">
                     {activeDraftPick()
                         ? `${t("nextPick")}: ${pickLabel(activeDraftPick()!.team, activeDraftPick()!.index)}`
                         : t("draftComplete")}
                 </p>
-                <div class="flex items-center gap-3">
+                <div class="flex flex-wrap items-center gap-3">
+                    <button type="button" class="rounded border border-neutral-700 px-2 py-1 text-xs disabled:opacity-40" disabled={!canUndoManualDraft() || clientState() === ClientState.InChampSelect} onClick={undoManualDraft}>Undo</button>
+                    <button type="button" class="rounded border border-neutral-700 px-2 py-1 text-xs disabled:opacity-40" disabled={!canRedoManualDraft() || clientState() === ClientState.InChampSelect} onClick={redoManualDraft}>Redo</button>
+                    <Show when={backupAvailable()}><button type="button" class="rounded border border-neutral-700 px-2 py-1 text-xs disabled:opacity-40" disabled={clientState() === ClientState.InChampSelect} onClick={restorePreviousManualDraft}>Restore previous board</button></Show>
                     <label class="inline-flex items-center gap-2 text-xs text-neutral-400">
                         <span>{t("usePickOrder")}</span>
                         <Switch
@@ -53,13 +65,14 @@ export function DraftSequence() {
                                 (pick) => pick.championKey || pick.hoverKey,
                             )
                         }
-                        onClick={resetAll}
+                        onClick={() => resetAll()}
                     >
                         <Icon path={resetDraft} class="h-4 w-4" />
                         {t("resetDraft")}
                     </button>
                 </div>
             </div>
+            <Show when={draftStorageError()}><p role="alert" class="text-xs text-red-400">Manual draft could not be saved locally.</p></Show>
             <Show
                 when={config.usePickOrder}
                 fallback={

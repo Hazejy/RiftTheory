@@ -187,13 +187,16 @@ export type RiftTheoryKnowledge = {
     champions: KnowledgeChampion[];
 };
 
+export const SUPPORTED_KNOWLEDGE_SCHEMA_VERSION = 7;
+
 export function isRiftTheoryKnowledge(
     value: unknown,
 ): value is RiftTheoryKnowledge {
     if (!value || typeof value !== "object") return false;
     const candidate = value as Partial<RiftTheoryKnowledge>;
     return (
-        typeof candidate.metadata?.schemaVersion === "number" &&
+        candidate.metadata?.schemaVersion === SUPPORTED_KNOWLEDGE_SCHEMA_VERSION &&
+        typeof candidate.metadata.generatedAt === "string" &&
         Array.isArray(candidate.sources) &&
         Array.isArray(candidate.traitDefinitions) &&
         Array.isArray(candidate.interactionRules) &&

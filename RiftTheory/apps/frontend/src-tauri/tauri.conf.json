@@ -39,13 +39,18 @@
                 "depends": []
             }
         },
-        "createUpdaterArtifacts": false
+        "createUpdaterArtifacts": true
     },
     "productName": "RiftTheory",
     "mainBinaryName": "RiftTheory",
-    "version": "3.2.11",
+    "version": "3.2.14",
     "identifier": "local.rifttheory.workspace",
-    "plugins": {},
+    "plugins": {
+        "updater": {
+            "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDk0Q0UwNjA4M0VBRDQ2OUMKUldTY1JxMCtDQWJPbElVNVRJRDJSM2s2U2JYL1ZlT2s3SXg1d05lN3N1NGxWRFA2N25HMW1GbE8K",
+            "endpoints": ["https://github.com/Hazejy/RiftTheory/releases/latest/download/latest.json"]
+        }
+    },
     "app": {
         "windows": [
             {

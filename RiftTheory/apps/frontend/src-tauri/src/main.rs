@@ -3,9 +3,6 @@
     windows_subsystem = "windows"
 )]
 
-#[cfg(target_os = "windows")]
-use std::os::windows::process::CommandExt;
-
 use reqwest::Client;
 use serde::Serialize;
 use serde_json::Value;
@@ -18,7 +15,7 @@ struct AppState {
     data_client: Client,
 }
 
-#[derive(Serialize, Debug)]
+#[derive(Clone, Serialize, Debug, PartialEq, Eq)]
 struct LcuData {
     port: u16,
     password: String,
@@ -33,20 +30,26 @@ fn parse_lcu_command_line(command_line: &str) -> Option<LcuData> {
         .as_str()
         .parse()
         .ok()?;
-    let password = regex::Regex::new(r#"--remoting-auth-token=["']?([^s"']+)"#)
+    let password = regex::Regex::new(r#"--remoting-auth-token=["']?([^\s"']+)"#)
         .ok()?
         .captures(command_line)?
         .get(1)?
         .as_str()
         .trim_end_matches('"')
         .to_owned();
-    Some(LcuData { port, password, username: "riot".to_owned() })
+    Some(LcuData {
+        port,
+        password,
+        username: "riot".to_owned(),
+    })
 }
 
 fn parse_lockfile(path: &PathBuf) -> Option<LcuData> {
     let contents = std::fs::read_to_string(path).ok()?;
     let fields: Vec<&str> = contents.trim().split(':').collect();
-    if fields.len() < 5 { return None; }
+    if fields.len() < 5 {
+        return None;
+    }
     Some(LcuData {
         port: fields.get(2)?.parse().ok()?,
         password: fields.get(3)?.to_string(),
@@ -57,9 +60,9 @@ fn parse_lockfile(path: &PathBuf) -> Option<LcuData> {
 #[cfg(target_os = "windows")]
 fn windows_lockfile_candidates() -> Vec<PathBuf> {
     let mut paths = vec![
-        PathBuf::from(r"C:Riot GamesLeague of Legendslockfile"),
-        PathBuf::from(r"C:Program FilesRiot GamesLeague of Legendslockfile"),
-        PathBuf::from(r"C:Program Files (x86)Riot GamesLeague of Legendslockfile"),
+        PathBuf::from(r"C:\Riot Games\League of Legends\lockfile"),
+        PathBuf::from(r"C:\Program Files\Riot Games\League of Legends\lockfile"),
+        PathBuf::from(r"C:\Program Files (x86)\Riot Games\League of Legends\lockfile"),
     ];
     if let Some(root) = std::env::var_os("ProgramFiles") {
         paths.push(PathBuf::from(root).join("Riot Games/League of Legends/lockfile"));
@@ -75,43 +78,60 @@ fn windows_lockfile_candidates() -> Vec<PathBuf> {
     paths
 }
 
+#[cfg(target_os = "windows")]
+fn run_discovery_command(executable: &str) -> std::io::Result<std::process::Output> {
+    use std::os::windows::process::CommandExt;
+    use std::process::Stdio;
+    use std::time::{Duration, Instant};
+
+    let mut child = std::process::Command::new(executable)
+        .arg("-NoProfile")
+        .arg("-Command")
+        .arg("Get-CimInstance -Query \"SELECT * from Win32_Process WHERE name = 'LeagueClientUx.exe'\" | Select-Object -ExpandProperty CommandLine")
+        .creation_flags(0x08000000)
+        .stdout(Stdio::piped())
+        .stderr(Stdio::null())
+        .spawn()?;
+    let deadline = Instant::now() + Duration::from_secs(3);
+    loop {
+        if child.try_wait()?.is_some() {
+            return child.wait_with_output();
+        }
+        if Instant::now() >= deadline {
+            let _ = child.kill();
+            let _ = child.wait();
+            return Err(std::io::Error::new(
+                std::io::ErrorKind::TimedOut,
+                "League client discovery timed out",
+            ));
+        }
+        std::thread::sleep(Duration::from_millis(50));
+    }
+}
+
 fn get_league_lcu_data() -> Result<LcuData, String> {
     #[cfg(not(target_os = "windows"))]
-    let output = std::process::Command::new("sh")
-        .arg("-lc")
-        .arg("ps axww -o args | grep -F 'LeagueClientUx ' | grep -v grep | head -n 1")
-        .output()
-        .map_err(|_| "Could not run command")?;
+    let output_str = String::from_utf8_lossy(
+        &std::process::Command::new("sh")
+            .arg("-lc")
+            .arg("ps axww -o args | grep -F 'LeagueClientUx ' | grep -v grep | head -n 1")
+            .output()
+            .map_err(|_| "Could not run command")?
+            .stdout,
+    )
+    .into_owned();
 
     #[cfg(target_os = "windows")]
-    let output = {
-        match std::process::Command::new("powershell")
-            .arg("-NoProfile")
-            .arg("-Command")
-            .arg(
-                "Get-CimInstance -Query \"SELECT * from Win32_Process WHERE name = 'LeagueClientUx.exe'\" | \
-                 Select-Object -ExpandProperty CommandLine",
-            )
-            .creation_flags(0x08000000)
-            .output()
-        {
-            Ok(output) => Ok(output),
-            Err(_) => std::process::Command::new(
-                r"C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe",
-            )
-            .arg("-NoProfile")
-            .arg("-Command")
-            .arg(
-                "Get-CimInstance -Query \"SELECT * from Win32_Process WHERE name = 'LeagueClientUx.exe'\" | \
-                 Select-Object -ExpandProperty CommandLine",
-            )
-            .creation_flags(0x08000000)
-            .output(),
-        }
-    }
-    .map_err(|e| format!("Could not run command: {e}"))?;
-
-    let output_str = String::from_utf8_lossy(&output.stdout);
+    let output_str = run_discovery_command("powershell")
+        .or_else(|e| {
+            if e.kind() == std::io::ErrorKind::NotFound {
+                run_discovery_command(r"C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe")
+            } else {
+                Err(e)
+            }
+        })
+        .map(|output| String::from_utf8_lossy(&output.stdout).into_owned())
+        .unwrap_or_default();
 
     if let Some(data) = parse_lcu_command_line(&output_str) {
         return Ok(data);
@@ -128,18 +148,18 @@ fn get_league_lcu_data() -> Result<LcuData, String> {
 }
 
 async fn get_lcu_response(state: &tauri::State<'_, AppState>, path: &str) -> Result<Value, String> {
-    let mut lcu_data_mutex = state.lcu_data.lock().await;
-
-    if lcu_data_mutex.is_none() {
-        let new_lcu_data =
-            get_league_lcu_data().map_err(|e| format!("Could not get LCU data: {e}"))?;
-
-        *lcu_data_mutex = Some(new_lcu_data);
-    }
-
-    let lcu_data = lcu_data_mutex
-        .as_ref()
-        .ok_or_else(|| "LCU data is unavailable".to_owned())?;
+    let cached = state.lcu_data.lock().await.clone();
+    let lcu_data = match cached {
+        Some(data) => data,
+        None => {
+            let found = tauri::async_runtime::spawn_blocking(get_league_lcu_data)
+                .await
+                .map_err(|e| format!("Could not run LCU discovery: {e}"))?
+                .map_err(|e| format!("Could not get LCU data: {e}"))?;
+            let mut current = state.lcu_data.lock().await;
+            current.get_or_insert_with(|| found.clone()).clone()
+        }
+    };
 
     let url = format!("https://127.0.0.1:{}/{}", lcu_data.port, path);
 
@@ -153,7 +173,10 @@ async fn get_lcu_response(state: &tauri::State<'_, AppState>, path: &str) -> Res
     let response = match response {
         Ok(response) => response,
         Err(e) => {
-            *lcu_data_mutex = None;
+            let mut current = state.lcu_data.lock().await;
+            if current.as_ref() == Some(&lcu_data) {
+                *current = None;
+            }
             return Err(format!("Could not get LCU response: {e}"));
         }
     };
@@ -174,7 +197,10 @@ async fn get_lcu_response(state: &tauri::State<'_, AppState>, path: &str) -> Res
     }
 
     if status == reqwest::StatusCode::UNAUTHORIZED {
-        *lcu_data_mutex = None;
+        let mut current = state.lcu_data.lock().await;
+        if current.as_ref() == Some(&lcu_data) {
+            *current = None;
+        }
         return Err("LCU returned Unauthorized".to_owned());
     }
 
@@ -236,9 +262,7 @@ async fn fetch_rank_dataset(
         .or_else(|| url.strip_prefix(BUCKET_PREFIX))
         .ok_or_else(|| "Rank dataset URL is not allowed".to_owned())?;
     let valid_file =
-        regex::Regex::new(
-            r"^(current-patch|30-days)(-(diamond_plus|master_plus))?\.json$",
-        )
+        regex::Regex::new(r"^(current-patch|30-days)(-(diamond_plus|master_plus))?\.json$")
             .map_err(|e| format!("Could not validate rank dataset URL: {e}"))?;
     if !valid_file.is_match(file_name) {
         return Err("Rank dataset file is not allowed".to_owned());
@@ -288,6 +312,7 @@ fn main() {
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_process::init())
+        .plugin(tauri_plugin_updater::Builder::new().build())
         .manage(state)
         .invoke_handler(tauri::generate_handler![
             get_champ_select_session,
@@ -300,4 +325,24 @@ fn main() {
         ])
         .run(tauri::generate_context!())
         .expect("error while running Tauri application");
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn parses_full_lcu_token_including_letter_s() {
+        let data = parse_lcu_command_line(
+            r#"LeagueClientUx.exe --app-port=53123 --remoting-auth-token="pass-token""#,
+        )
+        .expect("LCU command line");
+        assert_eq!(data.port, 53123);
+        assert_eq!(data.password, "pass-token");
+    }
+
+    #[test]
+    fn rejects_missing_lcu_credentials() {
+        assert!(parse_lcu_command_line("LeagueClientUx.exe --app-port=53123").is_none());
+    }
 }

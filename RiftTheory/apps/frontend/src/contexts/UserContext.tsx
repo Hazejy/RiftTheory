@@ -15,6 +15,7 @@ import {
 
 type RiftTheoryConfig = BaseRiftTheoryConfig & AppearancePreferences;
 import { DEFAULT_CUSTOM_COLORS } from "../utils/customTheme";
+import { readStoredValue, writeStoredValue } from "../utils/safeStorage";
 
 type FavouritePick = `${string}:${Role}`;
 
@@ -50,12 +51,12 @@ const CONFIG_KEY = "rifttheory-config";
 const LEAGUE_SYNC_DEFAULT_MIGRATION_KEY =
     "rifttheory-league-sync-default-enabled-v1";
 
-function createConfig() {
+function createConfig(reportStorageFailure: () => void) {
     let partialInitialConfig: Partial<RiftTheoryConfig> = {};
     try {
         const saved = JSON.parse(
-            localStorage.getItem(CONFIG_KEY) ??
-                localStorage.getItem("draftos-config") ??
+            readStoredValue(CONFIG_KEY) ??
+                readStoredValue("draftos-config") ??
                 "{}",
         );
         if (saved && typeof saved === "object" && !Array.isArray(saved))
@@ -65,9 +66,9 @@ function createConfig() {
     }
 
     // Previous builds stored sync as disabled without the user choosing it.
-    if (!localStorage.getItem(LEAGUE_SYNC_DEFAULT_MIGRATION_KEY)) {
+    if (!readStoredValue(LEAGUE_SYNC_DEFAULT_MIGRATION_KEY)) {
         partialInitialConfig.disableLeagueClientIntegration = false;
-        localStorage.setItem(LEAGUE_SYNC_DEFAULT_MIGRATION_KEY, "true");
+        if (!writeStoredValue(LEAGUE_SYNC_DEFAULT_MIGRATION_KEY, "true")) reportStorageFailure();
     }
 
     const [config, setConfig] = createStore<RiftTheoryConfig>({
@@ -76,34 +77,44 @@ function createConfig() {
         ...normalizeAppearance(partialInitialConfig),
     });
     createEffect(() => {
-        localStorage.setItem(CONFIG_KEY, JSON.stringify(config));
+        if (!writeStoredValue(CONFIG_KEY, JSON.stringify(config))) reportStorageFailure();
     });
 
     return [config, setConfig] as const;
 }
 
-function createFavouritePicks() {
+function createFavouritePicks(reportStorageFailure: () => void) {
     const favouriteInitial =
-        localStorage.getItem(FAVOURITE_PICKS_KEY) ??
-        localStorage.getItem("draftos-favourite-picks");
-    const favouriteInitialParsed = JSON.parse(favouriteInitial || "[]");
+        readStoredValue(FAVOURITE_PICKS_KEY) ??
+        readStoredValue("draftos-favourite-picks");
+    let favouriteInitialParsed: FavouritePick[] = [];
+    try {
+        const parsed: unknown = JSON.parse(favouriteInitial || "[]");
+        if (Array.isArray(parsed))
+            favouriteInitialParsed = parsed.filter((value): value is FavouritePick =>
+                typeof value === "string" && /^.+:[0-4]$/.test(value));
+    } catch {
+        // Malformed old preferences should not block startup.
+    }
 
     const [favouritePicks, setFavouritePicks] = createSignal<
         Set<FavouritePick>
     >(new Set(favouriteInitialParsed));
     createEffect(() => {
-        localStorage.setItem(
+        if (!writeStoredValue(
             FAVOURITE_PICKS_KEY,
             JSON.stringify([...favouritePicks()]),
-        );
+        )) reportStorageFailure();
     });
 
     return [favouritePicks, setFavouritePicks] as const;
 }
 
 function createUserContext() {
-    const [config, setConfig] = createConfig();
-    const [favouritePicks, setFavouritePicks] = createFavouritePicks();
+    const [storageError, setStorageError] = createSignal(false);
+    const reportStorageFailure = () => setStorageError(true);
+    const [config, setConfig] = createConfig(reportStorageFailure);
+    const [favouritePicks, setFavouritePicks] = createFavouritePicks(reportStorageFailure);
 
     function setFavourite(championKey: string, role: Role, value: boolean) {
         const favouritePick: FavouritePick = `${championKey}:${role}`;
@@ -130,6 +141,7 @@ function createUserContext() {
         favouritePicks,
         setFavourite,
         isFavourite,
+        storageError,
     };
 }
 

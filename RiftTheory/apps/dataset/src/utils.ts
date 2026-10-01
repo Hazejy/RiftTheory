@@ -8,12 +8,14 @@ export function bytesToHumanReadable(size: number) {
 
 export async function retry<
     T extends (...args: unknown[]) => Promise<Awaited<ReturnType<T>>>,
->(fn: T, retries = 5): Promise<ReturnType<T>> {
+>(fn: T, retries = 5, signal?: AbortSignal): Promise<ReturnType<T>> {
     let error: unknown | undefined;
     for (let i = 0; i < retries; i++) {
+        signal?.throwIfAborted();
         try {
             return await fn();
         } catch (e) {
+            if (signal?.aborted) throw e;
             console.log("Retrying, error:", e);
             error = e;
         }

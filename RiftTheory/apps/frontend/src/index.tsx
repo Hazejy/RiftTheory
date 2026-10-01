@@ -22,6 +22,7 @@ import { DatasetProvider } from "./contexts/DatasetContext";
 import { DraftFiltersProvider } from "./contexts/DraftFiltersContext";
 import { ExtraDraftAnalysisProvider } from "./contexts/ExtraDraftAnalysisContext";
 import { RiftTheoryKnowledgeProvider } from "./contexts/RiftTheoryKnowledgeContext";
+import { StrategySessionProvider } from "./contexts/StrategySession";
 
 setupMobileVH();
 setupAnalytics();
@@ -43,14 +44,13 @@ render(
                                                 <DraftSuggestionsProvider>
                                                     <BuildProvider>
                                                         <LolClientProvider>
-                                                            <App />
-                                                            <Toaster
-                                                                position="bottom-right"
-                                                                toastOptions={{
-                                                                    duration:
-                                                                        Infinity,
-                                                                }}
-                                                            />
+                                                            <StrategySessionProvider>
+                                                                <App />
+                                                                <Toaster
+                                                                    position="bottom-right"
+                                                                    toastOptions={{ duration: Infinity }}
+                                                                />
+                                                            </StrategySessionProvider>
                                                         </LolClientProvider>
                                                     </BuildProvider>
                                                 </DraftSuggestionsProvider>

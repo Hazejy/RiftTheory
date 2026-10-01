@@ -1,4 +1,4 @@
-import { LolalyticsRole } from "../../../../apps/dataset/src/lolalytics/roles";
+import type { LolalyticsRole } from "./LolalyticsRole";
 
 export const Role = {
     Top: 0,

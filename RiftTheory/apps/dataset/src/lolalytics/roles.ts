@@ -1,8 +1,2 @@
-export const LOLALYTICS_ROLES = [
-    "top",
-    "jungle",
-    "middle",
-    "bottom",
-    "support",
-] as const;
-export type LolalyticsRole = (typeof LOLALYTICS_ROLES)[number];
+export { LOLALYTICS_ROLES } from "@rifttheory/core/src/models/LolalyticsRole";
+export type { LolalyticsRole } from "@rifttheory/core/src/models/LolalyticsRole";

@@ -434,7 +434,7 @@ describe("candidate legality and response windows", () => {
         ).toEqual([]);
         expect(
             strategyOptions([], [], candidates, { bans: [] }, 2, "missing"),
-        ).toEqual({ singles: [], pairs: [], unassessed: [], evaluated: 0 });
+        ).toMatchObject({ singles: [], pairs: [], unassessed: [], evaluated: 0 });
     });
 
     test("search anchors and partners still obey bans, ownership, history and role conflicts", () => {

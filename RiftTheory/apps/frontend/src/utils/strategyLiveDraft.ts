@@ -4,6 +4,7 @@ import {
     type CompletedLiveDraftGame,
     type LiveDraftSeriesConfig,
     nextDraftStep,
+    type DraftSequenceStep,
 } from "@rifttheory/core/src/live-draft/series";
 import type { Role } from "@rifttheory/core/src/models/Role";
 import type { Team } from "@rifttheory/core/src/models/Team";
@@ -19,6 +20,7 @@ export type StrategyLiveSnapshot = {
     unavailable: Record<Team, string[]>;
     next: { team: Team; index: number } | undefined;
     pendingBans: boolean;
+    pendingAction?: DraftSequenceStep;
 };
 
 export const LIVE_STRATEGY_ORDER = STANDARD_DRAFT_SEQUENCE.filter(
@@ -62,6 +64,7 @@ export function captureStrategyGame(
     const unavailable = (id: "team1" | "team2") => [
         ...new Set([...locks.disabled, ...locks.global, ...locks.byTeam[id]]),
     ];
+    const pendingAction = nextDraftStep(game.actions);
     return {
         capturedAt: Date.now(),
         gameNumber: game.gameNumber,
@@ -81,6 +84,7 @@ export function captureStrategyGame(
                   index: upcoming.slot,
               }
             : undefined,
-        pendingBans: nextDraftStep(game.actions)?.kind === "ban",
+        pendingBans: pendingAction?.kind === "ban",
+        pendingAction,
     };
 }

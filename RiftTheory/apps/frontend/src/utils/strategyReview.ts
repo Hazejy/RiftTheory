@@ -1,3 +1,4 @@
+import { canAssignPlayerPicks, type DraftPlayerPool } from "@rifttheory/core/src/draft/player-pool";
 import type {
     KnowledgeChampion,
     KnowledgeCoachingProfile,
@@ -585,6 +586,7 @@ export type StrategyConstraints = {
     bans: readonly string[];
     unavailable?: readonly string[];
     owned?: ReadonlySet<string>;
+    playerPools?: readonly DraftPlayerPool[];
 };
 
 /** Compare with the actual draft, including the outgoing pick in a replacement. */
@@ -705,7 +707,7 @@ export function strategyOptions(
         own.length >= 5 ||
         reviewStrategy(own, enemy).issues.length
     )
-        return { singles: [], pairs: [], unassessed: [], evaluated: 0 };
+        return { singles: [], pairs: [], unassessed: [], evaluated: 0, supported: 0 };
     const blocked = new Set([
         ...constraints.bans,
         ...(constraints.unavailable ?? []),
@@ -723,7 +725,7 @@ export function strategyOptions(
         )
             continue;
         const resolved = resolveStrategyPicks([...own, candidate]);
-        if (!resolved.scenarios) continue;
+        if (!resolved.scenarios || !canAssignPlayerPicks([...own, candidate], constraints.playerPools ?? [])) continue;
         if (!resolved.picks.at(-1)?.capabilities.length) {
             // An explicit search must not hide a legal champion just because
             // our role knowledge is incomplete. Keep it out of ranked lists.
@@ -788,7 +790,8 @@ export function strategyOptions(
                         !additions.some((p) =>
                             p.name.toLowerCase().includes(query),
                         )) ||
-                    !roleScenarios([...own, ...additions]).length
+                    !roleScenarios([...own, ...additions]).length ||
+                    !canAssignPlayerPicks([...own, ...additions], constraints.playerPools ?? [])
                 )
                     continue;
                 pairs.push(
@@ -819,6 +822,7 @@ export function strategyOptions(
             )
             .slice(0, 6),
         evaluated: options.filter(matches).length,
+        supported: distinct.length,
     };
 }
 

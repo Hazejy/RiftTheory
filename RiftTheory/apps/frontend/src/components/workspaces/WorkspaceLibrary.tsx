@@ -1,30 +1,7 @@
 import { createMemo, createSignal, For, Show } from "solid-js";
 import { useI18n } from "../../utils/i18n";
 import { Icon, folder, trash, xMark } from "../icons/RiftIcons";
-
-type WorkspaceKind = "draft-prep" | "rift-planner";
-type StoredWorkspace<T> = {
-    id: string;
-    kind: WorkspaceKind;
-    name: string;
-    updatedAt: string;
-    data: T;
-};
-
-const STORAGE_KEY = "rifttheory.workspace-library.v1";
-
-function readLibrary<T>(): StoredWorkspace<T>[] {
-    try {
-        const value = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "[]");
-        return Array.isArray(value) ? value : [];
-    } catch {
-        return [];
-    }
-}
-
-function writeLibrary<T>(records: StoredWorkspace<T>[]) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
-}
+import { readLibrary, writeLibrary, type StoredWorkspace, type WorkspaceKind } from "./workspaceStorage";
 
 export default function WorkspaceLibrary<T>(props: {
     kind: WorkspaceKind;
@@ -36,6 +13,7 @@ export default function WorkspaceLibrary<T>(props: {
     const [records, setRecords] = createSignal(readLibrary<T>());
     const [name, setName] = createSignal("");
     const [activeId, setActiveId] = createSignal<string>();
+    const [saveError, setSaveError] = createSignal(false);
     const relevantRecords = createMemo(() =>
         records()
             .filter((record) => record.kind === props.kind)
@@ -43,8 +21,15 @@ export default function WorkspaceLibrary<T>(props: {
     );
 
     const commitRecords = (next: StoredWorkspace<T>[]) => {
-        setRecords(next);
-        writeLibrary(next);
+        try {
+            writeLibrary(next);
+            setRecords(next);
+            setSaveError(false);
+            return true;
+        } catch {
+            setSaveError(true);
+            return false;
+        }
     };
 
     const saveWorkspace = () => {
@@ -58,10 +43,10 @@ export default function WorkspaceLibrary<T>(props: {
             updatedAt: new Date().toISOString(),
             data: props.getSnapshot(),
         };
-        commitRecords([
+        if (!commitRecords([
             ...records().filter((record) => record.id !== id),
             nextRecord,
-        ]);
+        ])) return;
         setActiveId(id);
     };
 
@@ -78,7 +63,7 @@ export default function WorkspaceLibrary<T>(props: {
     };
 
     const removeWorkspace = (id: string) => {
-        commitRecords(records().filter((record) => record.id !== id));
+        if (!commitRecords(records().filter((record) => record.id !== id))) return;
         if (activeId() === id) newWorkspace();
     };
 
@@ -198,6 +183,9 @@ export default function WorkspaceLibrary<T>(props: {
                                         ? t("updateWorkspace")
                                         : t("saveNewWorkspace")}
                                 </button>
+                                <Show when={saveError()}>
+                                    <p role="alert" class="mt-2 text-sm text-red-400">Could not save this workspace locally.</p>
+                                </Show>
                                 <button
                                     type="button"
                                     class="mt-2 w-full rounded-lg border border-neutral-700 px-3 py-2 text-sm text-neutral-400 hover:text-white"

@@ -555,3 +555,977 @@ Die vollstaendige Frontend-Suite meldete danach 97 erfolgreiche Tests; der
 Windows-Installer wurde fuer Version 3.2.11 unter
 `RiftTheory/apps/frontend/src-tauri/target/release/bundle/nsis/RiftTheory_3.2.11_x64-setup.exe`
 erstellt.
+
+## Response Tree v1 (2026-09-27)
+
+`apps/frontend/src/utils/draftResponseTree.ts` enthält einen reinen, deterministischen
+Draftzustand mit Patch, Kontext, Rang, Region, expliziter First-Pick-Seite,
+Aktionscursor, Picks, Bans, Rollen, Pool, Ownership und serienbedingten
+Sperren. Ein Zustandsübergang verwirft falsche Reihenfolge, Dubletten,
+gesperrte, nicht verfügbare und rollenunmögliche Picks. Die Live-Snapshot-
+Sperren stammen weiter aus `strategyLiveDraft.ts` und `core/live-draft/series.ts`;
+Team Fearless, Global Fearless, Ironman und Side Swap sind dort getestet.
+
+Die Suche nutzt die bestehende `strategyOptions`-Evidenz als begrenzten
+Kandidaten- und Ban-Target-Screen. Sie verfolgt pro gewähltem Einzel- oder
+Doppelpick legale Aktionen bis zum nächsten abgeschlossenen eigenen
+Pick-Fenster; B3 und R3 laufen durch alle vier zweiten Bans. Für zwei
+Alternativen entstehen aus demselben Zustand Principal Variations. Die UI zeigt
+die Aktionsfolge, verbleibende Needs und Pläne, Ressourcen- und Damage-Read,
+Abdeckung, Such-ID, Tiefe, Knoten, abgeschnittene Shortlist-Äste und einen
+konservativen Dominanzentscheid. Bei fehlender Evidenz oder Trade-offs bleibt
+das Urteil offen. Der frühere Drei-Antwort-Vergleich wird in der
+Vergleichskarte durch diesen Pfad ersetzt; die bestehenden allgemeinen
+Antwort- und Ban-Szenarien bleiben erhalten.
+
+Geprüft: `bun test` im Frontend (114 Tests, 608 Assertions),
+gezielter Response-Tree-Test (4 Tests, 119 Assertions),
+`bun run typecheck`, `bunx eslint src` (0 Fehler, bestehende Warnung in
+`DraftPrepCalendar.tsx:42`), und Frontend-Produktionsbuild. Der Build meldet
+weiter die bekannte Warnung für einen großen JavaScript-Chunk. Desktopcode
+war nicht betroffen; ein neuer Tauri/NSIS-Build wurde nicht ausgeführt.
+Die lokale Produktionsvorschau startete, aber die Computer-Use-Umgebung meldete
+keine verfügbaren Browser oder Apps. Daher fehlt für diesen Stand ein
+interaktiver Smoke-Test auf B1/B3/R3/R5 und schmaler Breite.
+
+Grenzen: Die Ban-Ziele kommen aus einem einzelnen heuristischen Pick-Screen.
+Die Suche betrachtet nur eine kleine Pick-Beam und keinen vollständigen
+Draftbaum; der Knoten-Cap kann Linien als `unresolved` beenden. Rating-Index,
+Matchups und Comfort werden nicht zu einem kalibrierten Outcome-Wert
+vermischt. Pool-Comfort-Daten fehlen weiterhin; die Suche behauptet dazu
+nichts. Nächster Schritt mit größtem Produktwert: die Suche in einen Worker
+verlagern, Ban- und Pick-Branches anhand derselben mehrdimensionalen
+Evidenz verlässlich breiter screenen und die vier UI-Smoke-Slots interaktiv
+prüfen.
+
+## Optionale Spielerpools (2026-09-27)
+
+`packages/core/src/draft/player-pool.ts` modelliert Spieler, mögliche Rollen,
+explizit verfügbare Champions, gemeldeten Comfort, Quelle, Datum und
+Confidence. Eine fehlende Verfügbarkeitsliste bedeutet unbekannt und
+schränkt den Draft nicht ein. Eine eingetragene Liste begrenzt legale Picks
+für diesen Spieler hart. Flex-Picks prüfen weiterhin mögliche Rollen und
+benötigen verschiedene Spieler für verschiedene Picks.
+
+Im Strategy-Tab können Blue und Red ihre Solo-Queue-Spielerprofile optional
+eingeben. Namen werden gegen den aktiven Champion-Datensatz aufgelöst;
+unbekannte Namen werden gemeldet. Die Daten bleiben lokal gespeichert und
+werden beim Wechsel von Draft, Rolle, Pool oder Datensatz in der Vorschau
+neu berücksichtigt. `strategyOptions`, der Response Tree und der rückblickende
+Replacement-Screen beachten eingetragene Verfügbarkeit. Der Coach zeigt
+gemeldeten Comfort getrennt an, ohne daraus einen nicht validierten Bonus
+oder eine statistische Aussage zu machen. Live-Serien-Snapshots verwenden
+die lokalen Solo-Queue-Profile nicht, weil die Teamidentität nach Side Swap
+anders sein kann.
+
+Grenzen: Es gibt noch keinen Import verifizierter Profi-Roster oder
+Spielerhistorien und keine aus Spielen abgeleitete Comfort-Schätzung. Die
+Profile sind manuelle Selbstauskünfte. Der nächste produktive Schritt ist
+ein interaktiver UI-Smoke-Test der Pool-Eingabe und der vier kritischen
+Draft-Slots; danach die Suche in einen Worker auslagern.
+
+Verifikation dieses Schritts: Frontend `bun test` 116 Tests / 611 Assertions,
+Core `bun test` 11 Tests / 22 Assertions, Workspace-Typecheck und
+Frontend-Produktionsbuild erfolgreich. `bunx eslint src` hat null Fehler;
+der bestehende Hinweis in `DraftPrepCalendar.tsx:42` bleibt. Der Build meldet
+weiter den großen Haupt-Chunk. Ein interaktiver Browser ist in der aktuellen
+Computer-Use-Umgebung weiterhin nicht verfügbar.
+
+## Response Tree im Worker (2026-09-27)
+
+Die zwei Principal Variations werden nun in
+`apps/frontend/src/workers/draftResponseTree.worker.ts` berechnet. Der
+Strategy-Tab erstellt eine reproduzierbare Request-ID aus Draftzustand,
+Pool, Datensatz, Config und beiden Kandidaten. Bei Änderung wird der laufende
+Worker beendet; ein altes Ergebnis wird nicht mehr gerendert. Während der
+Suche erscheint ein Status, bei Worker-Fehler ein sichtbarer Fehlertext.
+Ein gezielter Test prüft Abbruch und Stale-Result-Filter.
+
+Verifikation: Frontend `bun test` 118 Tests / 618 Assertions, Workspace-
+Typecheck und Produktionsbuild erfolgreich. Vite erzeugte ein separates
+`draftResponseTree.worker`-Bundle. Nach dem finalen Lint-Fix meldete der
+gezielte ESLint-Lauf für die geänderten Worker-/Strategy-Dateien null
+Warnungen. Der projektweite Lint meldete zuvor den bestehenden Hinweis in
+`DraftPrepCalendar.tsx:42` und einen inzwischen behobenen Hinweis in
+`StrategyWorkspace.tsx`. Kein Desktopcode wurde in diesem Schritt geändert.
+Die Browser-/App-Inventur der Computer-Use-Umgebung war erneut leer. Die
+lokale Produktionsvorschau startete auf Port 3011, aber auch das Öffnen eines
+sichtbaren In-App-Browsers meldete `Browser is not available: iab`.
+Der interaktive UI-Smoke-Test bleibt deshalb offen.
+
+## Suchabdeckung und Abbruchgründe (2026-09-27)
+
+Die Search-Ausgabe trennt nun die Anzahl unterstützter Aktionsmöglichkeiten
+von den tatsächlich expandierten Aktionen. `pruned` zählt die ausgelassenen
+unterstützten Möglichkeiten über alle besuchten Knoten, einschließlich der
+von der bestehenden Kandidaten-Shortlist entfernten Champions. Ein Pfad
+speichert ausdrücklich `window_complete`, `draft_complete`, `node_cap` oder
+`no_supported_action`. Beim Knotenlimit oder ohne unterstützte Fortsetzung
+bleibt sein Urteil `unresolved`; die UI zeigt keine fertige Why-now-
+Begründung aus diesem Teilpfad. Gezielt getestet wurden beide Abbruchfälle,
+die Zählkonsistenz und weiterhin alle zehn Slots.
+
+Verifikation: Frontend `bun test` 119 Tests / 643 Assertions,
+Workspace-Typecheck, `bunx eslint src` (0 Fehler, nur bestehender Hinweis in
+`DraftPrepCalendar.tsx:42`) und Frontend-Produktionsbuild erfolgreich. Die
+bekannte Chunkgrößenwarnung bleibt. Desktopcode war nicht betroffen.
+
+## Entscheidungskarte und Deckvergleich (2026-09-27)
+
+Der Strategy-Tab startet die Worker-Suche für die führende unterstützte Wahl
+und eine Alternative bereits am aktuellen Slot. Die oberste Entscheidungskarte
+zeigt den konservativen Dominanzstatus, den gespeicherten Antwortpfad,
+Kit-Abdeckung und die Such-ID; Details bleiben in der Pick-Vorschau. Ein
+`unresolved`-Urteil wird nicht als Gewinnwahrscheinlichkeit dargestellt.
+
+`strategyDeckComparison.ts` liest für beide Seiten nur die bereits aufgelösten
+Rollenprofile und den vorhandenen Teamplan. Eine aufklappbare Gegenüberstellung
+zeigt dokumentierte Werkzeuge, Kernakteure, nicht belegten Anschluss an den
+Kernplan, Damage, Einkommen, Power-Kurven, Flex, nächste Need und
+Gegenantwort. Unbekannte Tools bleiben `Unconfirmed`; fehlende Tags gelten
+nicht als Abwesenheit. Farben und Quellen bleiben im angrenzenden Teamplan
+sichtbar. Konkrete gemeinsame Ultimate- oder Item-Fenster erfordern weiterhin
+Matchup- und Spielsituationsdaten und werden hier nicht erfunden.
+
+Beim Audit wurden zwei Legalitätsfälle geschlossen: Bans müssen jetzt auf
+Champions im aktiven Pool zielen; eine explizit leere Ownership-Menge erlaubt
+keinen Pick. Der Fingerprint berücksichtigt zusätzlich die tatsächlichen
+Kit-/Coaching-/Profilinhalte und eine abweichende Aktionssequenz, damit neue
+Evidenz bei gleicher Datensatz-ID ein altes Worker-Ergebnis invalidiert.
+
+Verifikation: Frontend `bun test` 121 Tests / 657 Assertions, Workspace-
+Typecheck, `bunx eslint src` (0 Fehler, nur bestehende Solid-Warnung in
+`DraftPrepCalendar.tsx:42`) und Frontend-Produktionsbuild erfolgreich. Der
+Build erzeugt den separaten Worker und meldet weiterhin den großen Haupt-
+Chunk. Kein Desktopcode wurde für diesen Schritt geändert. Der interaktive
+UI-Smoke-Test für B1/B3/R3/R5 und ein schmales Fenster bleibt offen, weil die
+Computer-Use-Umgebung keine Browser- oder App-Oberfläche anbietet.
+
+Nächster Produktwert: die Ban- und Pick-Beam mit einer expliziten
+mehrdimensionalen Branch-Auswahl erweitern. Der jetzige adversariale Pfad
+screened nur eine kleine heuristische Auswahl; insbesondere ein nicht
+gescreenter Ban kann die angezeigte Fortsetzung ändern.
+
+## Branch-Auswahl mit offengelegten Trade-offs (2026-09-27)
+
+Die Response-Suche wählt innerhalb ihrer Pick-/Ban-Beam nun per
+mehrdimensionaler Dominanz über Needs, Pläne, Flex, Kit-Abdeckung, Damage und
+Ressourcen. Wenn keine untersuchte Fortsetzung die anderen eindeutig
+dominiert, verwendet sie einen stabilen Tie-Break nur für den angezeigten
+Pfad. Die abweichenden Dimensionen werden als `branchTradeoffs` gespeichert,
+der Pfad bleibt `unresolved`, und der Strategy-Tab unterdrückt daraus eine
+Why-now-Behauptung. Bei lückenhafter Evidenz wird ebenfalls keine Dominanz
+abgeleitet. Ein gezielter Test prüft die Richtung der adversarialen Auswahl,
+echte Trade-offs und fehlende Evidenz.
+
+Ein Test mit `banBeam: 2` und `maxNodes: 256` geht reproduzierbar und legal
+durch die zweite Banphase. Die Produktionskonfiguration bleibt vorerst bei
+`banBeam: 1`, bis Laufzeit und Abdeckung auf dem echten Datensatz gemessen
+sind. Die UI beschreibt die gezeigte Gegnerlinie deshalb als gescreenten
+adversarialen Ast und kennzeichnet einen offenen Branch-Vergleich.
+
+Verifikation nach diesem Schritt: Frontend `bun test` 123 Tests /
+668 Assertions, Workspace-Typecheck, `bunx eslint src` (0 Fehler, weiterhin
+eine bestehende Warnung in `DraftPrepCalendar.tsx:42`) und Frontend-Build
+erfolgreich. Der neue gezielte Suchtest wurde nach der abschließenden
+Typkorrektur erneut ausgeführt (8 Tests / 162 Assertions); der breitere
+Ban-Beam besucht nachweislich mehr Knoten als der schmale Lauf.
+
+Die oberste Entscheidungskarte zerlegt den gespeicherten Suchpfad nun in
+Gegneraktion, eigene Fortsetzung und verbleibende Needs/Ressourcen; die
+verglichene Alternative steht direkt daneben. Bei B3 enthält die Antwort
+sowohl Picks als auch zwei gegnerische Bans, was der Pfadtest ausdrücklich
+prüft. Nach dieser UI-Ergänzung: Frontend `bun test` 123 Tests /
+672 Assertions, Typecheck, gezielter ESLint und Produktionsbuild erfolgreich.
+
+## Breiterer Gegner-Ban-Screen und Benchmark (2026-09-27)
+
+`apps/frontend/scripts/benchmark-response-tree.ts` misst alle zehn Slots
+reproduzierbar mit den 172 Champions, für die der ausgelieferte
+Wissens-Snapshot nutzbare Rollenfähigkeiten enthält. Der Benchmark erzeugt
+synthetische, legale Vor-Picks; er misst **nicht** den live geladenen
+Rang-Datensatz oder reale Draft-Häufigkeiten. Beim Lauf am 27.09.2026 lag
+die breitere B3-Linie mit `pickBeam: 2`, zwei Gegner-Ban-Zielen und
+`maxNodes: 256` bei 139 Knoten und etwa 0,4 Sekunden pro Kandidat. R3 lag
+bei 18 Knoten und etwa 0,07 Sekunden. Keine der zehn gemessenen Linien
+erreichte den Knoten-Cap. Diese Einzelmessung ist keine Laufzeitgarantie.
+Mit `--ranked` lädt dasselbe Script den validierten Emerald+-Current-Patch-
+Datensatz der App. Der Lauf am 27.09.2026 verwendete Version `16.19.1`
+mit 173 Champions im aktiven Rollenpool; die breite B3-Linie brauchte
+139 Knoten und etwa 0,33 bis 0,45 Sekunden, R3 18 Knoten und etwa
+0,06 bis 0,08 Sekunden. Auch hier erreichte keiner der zehn Slots den
+Knoten-Cap. Das sind synthetische Vor-Drafts auf echten Rollenstichproben,
+kein repräsentativer Lasttest über Match-Häufigkeiten oder Hardware.
+
+Die Produktionskonfiguration nutzt diese Begrenzung jetzt. Eigene Bans
+bleiben bei einem unterstützten Ziel, gegnerische Bans können zwei Ziele
+verzweigen. Diese asymmetrische Breite verhindert in der gemessenen B3-Linie
+den vorherigen Abbruch bei 256 Knoten. Die UI nennt die getrennten Breiten
+und zeigt weiterhin Knoten, ausgelassene Möglichkeiten und offene
+Trade-offs. Ein Legalitätstest spielt die breitere Suche für alle zehn Slots
+mit Blue und Red als First Pick nach; ein Doppelpick-Test prüft, dass bereits
+festgelegte Picks nicht als späterer Fallback erscheinen.
+
+Der Fingerprint unterscheidet jetzt auch `owned: undefined` (Ownership
+unbekannt) von einer explizit leeren Ownership-Menge (kein legaler Pick).
+Computer Use meldete bei der erneuten Inventur wieder `apps: []` und
+`browsers: []`. Ein interaktiver UI-Smoke-Test für B1/B3/R3/R5 und ein
+schmales Fenster ist deshalb weiterhin nicht als bestanden dokumentiert.
+Die lokale Vite-Produktionsvorschau startete auf Port 3011; sowohl Chrome
+als auch der sichtbare In-App-Browser meldeten beim Öffnen ausdrücklich
+`Browser is not available`.
+Ein versuchter Solid-SSR-Test wurde entfernt, weil Bun die TSX-Datei in
+diesem Testsetup mit einem React-JSX-Transform lädt; er wäre kein valider
+UI-Nachweis gewesen.
+
+Verifikation: Frontend `bun test` 125 Tests / 830 Assertions, Workspace-
+Typecheck, `bunx eslint src scripts/benchmark-response-tree.ts` (0 Fehler,
+eine bestehende Warnung in `DraftPrepCalendar.tsx:42`) und
+Frontend-Produktionsbuild erfolgreich. Der Build meldet weiterhin einen
+großen Haupt-Chunk. Desktopcode wurde in diesem Schritt nicht geändert.
+Nächster Schritt: echte UI-Smokes auf einer verfügbaren Oberfläche und
+danach Laufzeitprofile über mehrere häufige Draftzustände und Geräte,
+bevor die Suche noch weiter verbreitert wird.
+
+## Erklärungstreue und leere Ownership (2026-09-27)
+
+Der Response Tree behandelt eine ausdrücklich leere Ownership-Menge nun
+bereits am Kandidaten-Screen als null unterstützte Möglichkeiten. Die
+Zustandsübergänge hatten solche Picks schon blockiert; die angezeigte
+Abdeckung meldet sie jetzt ebenfalls nicht mehr als mögliche Antwort.
+Fehlende Ownership-Daten bleiben als `undefined` provider-neutral.
+
+Die zwei Principal Variations erzeugen jetzt strukturierte
+`ComparisonReason`-Einträge. Die Pick-Vorschau zeigt nur Dimensionen, die
+sich in den gespeicherten Pfaden tatsächlich unterscheiden: eigene und
+gegnerische Needs/Pläne, Rollenbelegungen, Kit-Abdeckung, Damage,
+Ressourcen, Evidenzunsicherheit und Suchstatus. Lange Vergleiche öffnen
+weitere Unterschiede progressiv. Ein Test prüft, dass die Reason-Werte
+direkt den Bewertungsvektoren entsprechen und auch gegnerische
+Unterschiede nicht unterschlagen werden. Die Texte geben weiterhin keine
+kalibrierte Win Probability aus.
+
+Verifikation: Frontend `bun test` 126 Tests / 838 Assertions,
+Workspace-Typecheck, `bunx eslint src scripts/benchmark-response-tree.ts`
+(0 Fehler, bestehende Warnung in `DraftPrepCalendar.tsx:42`) und
+Frontend-Produktionsbuild erfolgreich. Der große Haupt-Chunk bleibt eine
+Build-Warnung; Desktopcode war nicht betroffen. Interaktive UI-Smokes
+bleiben wegen der nicht verfügbaren Browser-/App-Oberfläche offen.
+
+## Live-Banphase als Zustandsgrenze (2026-09-27)
+
+`strategyResponseState.ts` bildet den sichtbaren Pick-Slot nun außerhalb der
+UI auf einen reinen `DraftState` ab. Im Live-Snapshot ist `ally` immer die
+aktuelle Blue-Seite und `opponent` Red; Teamnamen und Serien-Sperren werden
+bei Side Swap durch `captureStrategyGame` den aktuellen Seiten zugewiesen.
+Ein Test prüft die Zuordnung der Sperren nach Side Swap sowie Ownership und
+Spielerpools im normalen Draft.
+
+Während `pendingBans` wahr ist, nennt der Live-Snapshot bereits den Pick
+nach der zweiten Banphase. Eine Suche ab diesem Pick würde vier noch offene
+Bans überspringen. Der Adapter gibt deshalb bis zum Abschluss der Bans
+keinen Response-Tree-Request frei; die UI zeigt dafür einen Status und
+kennzeichnet die weiter sichtbaren Pick-Optionen als vorläufig. Nach
+aktualisiertem Live-Snapshot startet der Tree aus dem dann gültigen Pool.
+Der Test hält diesen Abbruch explizit fest. Ein vollständiger Banphase-
+Startbaum aus dem aktuellen Ban-Slot bleibt ein weiterer Suchschritt.
+
+Verifikation: Frontend `bun test` 129 Tests / 848 Assertions, Workspace-
+Typecheck, `bunx eslint src scripts/benchmark-response-tree.ts` (0 Fehler,
+eine bestehende Warnung in `DraftPrepCalendar.tsx:42`) und Frontend-
+Produktionsbuild erfolgreich. Keine Desktopdatei wurde in diesem Schritt
+geändert. Der interaktive UI-Smoke-Test bleibt mangels verfügbarer Browser-
+oder App-Oberfläche offen.
+
+## Live-Ban-Szenarien bis zum nächsten Pick (2026-09-27)
+
+Der Live-Snapshot speichert jetzt die tatsächlich nächste Draftaktion als
+`pendingAction`. `pendingBanDraftState` prüft, ob diese Aktion ein Ban ist
+und ob der nächste Pick zum sichtbaren Slot passt. Ältere Snapshots ohne
+diese Information bleiben lesbar, zeigen aber keine erfundene Ban-Folge.
+
+`searchPendingBans` geht vom offenen Ban-Slot legal und deterministisch
+durch die restlichen Bans bis zum nächsten Pick. Die Suche screent bis zu
+zwei Gegner-Ban-Ziele und ein eigenes Ban-Ziel je Schritt, mit einem Cap
+von 64 Knoten. Pro Ban-Pfad zeigt sie zwei führende unterstützte
+Pick-Optionen aus dem dann verbleibenden Pool, die Zahl weiterer
+unterstützter Optionen, ausgelassene Ban-Ziele, Such-ID und Abbruchstatus.
+Es sind Szenarien, keine Vorhersagen der Gegneraktion oder Beweise für
+den besten Pick. Der normale Response Tree startet weiterhin erst nach
+den tatsächlich abgeschlossenen Bans.
+
+Gezielte Tests spielen alle vier zweiten Bans nach und prüfen legale
+Folge-Picks, Serien-Sperren, Knotenlimit und den nächsten Slot. Auf dem
+aktiven Emerald+-Datensatz `16.19.1` benötigte der Ban-Screen im
+synthetischen R4-Vorzustand 9 Knoten und etwa 45–47 ms; er ergab vier
+bedingte Pfade ohne Abbruch. Der erweiterte Benchmark mit 30 synthetischen
+Vor-Drafts (drei Varianten je Slot) meldete für die Produktkonfiguration
+`pickBeam 2 / opponentBanBeam 2 / maxNodes 256` eine P95-Laufzeit von
+273 ms, maximal 518 ms und keinen Knoten-Cap. Diese Messung stammt von
+diesem Gerät und ist keine Garantie für andere Geräte oder häufige reale
+Drafts.
+
+Nächster Abnahmeschritt bleibt der interaktive UI-Smoke-Test für
+B1/B3/R3/R5, die laufende zweite Banphase und ein schmales Fenster auf
+einer verfügbaren Browser-/App-Oberfläche. Ein unabhängiger Future-Patch-
+Outcome-Test fehlt weiterhin; daher keine kalibrierte Win Probability.
+
+Abschlussprüfung dieses Schritts: Frontend `bun test` 130 Tests /
+907 Assertions, `bun run typecheck` für alle vier Workspace-Pakete,
+`bunx eslint src scripts/benchmark-response-tree.ts` ohne Fehler
+(eine bereits bestehende Solid-Warnung in `DraftPrepCalendar.tsx:42`),
+Frontend-Produktionsbuild und `git diff --check` erfolgreich. Der Build
+meldet weiterhin den großen Haupt-Chunk. Desktopcode wurde in diesem
+Schritt nicht geändert; ein neuer Tauri/NSIS-Build war deshalb nicht nötig.
+
+## Ban-Szenarien im Worker (2026-09-27)
+
+Die bedingte Ban-Suche läuft jetzt ebenfalls im bestehenden Response-Worker.
+Ein eigener Request-Fingerprint enthält Draftzustand, Pool, Datensatz und
+Suchkonfiguration. Beim Wechsel des Zustands wird der laufende Worker
+beendet; die UI rendert nur Ergebnisse mit der aktuellen ID und zeigt
+während der Berechnung einen Status. Ein Test prüft Abbruch und veraltete
+Ergebnisse nach einem Datensatzwechsel.
+
+Geprüft: Frontend `bun test` 131 Tests / 913 Assertions, Typecheck aller
+vier Workspace-Pakete, `bunx eslint src scripts/benchmark-response-tree.ts`
+mit null Fehlern (bestehende Solid-Warnung in `DraftPrepCalendar.tsx:42`)
+und Frontend-Produktionsbuild. Der Build enthält das Worker-Bundle und
+meldet weiterhin den großen Haupt-Chunk. Desktopcode wurde nicht geändert.
+Die Computer-Use-Inventur meldete erneut `apps: []`, `browsers: []`;
+ein interaktiver UI-Smoke-Test kann in dieser Umgebung noch nicht als
+bestanden gelten.
+
+## Entscheidung zuerst und Desktop-Abnahme (2026-09-27)
+
+Die aktuelle Entscheidungskarte und die bedingten Ban-Szenarien stehen im
+Strategy-Tab nun direkt nach den Draft-Slots und vor Teamplan,
+Deckvergleich und Detailansicht. Die DOM-Reihenfolge entspricht damit
+der gewünschten Lesereihenfolge. Die vorhandene Suche und ihre
+Evidenzgrenzen wurden dabei nicht verändert.
+
+Nach dieser Änderung: Frontend `bun test` 131 Tests / 913 Assertions,
+Typecheck aller vier Pakete, `bunx eslint src scripts/benchmark-response-tree.ts`
+ohne Fehler (die bestehende Solid-Warnung in `DraftPrepCalendar.tsx:42`)
+und `git diff --check` erfolgreich. Der finale Tauri/NSIS-Build erzeugte
+`apps/frontend/src-tauri/target/release/bundle/nsis/RiftTheory_3.2.11_x64-setup.exe`.
+Die CLI meldete dabei `__TAURI_BUNDLE_TYPE variable not found in binary`;
+laut Meldung könnte das den Updater dieses Pakets betreffen. Der große
+Frontend-Chunk bleibt eine separate Build-Warnung.
+
+Der interaktive Smoke-Test für B1/B3/R3/R5, laufende Bans und ein schmales
+Fenster ist weiterhin offen. Die lokale Vite-Vorschau lief auf Port 3011,
+aber Computer Use meldete `apps: []`, `browsers: []`; sowohl der sichtbare
+In-App-Browser als auch Chrome antworteten mit `Browser is not available`.
+Die Vorschau wurde danach gestoppt. Eine Sicht- oder Tastaturprüfung wird
+daher nicht als bestanden behauptet.
+
+Nach erneuter Prüfung: `cargo test --locked` im Tauri-Projekt bestand mit
+zwei Tests für die LCU-Credential-Erkennung. Die lokale Kombination ist
+`tauri-cli 2.11.4`, Rust-`tauri 2.9.5` und `tauri-utils 2.8.1`.
+Ein Versionswechsel wurde ohne belegten Fix der Bundle-Typ-Warnung nicht
+vorgenommen. Die UI-Inventur blieb leer; für den abschließenden
+interaktiven Smoke-Test wird eine erreichbare Browser- oder App-Oberfläche
+benötigt.
+
+## Interaktiver B1-Smoke im Projekt-Build (2026-09-27)
+
+Über den Windows-App-Zugriff wurde der frisch gebaute
+`src-tauri/target/release/RiftTheory.exe` als eigenes Fenster gestartet;
+der Prozesspfad wurde von den zwei installierten AppData-Fenstern
+unterschieden. Im Strategy-Tab war B1 im leeren Draft sichtbar:
+Entscheidungskarte direkt nach den Slots, Ashe als gescreente Wahl,
+Jhin als Alternative, Blitzcrank/Anivia als Gegnerantwort sowie
+Aurelion Sol/Alistar als eigene Fortsetzung. Die vollständige
+gescreente B1→R1→R2→B2→B3-Folge wurde angezeigt. Das Urteil blieb
+ausdrücklich `unresolved`, ohne Win-Probability-Behauptung.
+
+Ein Wechsel zu B3 zeigte korrekt den retrospektiven Zustand ohne
+chronologische Empfehlung, da die vorherigen Picks noch leer waren.
+Für einen echten B3/R3/R5-Smoke müssen die Vor-Picks im Testdraft
+gesetzt werden. Während dieser Vorbereitung wurde das Projektfenster
+minimiert; Windows Computer Use meldete wiederholt gleichzeitige
+Nutzereingaben und verweigerte die weitere Aktivierung. Die übrigen
+Slots und das schmale Fenster sind daher noch nicht interaktiv
+abgenommen. Der Nutzer wurde gebeten, genau das Projekt-Build-Fenster
+im Vordergrund bereitzustellen.
+
+## Erneuter Abnahmeversuch (2026-09-28)
+
+Der Windows-App-Zugriff meldet trotz erneutem Verbindungsversuch
+`Computer Use native pipe is unavailable`; die zweite UI-Inventur zeigt
+`apps: []`, `browsers: []`. Das geöffnete Projektfenster ist für die
+Automatisierung damit derzeit nicht erreichbar. B3, R3, R5 und die
+schmale Fensterbreite bleiben interaktiv ungeprüft. Eine Sichtprüfung
+wird nicht aus Code- oder Testresultaten abgeleitet.
+
+Ohne Quellcodeänderung erneut geprüft: Frontend `bun test` mit 131
+bestandenen Tests und 913 Assertions, Typecheck aller vier Pakete sowie
+`git diff --check` erfolgreich. Die CSS-Durchsicht ergab keinen
+hinreichend belegten Darstellungsfehler für eine Änderung ohne UI-Befund.
+
+## Such-ID bei geänderter Pick-Evidenz (2026-09-28)
+
+Der Response-Fingerprint enthält jetzt Namen und dieselben relevanten
+Evidenzfelder für bereits gesetzte Picks wie für den Kandidatenpool.
+Zuvor konnten sich Namen oder Evidenz eines gesetzten Picks ändern,
+ohne die Such-ID zu ändern. Der Worker-Client hätte dadurch ein altes
+Ergebnis weiterhin als aktuell ansehen können. Ein Regressionstest
+prüft beide Fälle und schlug vor der Korrektur fehl.
+
+Geprüft: Frontend `bun test` 131 Tests / 915 Assertions, Typecheck aller
+vier Pakete, `bunx eslint src scripts/benchmark-response-tree.ts` mit
+null Fehlern (bestehende Solid-Warnung in `DraftPrepCalendar.tsx:42`),
+Frontend-Produktionsbuild und `git diff --check` erfolgreich. Der große
+Haupt-Chunk bleibt eine Build-Warnung. Kein Desktopcode wurde geändert.
+Der interaktive Smoke-Test für B3/R3/R5 und schmales Fenster bleibt wegen
+der nicht erreichbaren Computer-Use-Verbindung offen.
+
+## Abnahmeversuch am 29. September 2026
+
+Der vorhandene Arbeitsbaum wurde auf dem aktuellen Stand belassen. Der native
+Computer-Use-Zugriff scheiterte bei `sky.list_apps()` zweimal mit
+`Computer Use native pipe is unavailable: failed to connect native pipe:
+Das System kann die angegebene Datei nicht finden. (os error 2)`.
+Die zweite Computer-Use-Oberfläche meldete `apps: []`, `browsers: []`;
+direktes Öffnen der lokalen Vorschau in `iab` und `chrome` endete jeweils
+mit `Browser is not available`. Die Produktionsvorschau lieferte unter
+`http://127.0.0.1:3011/` HTTP 200, war aber nicht interaktiv erreichbar.
+Deshalb sind B3, R3, R5 mit vollständigen Vor-Picks, die laufende zweite
+Banphase, das schmale Fenster, Tastaturfokus und aufklappbare Details in der
+UI weiterhin **nicht abgenommen**. Es wurde kein UI-Erfolg aus reinen
+Code- oder Logiktests abgeleitet und kein UI-Befund ohne Beobachtung repariert.
+
+Die vorhandenen Regressionstests prüfen alle zehn legalen Zustandsfolgen,
+Doppelpick-Fenster, zweite Bans, Side Swap, Ownership, Player Pools und das
+Verwerfen veralteter Worker-Ergebnisse. Vollständig neu ausgeführt:
+`bun test` im Frontend (131 Tests, 915 Assertions),
+`bunx eslint src scripts/benchmark-response-tree.ts` (0 Fehler),
+`bun run typecheck` für vier Pakete sowie zusätzlich
+`bunx turbo typecheck --force` (vier Pakete ohne Cache),
+`bun run --filter @rifttheory/frontend build` und `git diff --check`.
+ESLint meldet weiterhin nur die bestehende Solid-Warnung in
+`DraftPrepCalendar.tsx:42`; Vite meldet weiterhin den großen Haupt-Chunk
+(1.013,47 kB / 329,39 kB gzip). Die erwarteten 503-Warnungen in den
+Dataset-Fallback-Tests stammen aus simulierten Fehlerantworten. Desktopcode
+wurde bei diesem Abnahmeversuch nicht geändert; ein neuer Tauri/NSIS-Build
+war nicht erforderlich. Der nächste zwingende Schritt ist, die
+Computer-Use-Verbindung beziehungsweise eine steuerbare Browser-Oberfläche
+für die ausstehende interaktive Abnahme bereitzustellen.
+
+## Interaktive Abnahme über lokale Produktionsvorschau (2026-09-29)
+
+Der zuvor genannte UI-Blocker wurde für die Browser-Abnahme umgangen: Ein
+isolierter Headless-Chrome lief außerhalb der Sandbox gegen die lokale
+Produktionsvorschau auf Port 3011. Die native Computer-Use-Pipe blieb
+unerreichbar. Die folgenden Beobachtungen stammen aus echten DOM-Aktionen
+und einem Screenshot des gerenderten Browsers, nicht aus Logiktests allein.
+
+- Der Hauptdraft wurde in tatsächlicher Reihenfolge über die Draft-Tabelle
+  gesetzt: B1 Ashe (Bot), R1 Vi (Jungle), R2 Janna (Support), B2 Poppy (Top),
+  B3 Anivia (Mid), R3 Ahri (Mid), R4 Aphelios (Bot), B4 Ivern (Jungle),
+  B5 Bard (Support). B3 mit vier Vor-Picks zeigte eine gescreente Folge
+  B3 → R3 → vier zweite Bans → R4 → B4/B5. R3 mit fünf Vor-Picks zeigte
+  R3 → vier zweite Bans → R4. R5 mit neun Vor-Picks zeigte nur den finalen
+  R5-Pick und keine erfundene spätere Antwort. Alle drei Entscheidungen
+  behielten das ungelöste, nicht kalibrierte Urteil bei.
+- Eine lokale Live-Serie wurde durch sechs erste Bans und sechs Picks bis
+  zur offenen zweiten Banphase gespielt. `Analyze game` zeigte vier
+  bedingte Ban-Pfade mit legalen R4-Optionen, aber keine normale
+  Entscheidungskarte. Danach bannte Red Alistar und Blitzcrank; Blue
+  bannte Aatrox und Ambessa.
+  Ein neuer Snapshot zeigte keine Ban-Szenarien mehr und startete den
+  normalen R4-Response-Tree mit R4 Aphelios → B4 Karma → B5 Akshan →
+  R5 Camille. Mit nur einem wieder geöffneten Ban blieb die normale
+  Entscheidung erneut ausgeblendet.
+- Bei 430 Pixeln betrug die Dokumentbreite 430 Pixel sowohl für R5 als
+  auch für die laufende Banphase. Die Entscheidung und der Rückweg in
+  den Live Draft blieben bedienbar. Ein visueller Screenshot der R5-Karte
+  bestätigte lesbaren Text und sichtbare Aktion. Die Vorschau erhielt
+  beim Öffnen Fokus; nach dem Schließen kehrte der Fokus zum Auslöser
+  zurück. Die Suchmethoden-Details und Banmethoden-Details ließen sich
+  mit Enter öffnen und zeigten einen sichtbaren Fokusrahmen.
+- Im zweiten Spiel tauschten die Teamseiten automatisch. Ein manueller
+  `Swap sides` im noch leeren zweiten Spiel kehrte sie erneut um; beide
+  `Analyze game`-Snapshots nannten die jeweils richtigen Teams auf Blue
+  und Red. Ein manueller Red-Top-Spielerpool mit nur Camille senkte die
+  R5-Shortlist im Hauptdraft von 54 auf eine legale Option; die alte
+  Aatrox-Entscheidung verschwand und die Karte zeigte Camille ohne
+  vorgetäuschte zweite Wahl. Ownership ohne LCU-Verbindung wurde nur in
+  den bestehenden Logiktests geprüft, nicht interaktiv.
+
+Bei dieser Abnahme trat kein reproduzierbarer UI-Fehler auf; deshalb wurde
+kein Produktcode verändert und kein neuer Regressionstest erfunden. Der
+isolierte Browser prüfte die Produktions-Weboberfläche; die native
+Tauri-WebView und der NSIS-Installer wurden anschließend getrennt geprüft.
+Die strategischen
+Evidenzgrenzen und Winrates blieben unverändert.
+
+Abschlussgates nach der UI-Abnahme: Frontend `bun test` erneut 131 Tests /
+915 Assertions; `bunx eslint src scripts/benchmark-response-tree.ts` mit
+0 Fehlern und dem bestehenden Hinweis in `DraftPrepCalendar.tsx:42`;
+`bun run typecheck` für vier Pakete erfolgreich (Turbo-Cache, zuvor in
+dieser Sitzung zusätzlich mit `bunx turbo typecheck --force` ohne Cache
+bestätigt); Frontend-Produktionsbuild erfolgreich. Der Haupt-Chunk bleibt
+bei 1.013,47 kB / 329,39 kB gzip über Vites Warnschwelle. Der aktuelle
+Tauri/NSIS-Build erzeugte lokal
+`RiftTheory/apps/frontend/src-tauri/target/release/bundle/nsis/RiftTheory_3.2.11_x64-setup.exe`.
+Die bekannte Tauri-Warnung zur fehlenden `__TAURI_BUNDLE_TYPE`-Markierung
+bleibt; ein Updater-Lauf dieses Installers wurde nicht geprüft.
+`cargo test --locked` bestand mit zwei Rust-Tests. Zu diesem Zeitpunkt war
+der Installer noch nicht installiert; er wurde nicht veröffentlicht.
+`git diff --check` wurde nach
+dieser Dokumentation abschließend geprüft.
+
+## Nativer Projekt-Build und Installer-Prüfung (2026-09-29)
+
+Die Computer-Use-Verbindung war später wieder verfügbar. Der zunächst über
+die App-Inventur gestartete Prozess war die bereits installierte App unter
+`AppData/Local/RiftTheory`; er wurde ausdrücklich nicht als Projekt-Build
+gezählt. Danach wurde die frisch gebaute
+`apps/frontend/src-tauri/target/release/RiftTheory.exe` direkt gestartet und
+anhand des von Windows zurückgegebenen Prozess- und Fensterpfads eindeutig
+ausgewählt. Nach dem Laden zeigte ihre native WebView den Strategy-Tab,
+die B1-Entscheidung, den gescreenten B1 → R1 → R2 → B2 → B3-Pfad und die
+Vergleichsvorschau für Ashe. Die Vorschau ließ sich öffnen und schließen;
+das Urteil blieb ungelöst und ohne Wahrscheinlichkeitsbehauptung.
+
+Der Versuch, zusätzlich das native Fenster schmal zu ziehen, wurde wegen
+einer gleichzeitig vor dem Projektfenster erscheinenden anderen Anwendung
+abgebrochen. Die schmale Ansicht, Fokus und aufklappbare Details sind in
+der lokalen Produktions-Weboberfläche wie oben beschrieben geprüft; diese
+Teilprüfungen werden nicht als native WebView-Tests umetikettiert. Beide
+von diesem Test gestarteten RiftTheory-Prozesse wurden danach beendet.
+
+Der NSIS-Installer wurde erfolgreich gebaut und liegt lokal unter
+`apps/frontend/src-tauri/target/release/bundle/nsis/RiftTheory_3.2.11_x64-setup.exe`
+(5.858.409 Bytes, SHA-256
+`EE5FEA58328C1EEEBBCD20E53D28132C9C2304369071023EED7742AED6EA161E`).
+Er ist nicht digital signiert. Die bestehende Installation unter AppData
+wurde anschließend mit diesem lokalen Installer still aktualisiert:
+Installationsprozess Exitcode 0. Die installierte
+`AppData/Local/RiftTheory/RiftTheory.exe` ist 17.818.624 Bytes groß und hat
+denselben SHA-256-Hash wie die frisch gebaute Projekt-EXE:
+`3F1A08522007932EA36CA9FEF3F6DC4C6FFDFFB8C2095EE518EFECC98CE003DB`.
+
+## Retrospektiver Pilot mit lokalen Matches (2026-09-29)
+
+Die lokale Riot-Match-V5-Datei `data/runtime/soloq/euw1-DIAMOND-I.jsonl`
+liefert echte Endaufstellungen und Rollen, aber keine historische Pick-Reihenfolge
+oder zweite Ban-Reihenfolge. Die folgenden B1–R5-Eingaben sind deshalb
+**illustrative, chronologisch legale Rekonstruktionen der aufgezeichneten
+Rollen**, keine Replays der tatsächlichen Draft-Entscheidungen. Sie prüfen
+Darstellung, Bedienung und Grenzen der Ausgaben. Ein Matchausgang belegt keine
+Empfehlungsqualität.
+
+| Match | Aufgezeichnetes Ergebnis | Vollständiger Vergleich der App | R5-Fenster vor dem letzten Pick |
+| --- | --- | --- | --- |
+| `EUW1_7992567789` | Red gewann | Ratingindex Red 55,6 / Blue 44,4 | Alistar · support vs Blitzcrank · support; keine spätere Gegneraktion |
+| `EUW1_7980186298` | Red gewann | Ratingindex Blue 52,4 / Red 47,6 | Brand · support vs Camille · support; Kitabdeckung 4/5 |
+| `EUW1_7991577772` | Blue gewann | Ratingindex Blue 53,2 / Red 46,8 | Alistar · support vs Blitzcrank · support; struktureller Vorsprung nur in den geprüften Zweigen |
+
+Der erste Fall wurde mit allen zehn Picks und zugewiesenen Rollen in der
+nativen Projekt-EXE durchgespielt. Die beiden weiteren Fälle wurden mit echten
+DOM-Aktionen in der lokalen Produktionsvorschau durchgespielt. Die App zeigt
+den Ratingindex ausdrücklich als unkalibriert, ohne Anpassung an Spielerstärke.
+Die drei Einzelfälle sind keine Kalibrierungs- oder Outcome-Studie. Historische
+Gegnerreaktionen, tatsächliche Bans und Lock-in-Zeitpunkte bleiben unbekannt.
+Der Strategy-Bestand wurde weder hinsichtlich Matchups noch Winrates geändert.
+
+Der Pilot fand zwei Darstellungsfehler. Im finalen R5-Fenster stand trotz
+`draft_complete` noch „Reached the next decision window“. Ein zuerst
+fehlschlagender Regressionstest deckt nun den Abschlussstatus ab; die UI zeigt
+„Draft complete“. Ein Flex-Vergleich nannte nur „Camille“, obwohl die für R5
+gewählte Rolle Support war. Der aktuelle Datensatz führt Camille auf Support
+als etablierte Rolle mit 19.399 Spielen und 28,7 % Anteil; der Vergleich war
+legal, aber unklar beschriftet. Ein zweiter zuerst fehlschlagender Test sichert
+die Rollenangabe; die UI zeigt „Compared with: Camille · support“.
+
+Beide Korrekturen wurden im neu gebauten Produktionsbundle erneut interaktiv
+geprüft. Bei 430 px Viewportbreite betrug `documentElement.scrollWidth` 430 px;
+die R5-Karte und „Inspect this line“ blieben erreichbar, die Vorschau öffnete
+sich. Der native Schmalfenster-Test bleibt auf dieser Maschine offen: Eine
+gleichzeitig aktive Vollbildanwendung überlagerte die Desktop-App und die
+Computer-Use-Eingabe meldete konkurrierende Nutzereingabe. Der Browser-Test
+wird nicht als native Prüfung ausgegeben.
+
+Finale Prüfungen nach beiden Korrekturen: Frontend `bun test` 133 Tests / 919
+Assertions; `bunx eslint src scripts/benchmark-response-tree.ts` 0 Fehler und
+der bestehende `solid/reactivity`-Hinweis in `DraftPrepCalendar.tsx:42`;
+`bun run typecheck` 4/4 Pakete erfolgreich (Frontend neu berechnet, drei
+unveränderte Pakete aus Turbo-Cache); Frontend-Produktionsbuild erfolgreich.
+Der Haupt-Chunk beträgt 1.013,55 kB / 329,45 kB gzip und überschreitet weiter
+Vites 500-kB-Warnschwelle. `bunx tauri build --bundles nsis` erfolgreich mit
+der bestehenden `__TAURI_BUNDLE_TYPE`-Warnung; `cargo test --locked` 2/2.
+Der finale lokale Installer
+`apps/frontend/src-tauri/target/release/bundle/nsis/RiftTheory_3.2.11_x64-setup.exe`
+ist 5.855.473 Bytes groß und hat SHA-256
+`9DABC8C4864DF21D730F655C9A61D9AABAFD06F385D5CCC6C97817496923B907`.
+Das stille Update der bestehenden App beendete sich mit Exitcode 0; die
+installierte EXE und Projekt-EXE haben beide SHA-256
+`4E62E6016AB15BBA580931C7F84CA2EFFA0BAF54CB8A92107FADE9D38C0E72E3`.
+`git diff --check` war vor dieser Dokumentation erfolgreich und wird danach
+nochmals ausgeführt. Ein Updater- oder Uninstallationslauf wurde nicht geprüft.
+Kein Release, Push oder Tag.
+
+## Release-Candidate-Abnahme am 1. Oktober 2026
+
+**Bewertung: GO fuer einen lokalen Release Candidate 3.2.11.** Diese Bewertung
+setzt eine ausdrueckliche Freigabe vor jeder Veroeffentlichung voraus. Der
+vorhandene umfangreiche uncommittete Arbeitsbaum wurde nicht zurueckgesetzt,
+ausgecheckt, committed oder gepusht. Matchups, Winrates und strategische
+Wissensdaten wurden nicht veraendert.
+
+### Korrekturen und Regressionen
+
+- Der gespeicherte Live Draft akzeptierte ein `games`-Array mit `null`-Eintrag
+  oder defekter Aktion; spaeter konnte `game.actions.length` die Ansicht
+  abbrechen. `liveDraftStorage.test.ts` war vor der Korrektur rot und prueft
+  nun ungueltige sowie gueltige Spielstaende. Der Loader prueft jedes Spiel,
+  die Aktionen und die Serienkonfiguration vor der Verwendung. Ein zweiter
+  zuerst roter Test prueft fehlende Lock-Daten. Einen verworfenen lokalen
+  Rohwert loescht der initiale Mount nicht; eine neu gestartete Serie ersetzt
+  ihn erst durch Nutzeraktion. Die gezielten Tests bestanden mit 2 Tests und
+  5 Assertions.
+- Die Produktions-Contexts exportierten `RIFTTHEORY_DEBUG` mit Draft-Aktionen
+  und Datensatz-Zugriff auf `window`. Diese Entwicklungs-Schnittstelle wurde
+  entfernt. Der finale Produktionsordner enthaelt die Kennung nicht; auch
+  die installierte WebView meldete `debug: false`. Das CDP-Smoke-Script liegt
+  nur unter `apps/frontend/scripts/` und wird nicht in die App gebuendelt.
+- Die Tauri-Konfiguration und der Installer waren 3.2.11, die Windows-EXE
+  meldete aber `FileVersion` und `ProductVersion` 0.1.0. `Cargo.toml` und
+  `Cargo.lock` tragen nun 3.2.11. Nach dem Neubau meldeten Projekt- und
+  installierte EXE `ProductName=RiftTheory`, `FileVersion=3.2.11` und
+  `ProductVersion=3.2.11`.
+- Die frueheren Korrekturen sind im aktuellen Code und in der finalen nativen
+  R5-Ansicht vorhanden: `draft_complete` wird als `Draft complete` angezeigt;
+  `formatResponseChoice` nennt die Rolle eines Flex-Picks. Die bestehenden
+  gezielten Tests dafuer sind gruen.
+
+### Technische Gates auf dem finalen Quellstand
+
+| Verzeichnis | Befehl | Ergebnis |
+| --- | --- | --- |
+| `RiftTheory/apps/frontend` | `bun test` | 135 bestanden, 0 fehlgeschlagen, 924 Assertions |
+| `RiftTheory/apps/frontend` | `bunx eslint src scripts/benchmark-response-tree.ts` | Exit 0, 0 Fehler, 1 bestehende `solid/reactivity`-Warnung |
+| `RiftTheory` | `bun run typecheck` | 4/4 Pakete bestanden, 3 aus Turbo-Cache |
+| `RiftTheory` | `bun run --filter @rifttheory/frontend build` | Exit 0; separater Response-Worker im Bundle |
+| `RiftTheory/apps/frontend` | `bunx tauri build --bundles nsis` | Exit 0; EXE und NSIS erzeugt |
+| `RiftTheory/apps/frontend/src-tauri` | `cargo test --locked` | 2/2 Rust-Tests bestanden |
+| Repository-Wurzel | `git diff --check` | Exit 0 nach dieser Dokumentation |
+
+Der erste NSIS-Versuch im Sandbox-Kontext scheiterte an `Access is denied`
+beim Lesen der Vite-Konfiguration; derselbe Befehl ausserhalb der Sandbox
+bestand. Ein zwischenzeitlicher Typecheck-Fehler betraf ausschliesslich die
+fehlende Moduldeklaration des lokalen CDP-Smoke-Scripts; nach `export {}`
+bestanden der gezielte Typecheck und die komplette Gate-Folge. Die simulierten
+503-Ausgaben in den Dataset-Tests sind erwartete Fehlerantworten.
+
+Zusaetzliche Abnahmebefehle: `bun test src/components/workspaces/liveDraftStorage.test.ts`
+(2/2), `cargo metadata --locked --no-deps --format-version 1` (Paket `app`
+3.2.11),
+`bun scripts/release-smoke-cdp.ts native-live`, `native-sequence`,
+`native-r5` und `native-interact` (Ergebnisse unten), `Get-FileHash -Algorithm SHA256`
+sowie `Get-Item ... .VersionInfo` (Hash und Version unten). Das lokale Update
+lief mit `Start-Process <Installer> -ArgumentList '/S' -Wait`; danach wurde
+die installierte AppData-EXE explizit gestartet.
+`rg` pruefte den finalen `dist`-Ordner auf Debug-Kennung, Entwicklungs-URL
+und offensichtliche Token-/Schluesselmarker. `git diff --check` hatte
+Exitcode 0; Git gab nur CRLF-Normalisierungswarnungen aus.
+
+### Interaktive Oberflaechenpruefungen
+
+**Native, finale installierte EXE:** Gestarteter Prozesspfad war
+`C:\Users\Löltgen\AppData\Local\RiftTheory\RiftTheory.exe`. Die WebView lud
+mit Patch-/Aktualitaetsanzeige, Live Draft oeffnete seine lokale Serienmaske,
+Strategy berechnete die B1-Entscheidung und die Vorschau oeffnete und schloss.
+Die League-Statusanzeige zeigte eine bestehende Verbindung; in einem frueheren
+Testlauf wechselte sie sichtbar zu `CLIENT NOT CONNECTED`, ohne die Strategy-
+Ansicht abzubrechen. Ein echtes aktives League-Champ-Select war nicht
+verfuegbar und wird hier nicht behauptet.
+
+In der final installierten EXE wurden die Picks ueber die Draft-Tabelle
+chronologisch gesetzt: B1 Ashe (Bot), R1 Vi (Jungle), R2 Janna (Support),
+B2 Poppy (Top), B3 Anivia (Mid), R3 Ahri (Mid), R4 Aphelios (Bot),
+B4 Ivern (Jungle), B5 Bard (Support). Mit vier Vor-Picks zeigte B3 eine
+Fortsetzung B3 -> R3 -> vier zweite Bans -> R4 -> B4/B5. Mit fuenf
+Vor-Picks zeigte R3 R3 -> vier zweite Bans -> R4. Mit neun Vor-Picks zeigte
+R5 nur den letzten Pick, `Draft complete` und keine erfundene spaetere
+Gegneraktion. Die strukturellen Urteile blieben offen und wurden nicht als
+Gewinnwahrscheinlichkeit ausgegeben.
+
+Das **tatsaechliche native Fenster** wurde ueber WebView2-CDP auf 430 px
+gesetzt; `outerWidth`, `innerWidth` und `documentElement.scrollWidth` waren
+jeweils 430 px. R5-Entscheidung und `Inspect this line` blieben erreichbar.
+Die Vorschau erhielt beim Oeffnen Fokus. `Search method and uncertainty`
+liess sich mit Enter oeffnen und schliessen; nach `Close comparison` kehrte
+der Fokus zu `Inspect this line` zurueck. Die Hauptansicht blieb gefuellt.
+
+**Browser, lokale Produktionsvorschau:** Ein isolierter Headless-Chrome
+oeffnete `http://127.0.0.1:3011/`; Draft und Strategy renderten, B1 wurde
+berechnet und eine Vorschau geoeffnet. Bei 430 px war die Dokumentbreite
+ebenfalls 430 px. Eine lokale CDP-Injektion liess externe `fetch`-Aufrufe
+scheitern; die Konsole zeigte fehlgeschlagene Dataset-Anfragen, waehrend die
+Ansicht anschliessend weiter renderte. Der gezielte Loader-Test prueft
+Cache-Fallback, Rang-Fallback, Wiederverwendung voriger Daten und einen
+Fehler ohne Daten. Ein vollstaendiger nativer Netzwerkausfall wurde nicht
+simuliert. Das zwischenzeitliche Loeschen von IndexedDB bei offener Browser-
+Seite erzeugte einen haengenden Testlauf und gilt nicht als Produktbefund.
+
+Die am 29. September dokumentierten interaktiven Browser-Pruefungen fuer
+laufende zweite Bans, Side Swap und Player Pools sowie die Tests fuer
+Ownership und veraltete Worker-Ergebnisse gelten weiterhin fuer diese
+unveraenderten Fachpfade; sie werden nicht als heute erneut durchgefuehrte
+native Aktionen ausgegeben. Die finale Suite enthaelt diese Regressionen.
+
+### Artefakt und Grenzen
+
+- Finaler Installer:
+  `RiftTheory/apps/frontend/src-tauri/target/release/bundle/nsis/RiftTheory_3.2.11_x64-setup.exe`;
+  **5.860.320 Bytes**; SHA-256
+  `99A6C572EAACA596516D6D29F031121605804184CC0C72656734187579606FF3`.
+- Stilles lokales Update ueber die vorhandene Installation: Exitcode 0.
+  Installierte und Projekt-EXE sind 17.818.624 Bytes gross und haben beide
+  SHA-256 `2716BE07F65C8B5E8A71260BC02817DF6EEB96C79DA55364B6F310A1EED418E4`.
+  Die installierte EXE wurde danach gestartet und interaktiv geprueft.
+- Artefakt-Scan: keine `RIFTTHEORY_DEBUG`-Kennung, kein Entwicklungsendpunkt
+  `127.0.0.1:3000`/`localhost:3000`, kein `RIOT_API_KEY`, kein privater
+  Schluesselblock und kein GitHub-Token-Praefix im Produktionsordner. Die
+  Fehlalarme eines breiten `sk-`-Musters waren CSS-`mask-image`-Bezeichner.
+- Bestehende Warnungen: `DraftPrepCalendar.tsx:42` (`solid/reactivity`),
+  Vite-Haupt-Chunk 1.013,83 kB (Buildwarnschwelle 500 kB), Tauri-
+  `__TAURI_BUNDLE_TYPE`-Markierung fehlt. Das lokale NSIS-Update bestand;
+  ein automatischer Updater wurde nicht geprueft. Der Installer ist nicht
+  digital signiert. Deinstallation wurde zum Schutz vorhandener Nutzerdaten
+  nicht getestet.
+- Fachliche Grenzen bleiben: begrenzter, nicht vollstaendig geloester
+  Response Tree; kein kalibriertes Outcome-Modell; Match-V5-Dateien enthalten
+  Endaufstellungen und Rollen, aber keine historische Pick-/Ban-Reihenfolge.
+  Rekonstruierte Folgen sind keine echten Replays. Ein aktives LCU-Champ-
+  Select samt Wiederverbindung wurde heute mangels entsprechender Session
+  nicht end-to-end geprueft.
+
+Keine bekannte ungeloeste P0- oder P1-Stoerung. Kein Push, Tag, Release oder
+oeffentliches Hochladen wurde ausgefuehrt.
+
+## UX-Nachtrag und lokaler Release Candidate 3.2.12 (1. Oktober 2026)
+
+Der Nutzer autorisierte die Umsetzung der nach dem 3.2.11-RC vorgeschlagenen
+UI- und Technikverbesserungen. Die vorhandene uncommittete Arbeit blieb erhalten;
+es gab keinen Reset, Checkout, Push, Tag oder Upload. Die Version steht in Root-
+und Frontend-`package.json`, Tauri-Konfiguration, Cargo-Manifest und beiden
+Lockfiles auf 3.2.12. Windows-EXE-Metadaten melden RiftTheory 3.2.12.
+
+### Tatsächliche Änderungen und Regressionen
+
+- Die bestehende Strategy-Entscheidung zeigt jetzt zwei direkt anwählbare
+  Kandidaten, eine knappe Rollen-/Patch-/Suchabdeckungszeile und aufklappbare
+  Gründe/Unsicherheit. Der vorhandene ausführliche Same-Slot-Vergleich bleibt
+  die Grundlage. Es wurde keine neue Winrate oder strategische Behauptung
+  erfunden. Beim Öffnen der Alternative erhält die Vorschau Fokus; nach dem
+  Schließen kehrt er zur auslösenden Taste zurück.
+- Der manuelle Draft speichert Picks und Rollen als validierten lokalen Snapshot.
+  Undo/Redo sind im Draft und Strategy erreichbar. Defekte, doppelte oder
+  strukturell ungültige Snapshots werden nicht geladen und nicht automatisch
+  überschrieben. Hover, LCU-Picks und LCU-Bans werden nicht als manuelle
+  Draft-Aktionen gespeichert. Bei Schreibfehlern erscheint eine sichtbare
+  Meldung. Die letzten 30 manuell geänderten Board-Zustände bleiben für Undo
+  in der laufenden Sitzung; nach App-Neustart wird der letzte Board-Zustand
+  restauriert, nicht die Undo-Historie.
+- Browser-Test fand zuerst einen echten Restore-Fehler: B1 war gespeichert,
+  aber nach Neustart noch als aktiver Slot markiert. Der neue Test
+  `manualDraftStorage.test.ts` prüft B1 -> R1; Restore, Undo und Redo setzen
+  den nächsten offenen chronologischen Slot. Derselbe Test prüft Format,
+  beschädigte Daten, Duplikate und unzulässige Rollen.
+- Ein UI-Regressionscheck fand, dass Solid `Suspense` während einer neuen
+  Response-Berechnung die gesamte Strategy-Ansicht durch „Loading workspace“
+  ersetzte. Der Check wurde vor der Korrektur rot. `DeferredView` lädt große
+  Arbeitsbereiche einmalig bei Bedarf und zeigt einen Retry bei Importfehlern,
+  ohne ihre späteren Datenberechnungen aus der Oberfläche zu entfernen.
+- Der Produktionsstart-Chunk sank von 1.013,83 kB bei 3.2.11 auf 486,24 kB
+  bei 3.2.12 (160,64 kB gzip im Tauri-Build). Strategy, Draft-Tabelle,
+  Analyse, Workspaces und Einstellungen liegen in separaten Chunks. Die
+  bisherige Vite-Warnung über 500 kB tritt nicht mehr auf.
+- Ein simulierter Offline-Start ohne IndexedDB-Cache reproduzierte eine
+  leere Hauptfläche: ein fehlgeschlagener Solid-Ressourcenabruf wurde vor der
+  Fehleransicht als Exception gelesen. Der neue Browser-Regressionscheck
+  schlug zuerst fehl. `DatasetContext` liest den Fehlerzustand vor dem Wert;
+  danach zeigte dieselbe Produktionsvorschau die Statistik-Fehlermeldung,
+  „Retry statistics“ und lokale Draft-Prep-Arbeitsbereiche.
+
+### Finale technische Gates nach dem letzten Code-Fix
+
+Ausgeführt in den angegebenen Verzeichnissen, jeweils Exitcode 0:
+
+```powershell
+cd RiftTheory/apps/frontend
+bun test                                  # 138 pass, 0 fail, 931 assertions
+bunx eslint src scripts/benchmark-response-tree.ts # 0 errors, 1 warning
+cd ../..
+bun run typecheck                         # 4/4 Pakete erfolgreich, 3 Cache-Hits
+bun run --filter @rifttheory/frontend build # erfolgreich; Start-Chunk 486,23 kB
+cd apps/frontend
+bunx tauri build --bundles nsis           # erfolgreich; Start-Chunk 486,24 kB
+cd src-tauri
+cargo test --locked                       # 2 pass, 0 fail
+cd "C:\Users\Löltgen\Documents\vscode\Projekt DraftOS"
+git diff --check                          # erfolgreich; CRLF-Hinweise
+```
+
+Die einzige ESLint-Warnung bleibt `DraftPrepCalendar.tsx:42`
+(`solid/reactivity`). Tauri meldet weiter die fehlende
+`__TAURI_BUNDLE_TYPE`-Markierung. Automatische Updates wurden nicht aktiviert
+oder geprüft; `createUpdaterArtifacts` bleibt `false`, der Installer ist nicht
+signiert. Für einen signierten Updatekanal fehlen ein verwalteter Signierschlüssel
+und ein überprüfbarer Endpunkt. Die lokale NSIS-Installation funktioniert.
+
+### UI-Prüfung: Browser und native App getrennt
+
+**Browser, lokale Produktionsvorschau:** Ein isoliertes Chrome-Profil auf
+`http://127.0.0.1:3011/` prüfte manuelles Speichern, Undo, Redo, Reload,
+R1 als nächstes Fenster nach gespeichertem B1, 430 px
+`innerWidth = scrollWidth`, direkten Alternativ-Klick, Vorschau-Fokus und
+Fokus-Rückkehr. Eine beschädigte gespeicherte Draft-Zeichenfolge ließ den
+Draft leer und die App bedienbar; der Rohwert blieb bis zu einer bewussten
+neuen Speicherung bestehen. Mit abgefangenen externen Fetches und leerem
+IndexedDB-Cache zeigte die final gebaute Ansicht einen sichtbaren Fehler,
+Retry und Draft Prep. Der Netzwerkfehler war simuliert, kein physisches
+Trennen der Verbindung.
+
+**Native Projekt-EXE und final installierte EXE:** WebView2-CDP prüfte in der
+3.2.12-EXE B3, R3 und R5 nach chronologisch gesetzten Vor-Picks. B3 und R3
+zeigten die zweite Banphase; R5 zeigte `Draft complete`. Das tatsächlich
+schmale native Fenster hatte `outerWidth = innerWidth = scrollWidth = 430`.
+Die R5-Alternative öffnete die Vorschau, `Search method and uncertainty`
+ließ sich mit Enter öffnen und der Fokus kehrte nach dem Schließen zu
+`Try Ambessa` zurück. Die installierte App öffnete auch den nachgeladenen
+Live-Draft-Arbeitsbereich. Das ist kein Test in einem aktiven League-
+Champ-Select; der Client zeigte lediglich eine bestehende Verbindung.
+
+Nach einem Installationslauf erschien ein zuvor sichtbarer Neun-Pick-Draft
+leer. Die Ursache war aus diesem Lauf nicht rekonstruierbar. Daraufhin wurde
+ein kontrollierter Test mit einem eindeutigen lokalen Testeintrag und einem
+neu gespeicherten Neun-Pick-Draft durchgeführt: Beide überstanden einen
+App-Neustart und eine weitere stille Installation desselben Installers.
+Der Testeintrag wurde entfernt. Diese Beobachtung belegt Datenbewahrung im
+kontrollierten Updatefall; sie erklärt den früheren leeren Zustand nicht.
+
+### Finales lokales Artefakt und Bewertung
+
+- Installer: `RiftTheory/apps/frontend/src-tauri/target/release/bundle/nsis/RiftTheory_3.2.12_x64-setup.exe`;
+  **5.881.471 Bytes**; SHA-256
+  `C3DC7E0658BA23276CA4B86B84A169EC9996D9FD96606A2603DFBF44F9953CDD`.
+- Stilles Update über die vorhandene Installation: Exitcode 0. Projekt- und
+  installierte EXE: je 17.839.104 Bytes, gleicher SHA-256
+  `D3A26837225B9A27AF9EC04F4D4A312BF3AD9945732F032A33398257680AA1E2`.
+  Die gestartete installierte EXE liegt unter
+  `C:\Users\Löltgen\AppData\Local\RiftTheory\RiftTheory.exe`.
+- Scan der JS-Produktionsartefakte auf `RIFTTHEORY_DEBUG`, Entwicklungsport
+  3000, `TAURI_SIGNING_PRIVATE_KEY` und `GITHUB_TOKEN`: null Treffer.
+- **GO für einen lokalen, manuell installierbaren Release Candidate 3.2.12**
+  ohne bekannte offene P0-/P1-Störung. Kein GO für einen automatischen
+  Updatekanal: Signierung, Update-Artefakte und `__TAURI_BUNDLE_TYPE` sind
+  dafür ungeklärt. Ein aktiver LCU-Draft, automatische Updates und
+  Deinstallation wurden in diesem Nachtrag nicht end-to-end geprüft.
+
+## Finaler Windows-RC 3.2.14 (1. Oktober 2026)
+
+Der Nutzer bat um Abschluss und GitHub-Upload. Den echten Test in einem aktiven
+League-Champ-Select ließ er ausdrücklich aus. Diese Strecke wird daher nicht
+als bestanden bezeichnet. Die vorherige Arbeit und alle lokalen Daten blieben
+erhalten. 3.2.13 war ein lokal installierter Zwischenstand; 3.2.14 ist das
+finale Artefakt nach einer weiteren Fehlerkorrektur.
+
+### Änderungen und Regressionen
+
+- Ein zuvor beobachteter leerer manueller Draft ließ sich nicht deterministisch
+  reproduzieren. Als Datenrettung wird vor jeder manuellen Änderung ein
+  nichtleeres Board separat gesichert. „Restore previous board“ stellt es aus
+  Draft und Strategy wieder her. Der Test `manualDraftStorage.test.ts` prüft
+  die Nichtleer-Bedingung; die installierte 3.2.13-App bestand den nativen
+  Reset-/Restore-Versuch mit einem Neun-Pick-Board und identischem Snapshot.
+  Das ist eine Schadensbegrenzung, keine nachgewiesene Ursachenbehebung.
+- Der native Start ohne LeagueClient zeigte fälschlich „CLIENT CONNECTED“:
+  Champ-Select- und Gameflow-Aufruf lieferten beide `null`, während der
+  Riot-Client-Prozess lief. `lcu-api.test.ts` war zuerst rot und prüft jetzt,
+  dass ein fehlender Gameflow-Endpunkt als nicht verfügbar gilt. 3.2.14 zeigt
+  nach Installation korrekt „CLIENT NOT CONNECTED“. Ein echter aktiver Draft
+  und Wiederverbindung wurden auf Nutzerwunsch nicht durchgespielt.
+- Der Tauri-Updater ist registriert, sein öffentlicher Schlüssel und der
+  GitHub-Releases-Endpunkt sind konfiguriert. Die privaten Schlüsseldateien
+  liegen außerhalb des Repositories in `%USERPROFILE%\.tauri` mit auf den
+  Benutzer beschränkten Dateirechten. Der NSIS-Build erzeugt eine `.sig`;
+  `update-manifest.ts` erzeugt `latest.json` mit Versions-, Namens- und
+  Signaturprüfung. Zwei gezielte Tests für das Manifest bestanden. In den
+  Einstellungen gibt es eine Updateprüfung mit sichtbaren Erfolgs- und
+  Fehlerzuständen sowie eine bewusste Installationsaktion. Der vorherige,
+  nicht funktionsfähige S3-Kopierschritt wurde entfernt.
+- Die Tauri-CLI meldet weiterhin, dass `__TAURI_BUNDLE_TYPE` in der EXE nicht
+  gefunden wird. Ein expliziter Link-Versuch beseitigte das nicht und wurde
+  wieder entfernt. Die Signatur wurde erzeugt und das Manifest stimmt mit der
+  `.sig`-Datei überein; ein automatisches Update von einer älteren Version
+  auf 3.2.14 wurde nicht end-to-end getestet. Der Updatekanal bleibt deshalb
+  als ungeprüft gekennzeichnet. Windows-Authenticode-Signierung fehlt mangels
+  Zertifikat; die Tauri-Updater-Signatur ist davon getrennt.
+
+### Gates nach dem finalen Code
+
+Alle folgenden Befehle endeten mit Exitcode 0:
+
+```powershell
+cd RiftTheory/apps/frontend
+bun test                                   # 142 pass, 0 fail, 939 Assertions
+bunx eslint src scripts/benchmark-response-tree.ts # 0 Fehler, 1 Warnung
+cd ../..
+bun run typecheck                          # 4/4 Pakete erfolgreich
+bun run --filter @rifttheory/frontend build # erfolgreich, Haupt-Chunk 487,16 kB
+cd apps/frontend
+bunx tauri build --bundles nsis            # NSIS + .sig erfolgreich
+cd src-tauri
+cargo test --locked                        # 2 pass, 0 fail
+cd "C:\Users\Löltgen\Documents\vscode\Projekt DraftOS"
+git diff --check                           # erfolgreich, nur CRLF-Hinweise
+```
+
+`bun install --frozen-lockfile --dry-run` prüfte zusätzlich die korrigierte
+Lockfile-Syntax erfolgreich. ESLint meldet weiterhin ausschließlich
+`DraftPrepCalendar.tsx:42` (`solid/reactivity`). Der Tauri-Build meldet die
+oben beschriebene Bundle-Markierung. Ein Scan der finalen JS-Artefakte fand
+keinen privaten Updater-Schlüssel, `GITHUB_TOKEN`,
+`TAURI_SIGNING_PRIVATE_KEY` oder Entwicklungsendpunkt auf Port 3000.
+
+### Oberflächen und Installation
+
+**Browser:** Der 3.2.12-Produktionsvorschau-Test bei 430 px, inklusive
+Draft-Restore, Fokus-Rückkehr und simuliertem Offline-Start, bleibt als
+früherer Befund dokumentiert. Für 3.2.14 wurde kein neuer Browser-Smoke-Test
+behauptet.
+
+**Native installierte 3.2.14-App:** Lokales NSIS-Update Exitcode 0;
+Projekt- und installierte EXE je 19.723.264 Bytes mit demselben SHA-256
+`3F48EB5FC76FAD5C51139C6880B729AB35F2E79F0D5F3EF069809C9A62827F30`.
+Die App wurde eindeutig aus `%LOCALAPPDATA%\RiftTheory\RiftTheory.exe`
+gestartet. Ein gespeichertes Neun-Pick-Board und ein eindeutiger Testeintrag
+überstanden die Installation; der Testeintrag wurde danach entfernt. Die
+native Strategy hatte `innerWidth = outerWidth = scrollWidth = 430`, zeigte
+bei vollständigen Vor-Picks R5 und „Draft complete“, öffnete die
+Alternative, ließ die Details mit Enter öffnen und gab nach dem Schließen
+den Fokus an „Try Ambessa“ zurück. Die Settings-Updateprüfung zeigte vor
+Bereitstellung von `latest.json` einen sichtbaren Fehler statt einer leeren
+Ansicht. Kein LeagueClient-Prozess lief; der Status war korrekt nicht verbunden.
+B3, R3, zweite Banphase, Side Swap, Ownership, Player Pools und Worker-
+Aktualität waren im früheren nativen/browserbasierten RC-Abnahmelauf
+geprüft, nicht erneut im finalen 3.2.14-Smoke-Test.
+
+Installer: `RiftTheory/apps/frontend/src-tauri/target/release/bundle/nsis/RiftTheory_3.2.14_x64-setup.exe`;
+**6.287.437 Bytes**; SHA-256
+`30A43BA4A555404E7B2C3EC58ADC6FF929DC7BAD92975DA8D1A6D1E903E37377`.
+Daneben liegen die `.sig` (424 Bytes) und das erzeugte `latest.json`.
+
+**Bewertung:** GO für einen manuell installierbaren Windows-Release-Candidate
+ohne bekannte offene P0-/P1-Störung. Der automatische Updatepfad ist wegen
+der Bundle-Warnung und fehlendem End-to-End-Update noch kein geprüfter GO.
+Ein aktiver LCU-Champ-Select ist auf Nutzerwunsch ungeprüft. Der frühere
+leere Draft bleibt in seiner Ursache ungeklärt; die neue Wiederherstellung
+reduziert das Datenverlustrisiko. Keine historische Pick-/Ban-Reihenfolge wird
+aus Match-V5-Endaufstellungen erfunden.

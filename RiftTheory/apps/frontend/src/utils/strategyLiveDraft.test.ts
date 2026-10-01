@@ -114,6 +114,7 @@ describe("explicit live-series strategy handoff", () => {
         snapshot.teams.ally[0].role = 1;
         expect(current.actions[6]).not.toHaveProperty("role");
         expect(snapshot.pendingBans).toBe(true);
+        expect(snapshot.pendingAction).toEqual({ kind: "ban", side: "red", slot: 3 });
         expect(snapshot.next).toEqual({ team: "opponent", index: 3 });
         expect(captureStrategyGame(config, game(1), []).next).toBeUndefined();
     });
