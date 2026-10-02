@@ -1,6 +1,6 @@
 [package]
 name = "app"
-version = "3.2.15"
+version = "3.2.16"
 description = "RiftTheory desktop draft strategy app"
 license = ""
 repository = ""
