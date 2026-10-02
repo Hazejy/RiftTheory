@@ -33,15 +33,16 @@ export function normalizeCustomColors(value: unknown): CustomColors {
 
 export function customThemeVariables(colors: CustomColors) {
     return {
-        "--color-canvas": colors.background,
-        "--color-primary": colors.panel,
-        "--color-panel-inset": colors.inset,
+        "--color-app-shell": `color-mix(in srgb, ${colors.background} var(--surface-opacity), transparent)`,
+        "--color-canvas": `color-mix(in srgb, ${colors.background} var(--surface-opacity), transparent)`,
+        "--color-primary": `color-mix(in srgb, ${colors.panel} var(--surface-opacity), transparent)`,
+        "--color-panel-inset": `color-mix(in srgb, ${colors.inset} var(--surface-opacity), transparent)`,
         "--color-text": colors.text,
         "--color-accent": colors.accent,
         "--color-secondary": colors.accent,
-        "--color-neutral-950": colors.background,
-        "--color-neutral-900": colors.inset,
-        "--color-neutral-800": colors.input,
+        "--color-neutral-950": `color-mix(in srgb, ${colors.background} var(--surface-opacity), transparent)`,
+        "--color-neutral-900": `color-mix(in srgb, ${colors.inset} var(--surface-opacity), transparent)`,
+        "--color-neutral-800": `color-mix(in srgb, ${colors.input} var(--surface-opacity), transparent)`,
         "--color-neutral-700": colors.border,
         "--color-neutral-600": colors.border,
         "--color-neutral-500": colors.muted,

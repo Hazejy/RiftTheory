@@ -41,7 +41,7 @@ export default function LiveDraftBroadcastStage(props: {
         props.currentStep.slot === slot;
 
     return (
-        <section class="overflow-hidden rounded-xl border border-neutral-700 bg-[#090b0f] shadow-2xl">
+        <section class="overflow-hidden rounded-xl border border-neutral-700 bg-canvas shadow-2xl">
             <div class="grid grid-cols-2 border-b border-neutral-700">
                 <BroadcastTeamHeader
                     side="blue"

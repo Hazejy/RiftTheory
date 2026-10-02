@@ -79,7 +79,7 @@ export const PathTable: Component<PathTableProps> = (props) => {
                     {dataset()!.runePathData[props.pathId].name}
                 </h3>
             </Show>
-            <div class="bg-[#141414] p-2 rounded-md flex flex-col gap-2 relative">
+            <div class="bg-panel-inset p-2 rounded-md flex flex-col gap-2 relative">
                 <Show when={props.type === "primary"}>
                     <div class="flex gap-2 justify-between mb-2 min-w-[184px]">
                         <For each={runesBySlot().get(0)}>
@@ -150,7 +150,7 @@ export const ShardTable: Component = () => {
     return (
         <div>
             <h3 class="uppercase mb-2 min-w-[184px]">Shards</h3>
-            <div class="bg-[#141414] p-2 rounded-md flex flex-col gap-2 relative">
+            <div class="bg-panel-inset p-2 rounded-md flex flex-col gap-2 relative">
                 <For
                     each={
                         [

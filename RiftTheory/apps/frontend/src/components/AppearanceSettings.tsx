@@ -78,6 +78,23 @@ export function AppearanceSettings() {
                     </For>
                 </div>
             </fieldset>
+            <div class="rounded-lg border border-neutral-700 p-3">
+                <div class="flex items-center justify-between gap-3">
+                    <label for="surface-transparency" class="text-sm text-neutral-300">{t("transparency")}</label>
+                    <output for="surface-transparency" class="text-sm text-accent">{config.transparency}%</output>
+                </div>
+                <input
+                    id="surface-transparency"
+                    type="range"
+                    min="0"
+                    max="100"
+                    step="1"
+                    value={config.transparency}
+                    onInput={(event) => setConfig("transparency", Number(event.currentTarget.value))}
+                    class="mt-3 w-full accent-accent"
+                />
+                <p class="mt-2 text-xs text-neutral-400">{t("transparencyHelp")}</p>
+            </div>
             <CustomThemeEditor />
         </section>
     );

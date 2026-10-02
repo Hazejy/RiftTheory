@@ -108,6 +108,7 @@
 }
 
 :root {
+    --surface-opacity: 100%;
     color-scheme: dark;
     --color-neutral-950: #080b10;
     --color-neutral-900: #11151c;
@@ -130,6 +131,16 @@
 
 .rt-workspace {
     background-image: var(--workspace-glow);
+}
+
+.rt-app-shell {
+    background-color: var(--color-app-shell, #0d1016);
+}
+
+html,
+body,
+#root {
+    background-color: transparent;
 }
 
 .rt-draft-layout {

@@ -59,6 +59,7 @@
                 "resizable": true,
                 "dragDropEnabled": false,
                 "title": "RiftTheory",
+                "transparent": true,
                 "width": 1600,
                 "useHttpsScheme": true
             }

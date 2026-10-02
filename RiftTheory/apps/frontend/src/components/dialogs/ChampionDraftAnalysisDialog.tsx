@@ -47,7 +47,7 @@ export function ChampionDraftAnalysisDialog(props: Props) {
 
     return (
         <DialogContent class="max-w-3xl">
-            <div class="h-24 bg-[#101010] -m-6 mb-0" />
+            <div class="h-24 bg-panel-inset -m-6 mb-0" />
             <div class="flex gap-4 -mt-[78px] items-center">
                 <div class="rounded-full border-primary border-8">
                     <ChampionIcon

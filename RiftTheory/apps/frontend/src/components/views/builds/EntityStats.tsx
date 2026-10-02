@@ -65,7 +65,7 @@ export const HorizontalEntityStats = <T,>(props: Props<T>) => {
     const { currentSort, onSortClick, data } = useEntityStats(props);
 
     return (
-        <div class="flex gap-4 p-3 bg-[#141414] rounded-md items-end h-full">
+        <div class="flex gap-4 p-3 bg-panel-inset rounded-md items-end h-full">
             <div class="flex flex-col text-sm -mr-3 shrink-0">
                 <button
                     onClick={() => onSortClick("rating")}
@@ -112,7 +112,7 @@ export const VerticalEntityStats = <T,>(props: Props<T>) => {
     const { currentSort, onSortClick, data } = useEntityStats(props);
 
     return (
-        <table class="bg-[#141414] rounded-md">
+        <table class="bg-panel-inset rounded-md">
             <thead class="text-sm">
                 <tr>
                     <th />

@@ -36,6 +36,7 @@ const DEFAULT_CONFIG: RiftTheoryConfig = {
     language: "en_US",
     fontPreset: "inter",
     theme: "obsidian",
+    transparency: 0,
     customColors: { ...DEFAULT_CUSTOM_COLORS },
 
     // MISC

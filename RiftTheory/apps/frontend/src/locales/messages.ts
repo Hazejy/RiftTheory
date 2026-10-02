@@ -76,6 +76,9 @@ export const en = {
     appearanceSaved: "Applies immediately and is saved on this device.",
     font: "Font",
     theme: "Theme",
+    transparency: "Surface transparency",
+    transparencyHelp:
+        "Adjusts interface surfaces only. Text and champion portraits stay fully opaque.",
     riskLevel: "Risk level",
     riskHelp:
         "Controls how much small samples influence estimates. Low is more cautious; high gives limited data more weight. This is not a playstyle setting.",
@@ -518,6 +521,9 @@ export const ko: Messages = {
     appearanceSaved: "즉시 적용되며 이 기기에 저장됩니다.",
     font: "글꼴",
     theme: "테마",
+    transparency: "화면 투명도",
+    transparencyHelp:
+        "화면 배경에만 적용됩니다. 글자와 챔피언 초상화는 선명하게 유지됩니다.",
     riskLevel: "위험 수준",
     riskHelp:
         "적은 표본이 추정치에 미치는 영향을 조절합니다. 낮음은 보수적으로, 높음은 적은 데이터에 더 큰 비중을 둡니다. 플레이 스타일 설정이 아닙니다.",
@@ -949,6 +955,8 @@ export const zh: Messages = {
     appearanceSaved: "立即生效，并保存在此设备上。",
     font: "字体",
     theme: "主题",
+    transparency: "界面透明度",
+    transparencyHelp: "仅调整界面背景。文字和英雄头像保持不透明。",
     riskLevel: "风险等级",
     riskHelp:
         "控制小样本对估计值的影响。低档更保守，高档给予少量数据更大权重。这不是打法风格设置。",

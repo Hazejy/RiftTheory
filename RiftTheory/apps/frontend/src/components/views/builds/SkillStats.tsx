@@ -90,7 +90,7 @@ export function SkillStats() {
             </Panel>
             <Panel class="w-full">
                 <PanelHeader>Skill Order</PanelHeader>
-                <table class="bg-[#141414] rounded-md">
+                <table class="bg-panel-inset rounded-md">
                     <thead>
                         <tr>
                             <th class="text-center uppercase pt-3 pr-1.5 pl-3 font-normal">

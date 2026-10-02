@@ -90,6 +90,10 @@ const App: Component = () => {
         document.documentElement.lang = config.language.replace("_", "-");
         document.documentElement.dataset.font = config.fontPreset;
         document.documentElement.dataset.theme = config.theme;
+        document.documentElement.style.setProperty(
+            "--surface-opacity",
+            `${100 - config.transparency}%`,
+        );
         const themeColors =
             config.theme === "custom"
                 ? config.customColors
@@ -190,11 +194,15 @@ const App: Component = () => {
                                             label: t("strategy"),
                                             value: "strategy",
                                             icon: strategy,
+                                            disabled: true,
+                                            disabledReason: "Not available yet",
                                         },
                                         {
                                             label: "Draft Simulator",
                                             value: "draftSimulator",
                                             icon: draftBoard,
+                                            disabled: true,
+                                            disabledReason: "Not available yet",
                                         },
                                         {
                                             label: t("champColors"),
@@ -353,7 +361,7 @@ const App: Component = () => {
 
     return (
         <div
-            class="h-screen flex flex-col"
+            class="rt-app-shell h-screen flex flex-col"
             style={{
                 height: "calc(var(--vh, 1vh) * 100)",
             }}

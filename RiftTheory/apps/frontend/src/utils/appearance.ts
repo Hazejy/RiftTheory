@@ -77,12 +77,14 @@ export type AppearancePreferences = {
     fontPreset: (typeof FONT_PRESETS)[number]["id"];
     theme: ThemePresetId | "custom";
     customColors: CustomColors;
+    transparency: number;
 };
 
 export function normalizeAppearance(value: {
     fontPreset?: unknown;
     theme?: unknown;
     customColors?: unknown;
+    transparency?: unknown;
 }): AppearancePreferences {
     const theme = typeof value.theme === "string" ? value.theme : undefined;
     return {
@@ -95,5 +97,8 @@ export function normalizeAppearance(value: {
                 ? (theme as ThemePresetId | "custom")
                 : "obsidian",
         customColors: normalizeCustomColors(value.customColors),
+        transparency: typeof value.transparency === "number" && Number.isFinite(value.transparency)
+            ? Math.max(0, Math.min(100, Math.round(value.transparency)))
+            : 0,
     };
 }
